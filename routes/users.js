@@ -1,9 +1,23 @@
+var models  = require('../models');
 var express = require('express');
-var router = express.Router();
+var router  = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+
+router.post('/new', function(req, res) {
+  models.user.create({
+    name: req.body.name,
+    lname: req.body.lname,
+    email: req.body.email,
+    password: req.body.password,
+    gender: req.body.gender
+  }).then(function (user) {
+    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/users/" + user.id;
+    res.setHeader("Location", url);
+    res.status(201).send(user);
+  }).catch(function(err){
+    res.status(500).send(err);
+  })
 });
 
 module.exports = router;
