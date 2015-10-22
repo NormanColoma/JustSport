@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "admin_js",
+    "password": "js2015",
+    "database": "justsport",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "admin_js",
+    "password": "js2015",
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "admin_js",
+    "password": "js2015",
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
