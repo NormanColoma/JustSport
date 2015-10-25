@@ -13,17 +13,22 @@ module.exports = function(sequelize, Sequelize) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+      },
+      verifyPassword: function(pass, hPass){
+         return bcrypt.compareSync(pass, hPass);
       }
     },
     hooks: {
-      beforeCreate: function (user){
-        return bcrypt.hash(user.pass, null, null, function(err, hash) {
-           user.pass = hash;
+      beforeCreate: function (user, options, done){
+        bcrypt.hash(user.pass, null, null, function(err, hash) {
+          user.pass = hash;
+          done();
         });
       },
-      beforeUpdate: function (user) {
-        return bcrypt.hash(user.pass, null, null, function (err, hash) {
+      beforeUpdate:function (user, options, done){
+        bcrypt.hash(user.pass, null, null, function(err, hash) {
           user.pass = hash;
+          done();
         });
       }
     }
