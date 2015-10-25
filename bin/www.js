@@ -18,11 +18,11 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 
-models.sequelize.sync().then(function () {
-    app.listen(3000, function(){
-        console.log('Express en el puerto 3000');
-    })
+
+app.listen(3000, function(){
+    console.log('Express en el puerto 3000');
 });
+
 
 
 

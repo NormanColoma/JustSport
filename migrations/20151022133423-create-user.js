@@ -15,7 +15,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       pass: {
         type: Sequelize.STRING
@@ -33,7 +34,7 @@ module.exports = {
       }
     });
   },
-  down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('users');
+  down: function(queryInterface) {
+    queryInterface.dropTable('users');
   }
 };
