@@ -15,6 +15,7 @@ module.exports = {
       },
       clientId: {
         type: Sequelize.UUID,
+        unique: true,
         required:true
       },
       clientSecret: {
