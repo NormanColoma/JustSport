@@ -1,0 +1,16 @@
+extends layout
+
+html
+   head
+      title="OAuth Example"
+   body
+      p Hi #{user.username}
+      p
+         b #{client.name} is requesting full acces to your account
+      form(action="/api/oauth2/authorize", method="post")
+         input(name="transaction_id" type="hidden" value="#{transactionID}")
+         div
+            input(type="submit", value="Allow",id="allow")
+            input(type="submit",value="Deny",name="cancel",id="deny")
+
+
