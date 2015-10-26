@@ -40,8 +40,15 @@ router.route('/oauth2/token')
 app.use('/api', router);
 app.use('/', routes);
 app.use('/api/sports',authController.isBearerAuthenticated, sports);
-app.use('/api/clients',authController.isAuthenticated, clients);
+app.use('/api/clients',authController.isBearerAuthenticated, clients);
 app.use('/api/users', users);
+app.get('/login', function(req,res){
+  res.render('login');
+})
+app.post('/login',
+    passport.authenticate('local',  { successRedirect: '/',
+      failureRedirect: '/login'})
+);
 
 
 
