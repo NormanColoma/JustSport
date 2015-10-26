@@ -1,7 +1,7 @@
 // Load required packages
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
 var models  = require('../models');
 
 passport.use(new BasicStrategy(
@@ -22,17 +22,7 @@ passport.use(new BasicStrategy(
     }
 ));
 
-passport.use(new LocalStrategy(
-    function (email, password, done) {
-        models.user.find({ where: {email: email} }).then(function(user){
-            if(!user)
-                return done(null,false);
-            if(user.verifyPassword(password,user.pass))
-                return done(null, user);
-            return done(null,false);
-        })
-    }
-));
+
 
 passport.use('client-basic', new BasicStrategy(
     function(clientId, clientSecret, done) {
@@ -60,6 +50,5 @@ passport.use(new BearerStrategy(
 ));
 
 exports.isAuthenticated = passport.authenticate('basic', { session : false });
-exports.isLocalAuthenticated = passport.authenticate('local', {session: false});
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session : false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });

@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', routes);
-app.use('/api/sports',authController.isClientAuthenticated, sports);
+app.use('/api/sports',authController.isAuthenticated, sports);
 app.use('/api/clients',authController.isAuthenticated, clients);
 app.use('/api/users', users);
 
