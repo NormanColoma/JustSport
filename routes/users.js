@@ -12,7 +12,7 @@ router.post('/new', function(req, res) {
     pass: req.body.pass,
     gender: req.body.gender
   }).then(function (user) {
-    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/users/" + user.id;
+    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/users/" + user.uuid;
     res.setHeader("Location", url);
     res.status(201).send(user);
   }).catch(function (err){
