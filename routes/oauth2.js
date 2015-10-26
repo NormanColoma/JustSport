@@ -1,3 +1,99 @@
 /**
  * Created by Norman on 26/10/2015.
  */
+var oauth2orize = require('oauth2orize');
+var models  = require('../models');
+
+var server = oauth2orize.createServer();
+
+// Register serialialization function
+server.serializeClient(function(client, done) {
+    return done(null, client.clientId);
+});
+
+// Register deserialization function
+server.deserializeClient(function(id, done) {
+    models.client.findOne({where:{clientId:id}}).then(function(client){
+        return done(null,client);
+    });
+});
+
+
+// Register authorization code grant type
+server.grant(oauth2orize.grant.code(function(client, redirectUri, user, ares, done) {
+    // Create a new authorization code
+    var code = models.code.build({
+        code: uid(16),
+        clientId: client.clientId,
+        redirectUri: redirectUri,
+        userId: user.uuid
+    });
+
+    // Save the auth code and check for errors
+    code.save().then(function(){
+        done(null,code.code);
+    })
+}));
+
+// Exchange authorization codes for access tokens
+server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, done) {
+    models.code.findOne({where:{code:code}}).then(function(authCode){
+        if(authCode === undefined)
+            return done(null,false);
+        if(client.clientId !== authCode.clientId)
+            return done(null,false);
+        if(redirectUri !== authCode.redirectUri)
+            return done(null,false);
+
+        authCode.destroy().then(function(){
+            var token = models.token.build({
+                token: uid(256),
+                clientId: authCode.clientId,
+                userId: authCode.userId
+            });
+
+            token.save().then(function(){
+                done(null,token);
+            })
+        })
+    });
+}));
+
+
+function uid (len) {
+    var buf = []
+        , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        , charlen = chars.length;
+
+    for (var i = 0; i < len; ++i) {
+        buf.push(chars[getRandomInt(0, charlen - 1)]);
+    }
+
+    return buf.join('');
+};
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+exports.authorization = [
+    server.authorization(function(clientId, redirectUri, done) {
+        models.client.findOne({where:{clientId: clientId}}).then(function(client){
+            return done(null,client,redirectUri);
+        });
+    }),
+    function(req, res){
+        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+    }
+]
+
+// User decision endpoint
+exports.decision = [
+    server.decision()
+]
+
+// Application client token exchange endpoint
+exports.token = [
+    server.token(),
+    server.errorHandler()
+]

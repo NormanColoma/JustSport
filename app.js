@@ -7,6 +7,9 @@ var users = require('./routes/users');
 var clients = require('./routes/clients');
 var passport = require('passport');
 var authController = require('./routes/auth');
+var session = require('express-session');
+var oauth2Controller = require('./routes/oauth2');
+var router = express.Router();
 var app = express();
 
 // view engine setup
@@ -19,11 +22,27 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'Super Secret Session Key',
+  saveUninitialized: true,
+  resave: true
+}));
 
+
+// Create endpoint handlers for oauth2 authorize
+router.route('/oauth2/authorize')
+    .get(authController.isAuthenticated, oauth2Controller.authorization)
+    .post(authController.isAuthenticated, oauth2Controller.decision);
+
+// Create endpoint handlers for oauth2 token
+router.route('/oauth2/token')
+    .post(authController.isClientAuthenticated, oauth2Controller.token);
+app.use('/api', router);
 app.use('/', routes);
-app.use('/api/sports',authController.isAuthenticated, sports);
+app.use('/api/sports',authController.isBearerAuthenticated, sports);
 app.use('/api/clients',authController.isAuthenticated, clients);
 app.use('/api/users', users);
+
 
 
 // catch 404 and forward to error handler
