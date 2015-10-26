@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var sports = require('./routes/sports');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var clients = require('./routes/clients');
 var passport = require('passport');
 var authController = require('./routes/auth');
 var app = express();
@@ -21,7 +22,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/sports',authController.isAuthenticated, sports);
+app.use('/api/clients',authController.isAuthenticated, clients);
 app.use('/api/users', users);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
