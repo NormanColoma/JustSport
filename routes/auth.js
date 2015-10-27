@@ -26,7 +26,8 @@ passport.use(new BasicStrategy(
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'password',
+        session: false
     },
     function(email, password, done) {
         models.user.findOne({where:{email:email}}).then(function(user){
@@ -64,17 +65,6 @@ passport.use(new BearerStrategy(
         });
     }
 ));
-
-passport.serializeUser(function(user, done) {
-    done(null, user.uuid);
-});
-
-// used to deserialize the user
-passport.deserializeUser(function(id, done) {
-    models.user.findOne({where:{uuid:id}}).then(function(user){
-        done(null,user);
-    });
-});
 
 exports.isAuthenticated = passport.authenticate(['basic', 'bearer'], { session : false });
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session : false });

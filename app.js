@@ -5,6 +5,7 @@ var sports = require('./routes/sports');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var clients = require('./routes/clients');
+var login = require('./routes/login');
 var passport = require('passport');
 var authController = require('./routes/auth');
 var session = require('express-session');
@@ -42,13 +43,7 @@ app.use('/', routes);
 app.use('/api/sports',authController.isBearerAuthenticated, sports);
 app.use('/api/clients',authController.isBearerAuthenticated, clients);
 app.use('/api/users', users);
-app.get('/login', function(req,res){
-  res.render('login');
-})
-app.post('/login',
-    passport.authenticate('local',  { successRedirect: '/',
-      failureRedirect: '/login'})
-);
+app.use('/api/login', login);
 
 
 
