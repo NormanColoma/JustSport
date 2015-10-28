@@ -4,6 +4,9 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 var models  = require('../models');
+var jwt = require('jwt-simple');
+var moment = require('moment');
+var secret = '123456';
 
 passport.use(new BasicStrategy(
     function(email, password, done){
@@ -24,23 +27,6 @@ passport.use(new BasicStrategy(
 ));
 
 
-passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password',
-        session: false
-    },
-    function(email, password, done) {
-        models.user.findOne({where:{email:email}}).then(function(user){
-            if(!user)
-                return done(null, false, { message: 'Incorrect username.' });
-            if(!models.user.verifyPassword(password, user.pass))
-                return done(null, false, { message: 'Incorrect password.' });
-            return done(null, user);
-        });
-    }
-));
-
-
 passport.use('client-basic', new BasicStrategy(
     function(clientId, clientSecret, done) {
         models.client.find({ where: {clientId: clientId} }).then(function(client){
@@ -53,20 +39,26 @@ passport.use('client-basic', new BasicStrategy(
 
 passport.use(new BearerStrategy(
     function(accessToken, done) {
-        models.token.findOne({ where: {token: accessToken} }).then(function(token){
-            if(!token)
+        try {
+            var decodedToken = jwt.decode(accessToken, secret);
+        }catch(err){
+            return done(null,false);
+        }
+        console.log(decodedToken.iss);
+        if(decodedToken.exp <= moment().valueOf()) {
+            return done(null, false);
+        }
+        models.user.findOne({ where: {uuid: decodedToken.iss} }).then(function(user){
+            if(!user)
                 return done(null,false);
-            models.user.findOne({ where: {uuid: token.userId} }).then(function(user){
-                if(!user)
-                    return done(null,false);
-                done(null,user,{scope: '*'})
-
-            });
+            done(null,user,{scope: '*'})
+        }).catch(function(err){
+           return (null,false);
         });
     }
 ));
 
-exports.isAuthenticated = passport.authenticate(['basic', 'bearer'], { session : false });
+exports.isAuthenticated = passport.authenticate(['basic'], { session : false });
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session : false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });
 exports.isLocalAuthenticated = passport.authenticate('local', {session:false});

@@ -3,6 +3,9 @@
  */
 var oauth2orize = require('oauth2orize');
 var models  = require('../models');
+var moment = require('moment');
+var jwt = require('jwt-simple');
+var secret = '123456';
 
 var server = oauth2orize.createServer();
 
@@ -46,16 +49,34 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
             return done(null,false);
 
         authCode.destroy().then(function(){
-            var token = models.token.build({
-                token: uid(256),
-                clientId: authCode.clientId,
-                userId: authCode.userId
-            });
+            var expires = moment().add(7, 'days').valueOf();
+            var token = jwt.encode({
+                iss: authCode.userId,
+                client: authCode.clientId,
+                exp: expires
+            }, secret);
+            done(null,token);
+        });
 
-            token.save().then(function(){
-                done(null,token);
-            })
-        })
+
+    });
+}));
+
+
+server.exchange(oauth2orize.exchange.password(function(client,username, password, done) {
+    models.user.findOne({where:{email:username}}).then(function(user){
+
+        if(user === undefined)
+            return done(null,false);
+        if(!models.user.verifyPassword(password, user.pass))
+            return done(null,false);
+        var expires = moment().add(7, 'days').valueOf();
+        var token = jwt.encode({
+            iss: user.uuid,
+            client: 'trusted',
+            exp: expires
+        }, secret);
+        done(null,token);
     });
 }));
 

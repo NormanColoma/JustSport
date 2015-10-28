@@ -5,7 +5,6 @@ var sports = require('./routes/sports');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var clients = require('./routes/clients');
-var login = require('./routes/login');
 var passport = require('passport');
 var authController = require('./routes/auth');
 var session = require('express-session');
@@ -16,7 +15,6 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -41,9 +39,8 @@ router.route('/oauth2/token')
 app.use('/api', router);
 app.use('/', routes);
 app.use('/api/sports',authController.isBearerAuthenticated, sports);
-app.use('/api/clients',authController.isBearerAuthenticated, clients);
+app.use('/api/clients',authController.isAuthenticated, clients);
 app.use('/api/users', users);
-app.use('/api/login', login);
 
 
 

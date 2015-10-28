@@ -1,6 +1,6 @@
 extends layout
 block content
-   p Hi #{user.username}
+   p Hi #{user.name}
    p
       b #{client.name} is requesting full acces to your account
    form(action="/api/oauth2/authorize", method="post")
