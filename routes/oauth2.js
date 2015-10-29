@@ -51,8 +51,8 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
         authCode.destroy().then(function(){
             var expires = moment().add(7, 'days').valueOf();
             var token = jwt.encode({
-                iss: authCode.userId,
-                client: authCode.clientId,
+                iss: authCode.clientId,
+                sub: authCode.userId,
                 exp: expires
             }, secret);
             done(null,token);
@@ -72,8 +72,8 @@ server.exchange(oauth2orize.exchange.password(function(client,username, password
             return done(null,false);
         var expires = moment().add(7, 'days').valueOf();
         var token = jwt.encode({
-            iss: user.uuid,
-            client: 'trusted',
+            iss: 'trusted',
+            sub: user.uuid,
             exp: expires
         }, secret);
         done(null,token);

@@ -8,6 +8,8 @@
 
 var app = require('../app');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
 var models = require("../models");
 
 /**
@@ -18,19 +20,16 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 
-
-app.listen(3000, function(){
-    console.log('Express en el puerto 3000');
-});
-
-
-
+var options = {
+    key: fs.readFileSync('../fixtures/keys/server.key'),
+    cert: fs.readFileSync('../fixtures/keys/server.crt')
+};
 
 /**
- * Create HTTP server.
+ * Create HTTPs server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app).listen(3000);
 
 /**
  * Listen on provided port, on all network interfaces.
