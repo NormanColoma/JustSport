@@ -5,7 +5,6 @@ var oauth2orize = require('oauth2orize');
 var models  = require('../models');
 var moment = require('moment');
 var jwt = require('jwt-simple');
-var secret = '123456';
 
 var server = oauth2orize.createServer();
 
@@ -54,7 +53,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
                 iss: authCode.clientId,
                 sub: authCode.userId,
                 exp: expires
-            }, secret);
+            }, global.secret);
             done(null,token);
         });
 
@@ -75,7 +74,7 @@ server.exchange(oauth2orize.exchange.password(function(client,username, password
             iss: 'trusted',
             sub: user.uuid,
             exp: expires
-        }, secret);
+        }, global.secret);
         done(null,token);
     });
 }));

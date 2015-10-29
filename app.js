@@ -11,6 +11,7 @@ var session = require('express-session');
 var oauth2Controller = require('./routes/oauth2');
 var router = express.Router();
 var app = express();
+global.secret = '23asdfwer5676asdfaqzxsrt56woppxcjq12341pasdfasfd547kjxhoaefr44556añksdfjlka13a2adf4134sjdfla';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -18,7 +18,7 @@ var models = require("../models");
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
+app.set('jwt-secret', '123456');
 
 var options = {
     key: fs.readFileSync('../fixtures/keys/server.key'),
@@ -28,7 +28,6 @@ var options = {
 /**
  * Create HTTPs server.
  */
-
 var server = https.createServer(options, app).listen(3000);
 
 /**

@@ -5,7 +5,6 @@ var BearerStrategy = require('passport-http-bearer').Strategy;
 var models  = require('../models');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-var secret = '123456';
 
 passport.use(new BasicStrategy(
     function(email, password, done){
@@ -39,7 +38,7 @@ passport.use('client-basic', new BasicStrategy(
 passport.use(new BearerStrategy(
     function(accessToken, done) {
         try {
-            var decodedToken = jwt.decode(accessToken, secret);
+            var decodedToken = jwt.decode(accessToken, global.secret);
         }catch(err){
             return done(null,false);
         }
