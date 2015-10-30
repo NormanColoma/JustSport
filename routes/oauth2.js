@@ -43,9 +43,11 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
         if(authCode === undefined)
             return done(null,false);
         if(client.clientId !== authCode.clientId)
-            return done(null,false);
+            return done(null, false);
+
         if(redirectUri !== authCode.redirectUri)
-            return done(null,false);
+            return done(null, false);
+
 
         authCode.destroy().then(function(){
             var expires = moment().add(7, 'days').valueOf();

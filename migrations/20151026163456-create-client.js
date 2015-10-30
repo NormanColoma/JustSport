@@ -16,11 +16,13 @@ module.exports = {
       clientId: {
         type: Sequelize.UUID,
         unique: true,
-        required:true
+        required:true,
+        defaultValue: Sequelize.UUIDV4
       },
       clientSecret: {
         type: Sequelize.UUID,
-        required:true
+        required:true,
+        defaultValue: Sequelize.UUIDV4
       },
       userId: {
         type: Sequelize.UUID,
@@ -30,11 +32,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: new Date()
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: new Date()
       }
     });
   },
