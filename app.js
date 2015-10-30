@@ -10,18 +10,27 @@ var authController = require('./routes/auth');
 var session = require('express-session');
 var oauth2Controller = require('./routes/oauth2');
 var router = express.Router();
+var forceSSL = require('express-force-ssl');
 var app = express();
 global.secret = '23asdfwer5676asdfaqzxsrt56woppxcjq12341pasdfasfd547kjxhoaefr44556añksdfjlka13a2adf4134sjdfla';
+global.port = '3000';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.set('forceSSLOptions', {
+  enable301Redirects: true,
+  trustXFPHeader: false,
+  httpsPort: 3000,
+  sslRequiredMessage: 'SSL Required.'
+});
 
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(forceSSL);
 app.use(session({
   secret: 'Super Secret Session Key',
   saveUninitialized: true,
@@ -39,10 +48,9 @@ router.route('/oauth2/token')
     .post(authController.isClientAuthenticated, oauth2Controller.token);
 app.use('/api', router);
 app.use('/', routes);
-app.use('/api/sports',authController.isBearerAuthenticated, sports);
-app.use('/api/clients',authController.isAuthenticated, clients);
+app.use('/api/sports', sports);
+app.use('/api/clients',authController.isBearerAuthenticated, clients);
 app.use('/api/users', users);
-
 
 
 // catch 404 and forward to error handler

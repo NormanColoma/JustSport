@@ -18,7 +18,12 @@ var models = require("../models");
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-app.set('jwt-secret', '123456');
+app.set('forceSSLOptions', {
+    enable301Redirects: true,
+    trustXFPHeader: false,
+    httpsPort: 3000,
+    sslRequiredMessage: 'SSL Required.'
+});
 
 var options = {
     key: fs.readFileSync('../fixtures/keys/server.key'),
@@ -28,8 +33,11 @@ var options = {
 /**
  * Create HTTPs server.
  */
-var server = https.createServer(options, app).listen(3000);
-
+var server = https.createServer(options, app);
+var listener = server.listen(3000, function(){
+    console.log('Listening on port ' + listener.address().port); //Listening on port 8888
+});
+http.createServer(app).listen(8080)
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -96,4 +104,3 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
 }
-

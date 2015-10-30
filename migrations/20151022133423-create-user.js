@@ -9,7 +9,8 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        required:true
       },
       lname: {
         type: Sequelize.STRING
@@ -23,6 +24,10 @@ module.exports = {
       },
       gender: {
         type: Sequelize.STRING
+      },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'user'
       },
       createdAt: {
         allowNull: false,
