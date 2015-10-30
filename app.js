@@ -30,7 +30,7 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(forceSSL);
+//app.use(forceSSL);
 app.use(session({
   secret: 'Super Secret Session Key',
   saveUninitialized: true,

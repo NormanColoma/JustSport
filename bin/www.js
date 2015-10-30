@@ -18,12 +18,6 @@ var models = require("../models");
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-app.set('forceSSLOptions', {
-    enable301Redirects: true,
-    trustXFPHeader: false,
-    httpsPort: 3000,
-    sslRequiredMessage: 'SSL Required.'
-});
 
 var options = {
     key: fs.readFileSync('../fixtures/keys/server.key'),
@@ -35,7 +29,7 @@ var options = {
  */
 var server = https.createServer(options, app);
 var listener = server.listen(3000, function(){
-    console.log('Listening on port ' + listener.address().port); //Listening on port 8888
+    console.log('Listening on port ' + listener.address().port);
 });
 //http.createServer(app).listen(8080)
 
