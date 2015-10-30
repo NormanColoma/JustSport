@@ -2,28 +2,39 @@
 
 var bcrypt = require('bcrypt-nodejs');
 
-module.exports = function(sequelize, Sequelize) {
+module.exports = function(sequelize, DataTypes) {
   var user = sequelize.define('user', {
-    name: Sequelize.STRING,
-    lname: Sequelize.STRING,
-    email: Sequelize.STRING,
-    pass: Sequelize.STRING,
-    gender: Sequelize.STRING
+    uuid: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    name: DataTypes.STRING,
+    lname: DataTypes.STRING,
+    email: DataTypes.STRING,
+    pass: DataTypes.STRING,
+    gender: DataTypes.STRING,
+    role: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+      },
+      verifyPassword: function(pass, hPass){
+         return bcrypt.compareSync(pass, hPass);
       }
     },
     hooks: {
-      beforeCreate: function (user){
-        return bcrypt.hash(user.pass, null, null, function(err, hash) {
-           user.pass = hash;
+      beforeCreate: function (user, options, done){
+        bcrypt.hash(user.pass, null, null, function(err, hash) {
+          user.pass = hash;
+          done();
         });
       },
-      beforeUpdate: function (user) {
-        return bcrypt.hash(user.pass, null, null, function (err, hash) {
+      beforeUpdate:function (user, options, done){
+        bcrypt.hash(user.pass, null, null, function(err, hash) {
           user.pass = hash;
+          done();
         });
       }
     }

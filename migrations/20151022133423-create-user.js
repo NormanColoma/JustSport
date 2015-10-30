@@ -2,14 +2,15 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
     return queryInterface.createTable('users', {
-      id: {
+      uuid: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        required:true
       },
       lname: {
         type: Sequelize.STRING
@@ -24,13 +25,19 @@ module.exports = {
       gender: {
         type: Sequelize.STRING
       },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'user'
+      },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: new Date()
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: new Date()
       }
     });
   },
