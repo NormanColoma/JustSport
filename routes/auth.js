@@ -2,6 +2,7 @@
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 var models  = require('../models');
 var jwt = require('jwt-simple');
 var moment = require('moment');
@@ -23,6 +24,37 @@ passport.use(new BasicStrategy(
         })
     }
 ));
+
+
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+    function(email, password, done){
+        models.user.find({ where: {email: email} }).then(function(user){
+            if(!user){
+                return done(null,false);
+            }
+            if(models.user.verifyPassword(password, user.pass)) {
+                user.pass = password;
+                console.log(user.pass);
+                return done(null, user);
+            }
+            return done(null, false);
+
+        }).catch(function(err){
+            throw err;
+        })
+    }
+))
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+})
+
+passport.deserializeUser(function(user, done) {
+    done(null,user);
+})
 
 
 passport.use('client-basic', new BasicStrategy(
@@ -58,3 +90,4 @@ passport.use(new BearerStrategy(
 exports.isAuthenticated = passport.authenticate(['basic'], { session : false });
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session : false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });
+exports.isLocalAuthenticated = passport.authenticate('local');

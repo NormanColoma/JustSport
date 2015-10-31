@@ -21,6 +21,16 @@ server.deserializeClient(function(id, done) {
 });
 
 
+server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
+    var expires = moment().add(7, 'days').valueOf();
+    var token = jwt.encode({
+        iss: client,
+        sub: user.uuid,
+        exp: expires
+    }, global.secret);
+    done(null,token);
+}))
+
 // Register authorization code grant type
 server.grant(oauth2orize.grant.code(function(client, redirectUri, user, ares, done) {
     // Create a new authorization code
@@ -64,7 +74,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
 }));
 
 
-server.exchange(oauth2orize.exchange.password(function(client,username, password, done) {
+server.exchange(oauth2orize.exchange.password(function(clientId,username, password, done) {
     models.user.findOne({where:{email:username}}).then(function(user){
 
         if(user === undefined)
@@ -73,7 +83,7 @@ server.exchange(oauth2orize.exchange.password(function(client,username, password
             return done(null,false);
         var expires = moment().add(7, 'days').valueOf();
         var token = jwt.encode({
-            iss: 'trusted',
+            iss: clientId,
             sub: user.uuid,
             exp: expires
         }, global.secret);
@@ -99,18 +109,34 @@ function getRandomInt(min, max) {
 }
 
 exports.authorization = [
+    function(req, res, next) {
+        if (req.user) {
+            next()
+        }
+        else {
+            res.redirect('/api/oauth2/authorization')
+        }
+    },
     server.authorization(function(clientId, redirectUri, done) {
         models.client.findOne({where:{clientId: clientId}}).then(function(client){
             return done(null,client,redirectUri);
         });
     }),
     function(req, res){
-        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client, redirectUri: req.oauth2.redirectURI});
     }
 ]
 
 // User decision endpoint
 exports.decision = [
+    function(req, res, next) {
+        if (req.user) {
+            next()
+        }
+        else {
+            res.redirect('/api/oauth2/authorization')
+        }
+    },
     server.decision()
 ]
 

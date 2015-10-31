@@ -3,7 +3,7 @@ block content
    p Hi #{user.name}
    p
       b #{client.name} is requesting full acces to your account
-   form(action="https://localhost:3000/api/oauth2/authorize", method="post")
+   form(action="/api/oauth2/authorize?email=#{user.email}&password=#{user.pass}&grant_type=token&client_id=#{client.clientId}&redirectUri=#{redirectUri}", method="post")
       input(name="transaction_id" type="hidden" value="#{transactionID}")
       div
          input(type="submit", value="Allow",id="allow")
