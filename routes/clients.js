@@ -8,12 +8,11 @@ var router  = express.Router();
 
 
 router.get('/:user_id', function(req, res) {
-
-        models.client.find({where:{userId: req.params.user_id}}).then(function (clients) {
-            res.status(200).send(clients);
-        }).catch(function(err){
-            res.status(500).send(err);
-        });
+    models.client.find({where:{userId: req.params.user_id}}).then(function (clients) {
+        res.status(200).send(clients);
+    }).catch(function(err){
+        res.status(500).send(err);
+    });
 });
 
 router.post('/new', function(req, res) {
