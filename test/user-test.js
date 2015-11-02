@@ -31,6 +31,7 @@ describe('User', function(){
         "password" : "adi2015"
     };
     var token = "";
+    var user_id="";
     before('Setting database in a know state',function(done) {
         umzug.down('20151022133423-create-user').then(function (migrations) {
             umzug.up('20151022133423-create-user').then(function(){
@@ -71,6 +72,7 @@ describe('User', function(){
                 assert(res.body.access_token);
                 token = res.body.access_token;
                 models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
+                    user_id = user.uuid;
                     supertest(app)
                         .delete('/api/users/'+user.uuid)
                         .set('Authorization', 'Bearer '+token)
@@ -80,14 +82,36 @@ describe('User', function(){
             }).end(done);
 
     });
-    it('Deleting user without token access. Should return status 404', function(done){
+    it('Deleting user without token access. Should return status 403', function(done){
         supertest(app)
-            .delete('/api/users/12345-45546')
+            .delete('/api/users/111-222-adf568')
             .set('Authorization', 'Bearer '+token)
             .expect(403)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
                 assert.equal(res.body.message, 'You are not authorized to perform this action');
+            }).end(done);
+    });
+    it('Retrieving info about user that exists. Should return status 200', function(done){
+        supertest(app)
+            .get('/api/users/'+user_id)
+            .expect(200)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.name, 'Norman');
+                assert.equal(res.body.lname, 'Coloma García');
+                assert.equal(res.body.email, 'ua.norman@mail.com')
+                assert.equal(res.body.gender, 'male');
+                assert.equal(res.body.role, 'user')
+            }).end(done);
+    });
+    it('Retrieving info about user that exists. Should return status 200', function(done){
+        supertest(app)
+            .get('/api/users/111-222-adf568')
+            .expect(404)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, 'User was not found');
             }).end(done);
     });
 });
