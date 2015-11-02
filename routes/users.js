@@ -22,11 +22,21 @@ router.post('/new', function(req, res) {
   })
 });
 
+router.get('/:id', function(req, res) {
+  models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role']}).then(function (user) {
+      if (user == undefined)
+        res.status(404).send({message: "User was not found"});
+      else {
+        res.status(200).send(user);
+      }
+    }).catch(function(err){
+      res.status(500).send(err);
+    });
+});
 
 
 router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
-
       models.user.destroy({
         where: {
           uuid: req.params.id
@@ -38,12 +48,12 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
         else
           res.status(404).send({message: "User was not found"});
       }).catch(function (err) {
-        console.log(err);
         res.status(500).send(err);
       })
     }
-   else
+   else {
       res.status(403).send({message: "You are not authorized to perform this action"});
+    }
 });
 
 module.exports = router;

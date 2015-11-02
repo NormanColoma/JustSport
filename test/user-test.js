@@ -65,7 +65,7 @@ describe('User', function(){
                 assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
             }).end(done);
     });
-    it('Deleting user that exists. Should return status 204', function(done){
+    it('Getting access token and user id', function(done){
         supertest(app)
             .post('/api/oauth2/token').send(credentials)
             .expect(200).expect(function(res){
@@ -73,16 +73,11 @@ describe('User', function(){
                 token = res.body.access_token;
                 models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
                     user_id = user.uuid;
-                    supertest(app)
-                        .delete('/api/users/'+user.uuid)
-                        .set('Authorization', 'Bearer '+token)
-                        .expect(204)
-                        .expect('Content-type', 'application/json; charset=utf-8')
+                    assert(user_id);
                 });
             }).end(done);
-
     });
-    it('Deleting user without token access. Should return status 403', function(done){
+    it('Deleting user without being himself. Should return status 403', function(done){
         supertest(app)
             .delete('/api/users/111-222-adf568')
             .set('Authorization', 'Bearer '+token)
@@ -92,20 +87,28 @@ describe('User', function(){
                 assert.equal(res.body.message, 'You are not authorized to perform this action');
             }).end(done);
     });
-    it('Retrieving info about user that exists. Should return status 200', function(done){
+    it('Deleting user that exists. Should return status 204', function(done){
         supertest(app)
-            .get('/api/users/'+user_id)
-            .expect(200)
-            .expect('Content-type', 'application/json; charset=utf-8')
-            .expect(function(res){
-                assert.equal(res.body.name, 'Norman');
-                assert.equal(res.body.lname, 'Coloma García');
-                assert.equal(res.body.email, 'ua.norman@mail.com')
-                assert.equal(res.body.gender, 'male');
-                assert.equal(res.body.role, 'user')
-            }).end(done);
+            .delete('/api/users/'+user_id)
+            .set('Authorization', 'Bearer '+token)
+            .expect(204)
+            .end(done);
     });
     it('Retrieving info about user that exists. Should return status 200', function(done){
+        models.user.create(user).then(function(user){
+            supertest(app)
+                .get('/api/users/'+user.uuid)
+                .expect(200)
+                .expect(function(res){
+                    assert.equal(res.body.name, 'Norman');
+                    assert.equal(res.body.lname, 'Coloma García');
+                    assert.equal(res.body.email, 'ua.norman@mail.com')
+                    assert.equal(res.body.gender, 'male');
+                    assert.equal(res.body.role, 'user')
+                }).end(done);
+        });
+    });
+    it('Retrieving info about user that does not exist. Should return status 404', function(done){
         supertest(app)
             .get('/api/users/111-222-adf568')
             .expect(404)

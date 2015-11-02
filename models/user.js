@@ -25,10 +25,10 @@ module.exports = function(sequelize, DataTypes) {
          return bcrypt.compareSync(pass, hPass);
       },
       selfUser: function (token, user_id) {
-
         var decodedToken = jwt.decode(token, global.secret);
-        if(decodedToken.sub === user_id)
+        if(decodedToken.sub === user_id) {
           return true;
+        }
         return false;
       }
     },
