@@ -1,8 +1,7 @@
 var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
-
-
+var authController = require('../routes/auth');
 
 router.post('/new', function(req, res) {
   models.user.create({
@@ -21,6 +20,30 @@ router.post('/new', function(req, res) {
   }).catch(function (err){
     res.status(500).send(err);
   })
+});
+
+
+
+router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
+    if(models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
+
+      models.user.destroy({
+        where: {
+          uuid: req.params.id
+        }
+      }).then(function (rows) {
+        if (rows > 0) {
+          res.status(204).send();
+        }
+        else
+          res.status(404).send({message: "User was not found"});
+      }).catch(function (err) {
+        console.log(err);
+        res.status(500).send(err);
+      })
+    }
+   else
+      res.status(403).send({message: "You are not authorized to perform this action"});
 });
 
 module.exports = router;

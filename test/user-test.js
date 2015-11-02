@@ -24,6 +24,13 @@ var umzug = new Umzug({
 });
 
 describe('User', function(){
+    var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
+    var credentials = {
+        "grant_type" : "password",
+        "username" : "ua.norman@mail.com",
+        "password" : "adi2015"
+    };
+    var token = "";
     before('Setting database in a know state',function(done) {
         umzug.down('20151022133423-create-user').then(function (migrations) {
             umzug.up('20151022133423-create-user').then(function(){
@@ -31,8 +38,8 @@ describe('User', function(){
             });
         });
     });
-    var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
     it('Creating user that does not exist alrady. Should return the posted user', function(done){
+
         supertest(app)
             .post('/api/users/new').send(user)
             .expect(201)
@@ -58,21 +65,29 @@ describe('User', function(){
             }).end(done);
     });
     it('Deleting user that exists. Should return status 204', function(done){
-        models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
-            supertest(app)
-                .delete('/api/users/'+user.uuid)
-                .expect(204)
-                .expect('Content-type', 'application/json; charset=utf-8')
-                .end(done);
-        })
+        supertest(app)
+            .post('/api/oauth2/token').send(credentials)
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                token = res.body.access_token;
+                models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
+                    supertest(app)
+                        .delete('/api/users/'+user.uuid)
+                        .set('Authorization', 'Bearer '+token)
+                        .expect(204)
+                        .expect('Content-type', 'application/json; charset=utf-8')
+                });
+            }).end(done);
+
     });
-    it('Deleting user that doesn not exist. Should return status 404', function(done){
+    it('Deleting user without token access. Should return status 404', function(done){
         supertest(app)
             .delete('/api/users/12345-45546')
-            .expect(404)
+            .set('Authorization', 'Bearer '+token)
+            .expect(403)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.message, 'User was not found');
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
             }).end(done);
     });
 });
