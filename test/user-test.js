@@ -8,7 +8,7 @@ var sequelize = new Sequelize(
     config.database,
     config.username,
     config.password,
-    config
+    {logging: false} //Disable output from each time that sequelize is being fired
 );
 var Umzug = require('umzug');
 var umzug = new Umzug({
@@ -20,7 +20,7 @@ var umzug = new Umzug({
     storageOptions: {
         sequelize: sequelize
     },
-    logging: console.log
+    logging: false
 });
 
 describe('User', function(){
@@ -57,14 +57,16 @@ describe('User', function(){
                 assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
             }).end(done);
     });
-    xit('Deleting user that exists. Should return status 204', function(done){
+    it('Deleting user that exists. Should return status 204', function(done){
+        var user_id = models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(uuid){
+            console.log(uuid);
+            return uuid;
+        })
+        console.log(user_id);
         supertest(app)
-            models.user.findOne({where : {email: 'ua.norman@mail.com'}})
-            .delete('/api/users/').send(user)
-            .expect(500)
+            .delete('/api/users/'+user_id)
+            .expect(204)
             .expect('Content-type', 'application/json; charset=utf-8')
-            .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
-            }).end(done);
+            .end(done);
     });
 });

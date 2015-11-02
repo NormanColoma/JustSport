@@ -39,13 +39,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-// Create endpoint handlers for oauth2 authorize
-/*
-router.route('/oauth2/authorize')
-    .get(authController.isLocalAuthenticated, oauth2Controller.authorization)
-    .post(oauth2Controller.decision);
-*/
 router.route('/oauth2/authorize')
     .get(oauth2Controller.authorization)
     .post(oauth2Controller.decision);
