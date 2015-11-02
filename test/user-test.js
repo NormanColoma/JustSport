@@ -58,15 +58,21 @@ describe('User', function(){
             }).end(done);
     });
     it('Deleting user that exists. Should return status 204', function(done){
-        var user_id = models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(uuid){
-            console.log(uuid);
-            return uuid;
+        models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
+            supertest(app)
+                .delete('/api/users/'+user.uuid)
+                .expect(204)
+                .expect('Content-type', 'application/json; charset=utf-8')
+                .end(done);
         })
-        console.log(user_id);
+    });
+    it('Deleting user that doesn not exist. Should return status 404', function(done){
         supertest(app)
-            .delete('/api/users/'+user_id)
-            .expect(204)
+            .delete('/api/users/12345-45546')
+            .expect(404)
             .expect('Content-type', 'application/json; charset=utf-8')
-            .end(done);
+            .expect(function(res){
+                assert.equal(res.body.message, 'User was not found');
+            }).end(done);
     });
 });
