@@ -124,6 +124,51 @@ describe('Sports', function(){
 
     });
 
+    it('Updating sport that exists. Should return status 204', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/1').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(204)
+            .end(done);
+    })
+
+    it('Updating sport that does not exist. Should return status 404', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/5').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(404)
+            .expect(function(res){
+                assert.equal(res.body.message, 'The sport was not found');
+            }).end(done);
+    })
+
+    it('Updating sport passing a string as id. Should return status 400', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/Zumba').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(400)
+            .expect(function(res){
+                assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
+            }).end(done);
+    })
+
+
+    it('Updating sport with a malformed JSON. Should return status 400', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/1').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(204)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'Json is malformed, it must include the name field');
+            })
+            .end(done);
+    })
+
+
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
             done();

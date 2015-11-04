@@ -54,7 +54,6 @@ router.get('/:id/establishments', function(req, res) {
 
 });
 
-
 router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
   if (req.params.id != parseInt(req.params.id, 10)){
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
@@ -119,7 +118,7 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
         })
     }
     else
-      res.status(400).send({message: "Json is malformed"});
+      res.status(400).send({message: "Json is malformed, it must include the name field"});
   }
 });
 
