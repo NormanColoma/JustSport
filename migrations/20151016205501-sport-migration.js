@@ -20,6 +20,7 @@ module.exports = {
             defaultValue: new Date()
           },
           name: Sequelize.STRING,
+          unique: true
         }
     )
   },
