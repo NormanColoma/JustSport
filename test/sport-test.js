@@ -128,7 +128,7 @@ describe('Sports', function(){
         var sport = {name: 'Crossfit'};
         supertest(app)
             .put('/api/sports/1').send(sport)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+token)
             .expect(204)
             .end(done);
     })
@@ -137,7 +137,7 @@ describe('Sports', function(){
         var sport = {name: 'Crossfit'};
         supertest(app)
             .put('/api/sports/5').send(sport)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+token)
             .expect(404)
             .expect(function(res){
                 assert.equal(res.body.message, 'The sport was not found');
@@ -148,7 +148,7 @@ describe('Sports', function(){
         var sport = {name: 'Crossfit'};
         supertest(app)
             .put('/api/sports/Zumba').send(sport)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+token)
             .expect(400)
             .expect(function(res){
                 assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
@@ -160,7 +160,7 @@ describe('Sports', function(){
         var sport = {desc: 'Crossfit'};
         supertest(app)
             .put('/api/sports/1').send(sport)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+token)
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'Json is malformed, it must include the name field');
@@ -175,6 +175,19 @@ describe('Sports', function(){
             .expect(401)
             .end(done);
     })
+
+    it('Updating sport without being owner. Should return status 403', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/1').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
+            })
+            .end(done);
+    })
+
 
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {

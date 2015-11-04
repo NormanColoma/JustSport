@@ -54,25 +54,7 @@ router.get('/:id/establishments', function(req, res) {
 
 });
 
-router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
-  if (req.params.id != parseInt(req.params.id, 10)){
-    res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
-  }
-  else {
-    models.sport.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then(function (rows) {
-      if (rows > 0)
-        res.status(204).send();
-      else
-        res.status(404).send({message: "The sport was not found"});
-    }).catch(function(err){
-      res.status(500).send(err);
-    })
-  }
-});
+
 
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
   if(models.user.isOwner(req.get('Authorization').slice('7'))){
@@ -100,7 +82,8 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }
   else {
-    if (req.body.name) {
+    if(models.user.isOwner(req.get('Authorization').slice('7'))) {
+      if (req.body.name) {
         models.sport.update({
           name: req.body.name,
           updatedAt: new Date()
@@ -109,16 +92,19 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
             id: req.params.id
           }
         }).then(function (updated) {
-          if(updated > 0)
+          if (updated > 0)
             res.status(204).send();
           else
             res.status(404).send({message: "The sport was not found"});
-        }).catch(function(err){
+        }).catch(function (err) {
           res.status(500).send(err);
         })
+      }
+      else
+        res.status(400).send({message: "Json is malformed, it must include the name field"});
     }
     else
-      res.status(400).send({message: "Json is malformed, it must include the name field"});
+      res.status(403).send({message: "You are not authorized to perform this action"});
   }
 });
 
