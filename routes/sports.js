@@ -1,7 +1,7 @@
 var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
-
+var authController = require('../routes/auth');
 
 
 router.get('', function(req, res) {
@@ -55,7 +55,7 @@ router.get('/:id/establishments', function(req, res) {
 });
 
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
   if (req.params.id != parseInt(req.params.id, 10)){
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }
@@ -75,7 +75,7 @@ router.delete('/:id', function(req, res) {
   }
 });
 
-router.post('/new', function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, function(req, res) {
   if(req.body.name) {
     models.sport.create({
       name: req.body.name
@@ -91,7 +91,7 @@ router.post('/new', function(req, res) {
     res.status(400).send({message: "Json is malformed"});
 });
 
-router.put('/:id', function(req, res) {
+router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
   if (req.params.id != parseInt(req.params.id, 10)){
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }
