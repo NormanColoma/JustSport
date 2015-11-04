@@ -32,11 +32,14 @@ describe('User', function(){
     };
     var token = "";
     var user_id="";
-    before('Setting database in a know state',function(done) {
-        umzug.down('20151022133423-create-user').then(function (migrations) {
+    before('Setting database in a known state',function(done) {
+        umzug.execute({
+            migrations: ['20151022133423-create-user'],
+            method: 'down'
+        }).then(function (migrations) {
             umzug.up('20151022133423-create-user').then(function(){
                 done();
-            });
+            })
         });
     });
     it('Creating user that does not exist alrady. Should return the posted user', function(done){
@@ -116,5 +119,11 @@ describe('User', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'User was not found');
             }).end(done);
+    });
+
+    after('Dropping database',function(done) {
+        umzug.down('20151022133423-create-user').then(function (migrations) {
+            done();
+        });
     });
 });
