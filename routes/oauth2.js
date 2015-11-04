@@ -85,7 +85,8 @@ server.exchange(oauth2orize.exchange.password(function(clientId,username, passwo
         var token = jwt.encode({
             iss: clientId,
             sub: user.uuid,
-            exp: expires
+            exp: expires,
+            role: user.role
         }, global.secret);
         done(null,token);
     });

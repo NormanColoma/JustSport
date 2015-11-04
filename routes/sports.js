@@ -76,19 +76,24 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
 });
 
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
-  if(req.body.name) {
-    models.sport.create({
-      name: req.body.name
-    }).then(function (sport) {
-      var url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/" + sport.id;
-      res.setHeader("Location", url);
-      res.status(201).send(sport);
-    }).catch(function(err){
-      res.status(500).send(err);
-    })
+  if(models.user.isOwner(req.get('Authorization').slice('7'))){
+    if (req.body.name) {
+      models.sport.create({
+        name: req.body.name
+      }).then(function (sport) {
+        var url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/" + sport.id;
+        res.setHeader("Location", url);
+        res.status(201).send(sport);
+      }).catch(function (err) {
+        res.status(500).send(err);
+      })
+    }
+    else
+      res.status(400).send({message: "Json is malformed"});
   }
   else
-    res.status(400).send({message: "Json is malformed"});
+    res.status(403).send({message: "You are not authorized to perform this action"});
+
 });
 
 router.put('/:id', authController.isBearerAuthenticated, function(req, res) {

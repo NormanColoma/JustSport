@@ -27,33 +27,54 @@ var umzug = new Umzug({
 });
 
 describe('Sports', function(){
-    var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
+    var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
+    var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
         "password" : "adi2015"
     };
     var token = "";
-    var user_id="";
+    var user_token = "";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151022133423-create-user', '20151016205501-sport-migration'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user', '20151016205501-sport-migration']).then(function(){
-                models.user.create(user).then(function(user){
-                    supertest(app)
-                        .post('/api/oauth2/token').send(credentials)
-                        .expect(200).expect(function(res){
-                            assert(res.body.access_token);
-                            token = res.body.access_token;
-                            user_id = user.uuid;
-                        }).end(done);
-                });
+            umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
+                models.user.create(owner).then(function(){
+                    models.user.create(user).then(function(){
+                        done();
+                    })
+                })
             })
         });
     });
-    
+
+    it('Getting access token', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send(credentials)
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                token = res.body.access_token;
+            }).end(done);
+
+    });
+
+    it('Getting access token for user', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "pepe@mail.com",
+                "password" : "adi2015"
+            })
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                user_token = res.body.access_token;
+            }).end(done);
+
+    });
+
     it('Creating sport that does not exist. Should return status 201', function(done){
         var sport = {name: 'Zumba'};
         supertest(app)
@@ -76,7 +97,29 @@ describe('Sports', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
+                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+                assert.equal(res.body.errors[0].message, 'name must be unique');
+            }).end(done);
 
+    });
+
+    it('Creating sport without access token. Should return status 401', function(done){
+        var sport = {name: 'Zumba'};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .expect(401)
+            .end(done);
+    });
+
+    it('Creating sport without being owner. Should return status 403', function(done){
+        var sport = {name: 'Zumba'};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
             }).end(done);
 
     });
