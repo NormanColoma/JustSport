@@ -259,29 +259,23 @@ describe('Sports', function(){
     })
 
     it('Getting info about a sport that does not exist. Should return status 404', function(done){
-        var sport = {name: 'Crossfit'};
-        models.sport.create(sport).then(function(sport){
-            supertest(app)
-                .get('/api/sports/15')
-                .expect(404)
-                .expect(function (res) {
-                    assert.equal(res.body.message, 'The sport was not found');
-                })
-                .end(done);
-        })
+        supertest(app)
+            .get('/api/sports/15')
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The sport was not found');
+            })
+            .end(done);
     })
 
     it('Getting info about a sport passing string as id. Should return status 400', function(done){
-        var sport = {name: 'Crossfit'};
-        models.sport.create(sport).then(function(sport){
-            supertest(app)
-                .get('/api/sports/Crossfit')
-                .expect(400)
-                .expect(function (res) {
-                    assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
-                })
-                .end(done);
-        })
+        supertest(app)
+            .get('/api/sports/Crossfit')
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
+            })
+            .end(done);
     })
 
     after('Dropping database',function(done) {

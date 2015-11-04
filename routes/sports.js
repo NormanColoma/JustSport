@@ -16,7 +16,7 @@ router.get('', function(req, res) {
 
 router.get('/:id', function(req, res) {
   if (req.params.id != parseInt(req.params.id, 10)){
-    res.status(400).send({message: "The supplied id is not a numercial id"});
+    res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }else {
     models.sport.findById(req.params.id).then(function (sport) {
       if (sport == undefined)
@@ -24,6 +24,7 @@ router.get('/:id', function(req, res) {
       else
         res.status(200).send(sport);
     }).catch(function(err){
+      console.log(err)
       res.status(500).send(err);
     });
   }
