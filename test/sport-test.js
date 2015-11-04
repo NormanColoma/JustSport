@@ -278,6 +278,31 @@ describe('Sports', function(){
             .end(done);
     })
 
+    it('Getting sports without specify cursor. Should return status 200 and the first 5 sports', function(done){
+        models.sport.bulkCreate([{name: 'Zumba'},{name:'Fitness'},{name: 'Aerobic'},
+            {name: 'Spinning'}, {name: 'Step'}]).then(function(){
+            supertest(app)
+                .get('/api/sports')
+                .expect(200)
+                .expect(function (res) {
+                    assert.equal(res.body.sports.length, 5);
+                    assert.equal(res.body.sports[0].name, 'Crossfit');
+                    assert.equal(res.body.sports[1].name, 'Zumba');
+                    assert.equal(res.body.sports[2].name, 'Fitness');
+                    assert.equal(res.body.sports[3].name, 'Aerobic');
+                    assert.equal(res.body.sports[4].name, 'Spinning');
+                    assert.equal(res.body.paging.cursors.previous, 0);
+                    assert.equal(res.body.paging.cursors.next,
+                        new Buffer(res.body.sports[4].id.toString()+'&limit=5').toString('base64'));
+                    assert.equal(res.body.paging.previous, 'none');
+                    assert.equal(res.body.paging.next,
+                        'https://localhost:3000/api/sports?cursor='+
+                        new Buffer(res.body.sports[4].id.toString()+'&limit=5').toString('base64'));
+                })
+                .end(done);
+        })
+    })
+
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
             done();
