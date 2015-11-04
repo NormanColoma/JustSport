@@ -244,6 +244,46 @@ describe('Sports', function(){
             .end(done);
     })
 
+    it('Getting info about a sport that exists. Should return status 200', function(done){
+        var sport = {name: 'Crossfit'};
+        models.sport.create(sport).then(function(sport){
+            supertest(app)
+                .get('/api/sports/'+sport.id)
+                .expect(200)
+                .expect(function (res) {
+                    assert.equal(res.body.name, 'Crossfit');
+                    assert.equal(res.body.id, sport.id);
+                })
+                .end(done);
+        })
+    })
+
+    it('Getting info about a sport that does not exist. Should return status 404', function(done){
+        var sport = {name: 'Crossfit'};
+        models.sport.create(sport).then(function(sport){
+            supertest(app)
+                .get('/api/sports/15')
+                .expect(404)
+                .expect(function (res) {
+                    assert.equal(res.body.message, 'The sport was not found');
+                })
+                .end(done);
+        })
+    })
+
+    it('Getting info about a sport passing string as id. Should return status 400', function(done){
+        var sport = {name: 'Crossfit'};
+        models.sport.create(sport).then(function(sport){
+            supertest(app)
+                .get('/api/sports/Crossfit')
+                .expect(400)
+                .expect(function (res) {
+                    assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
+                })
+                .end(done);
+        })
+    })
+
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
             done();
