@@ -157,17 +157,24 @@ describe('Sports', function(){
 
 
     it('Updating sport with a malformed JSON. Should return status 400', function (done) {
-        var sport = {name: 'Crossfit'};
+        var sport = {desc: 'Crossfit'};
         supertest(app)
             .put('/api/sports/1').send(sport)
             .set('Authorization', 'Bearer '+user_token)
-            .expect(204)
+            .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'Json is malformed, it must include the name field');
             })
             .end(done);
     })
 
+    it('Updating sport whithout an access token. Should return status 401', function (done) {
+        var sport = {name: 'Crossfit'};
+        supertest(app)
+            .put('/api/sports/1').send(sport)
+            .expect(401)
+            .end(done);
+    })
 
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
