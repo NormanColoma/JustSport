@@ -34,7 +34,6 @@ router.get('/:id', function(req, res) {
     });
 });
 
-
 router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
       models.user.destroy({
