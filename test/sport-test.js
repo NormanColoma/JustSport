@@ -29,6 +29,7 @@ var umzug = new Umzug({
 describe('Sports', function(){
     var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
     var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
+    var admin = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'admin2015', gender: 'male', role: "admin"}
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -36,6 +37,7 @@ describe('Sports', function(){
     };
     var token = "";
     var user_token = "";
+    var admin_token= "";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151022133423-create-user', '20151016205501-sport-migration'],
@@ -44,7 +46,9 @@ describe('Sports', function(){
             umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
                 models.user.create(owner).then(function(){
                     models.user.create(user).then(function(){
-                        done();
+                        models.user.create(admin).then(function(){
+                            done();
+                        })
                     })
                 })
             })
@@ -71,6 +75,20 @@ describe('Sports', function(){
             .expect(200).expect(function(res){
                 assert(res.body.access_token);
                 user_token = res.body.access_token;
+            }).end(done);
+
+    });
+
+    it('Getting access token for admin', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "ua.norman@gmail.com",
+                "password" : "admin2015"
+            })
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                admin_token = res.body.access_token;
             }).end(done);
 
     });
@@ -188,6 +206,43 @@ describe('Sports', function(){
             .end(done);
     })
 
+
+    it('Deleting sport that exists. Should return status 204', function (done) {
+        supertest(app)
+            .delete('/api/sports/1')
+            .set('Authorization', 'Bearer '+admin_token)
+            .expect(204)
+            .end(done);
+    })
+
+    it('Deleting sport that does not exist. Should return status 404', function (done) {
+        supertest(app)
+            .delete('/api/sports/3')
+            .set('Authorization', 'Bearer '+admin_token)
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The sport was not found');
+            })
+            .end(done);
+    })
+
+    it('Deleting sport without an access token. Should return status 401', function (done) {
+        supertest(app)
+            .delete('/api/sports/1')
+            .expect(401)
+            .end(done);
+    })
+
+    it('Deleting sport without being admin. Should return status 403', function (done) {
+        supertest(app)
+            .delete('/api/sports/1')
+            .set('Authorization', 'Bearer '+token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
+            })
+            .end(done);
+    })
 
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
