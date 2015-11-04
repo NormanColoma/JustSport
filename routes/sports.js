@@ -108,4 +108,28 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
   }
 });
 
+router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
+  if (req.params.id != parseInt(req.params.id, 10)){
+    res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
+  }
+  else {
+    if(models.user.isAdmin(req.get('Authorization').slice('7'))) {
+      models.sport.destroy({
+        where: {
+          id: req.params.id
+        }
+      }).then(function (rows) {
+        if (rows > 0)
+          res.status(204).send();
+        else
+          res.status(404).send({message: "The sport was not found"});
+      }).catch(function (err) {
+        res.status(500).send(err);
+      })
+    }
+    else
+      res.status(403).send({message: "You are not authorized to perform this action"});
+  }
+});
+
 module.exports = router;

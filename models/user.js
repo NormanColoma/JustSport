@@ -36,6 +36,12 @@ module.exports = function(sequelize, DataTypes) {
         if(decodedToken.role === 'owner')
           return true;
         return false;
+      },
+      isAdmin: function(token){
+        var decodedToken = jwt.decode(token, global.secret);
+        if(decodedToken.role === 'admin')
+          return true;
+        return false;
       }
     },
     hooks: {
