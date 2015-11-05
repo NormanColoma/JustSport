@@ -291,16 +291,82 @@ describe('Sports', function(){
                     assert.equal(res.body.sports[2].name, 'Fitness');
                     assert.equal(res.body.sports[3].name, 'Aerobic');
                     assert.equal(res.body.sports[4].name, 'Spinning');
-                    assert.equal(res.body.paging.cursors.previous, 0);
-                    assert.equal(res.body.paging.cursors.next,
-                        new Buffer(res.body.sports[4].id.toString()+'&limit=5').toString('base64'));
+                    assert.equal(res.body.paging.cursors.before, 0);
+                    assert.equal(res.body.paging.cursors.after,
+                        new Buffer(res.body.sports[4].id.toString()).toString('base64'));
                     assert.equal(res.body.paging.previous, 'none');
                     assert.equal(res.body.paging.next,
-                        'https://localhost:3000/api/sports?cursor='+
-                        new Buffer(res.body.sports[4].id.toString()+'&limit=5').toString('base64'));
+                        'http://127.0.0.1:3000/api/sports?after='+
+                        new Buffer(res.body.sports[4].id.toString()).toString('base64')+'&limit=5');
                 })
                 .end(done);
         })
+    })
+
+
+    it('Getting sports without specify cursor but limit. Should return status 200 and the first n sports', function(done){
+        supertest(app)
+            .get('/api/sports?limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.sports.length, 3);
+                assert.equal(res.body.sports[0].name, 'Crossfit');
+                assert.equal(res.body.sports[1].name, 'Zumba');
+                assert.equal(res.body.sports[2].name, 'Fitness');
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/sports?after='+
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
+    })
+
+    it('Getting sports specifying after cursor. Should return status 200 and the first n sports', function(done){
+        var id = 3;
+        var after = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/sports?after='+after+'&limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.sports.length, 3);
+                assert.equal(res.body.sports[0].name, 'Zumba');
+                assert.equal(res.body.sports[1].name, 'Fitness');
+                assert.equal(res.body.sports[2].name, 'Aerobic');
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports?before='+
+                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=3');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/sports?after='+
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
+    })
+
+    it('Getting sports specifying before cursor. Should return status 200 and the first n sports', function(done){
+        var id = 6;
+        var before = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/sports?before='+before+'&limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.sports.length, 3);
+                assert.equal(res.body.sports[0].name, 'Crossfit');
+                assert.equal(res.body.sports[1].name, 'Zumba');
+                assert.equal(res.body.sports[2].name, 'Fitness');
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/sports?after='+
+                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
     })
 
     after('Dropping database',function(done) {
