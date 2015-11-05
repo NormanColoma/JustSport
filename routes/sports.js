@@ -20,7 +20,7 @@ router.get('', function(req, res) {
             var curs = {before: before, after: after};
             var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?before="+before+'&limit='+req.query.limit;
             var pag = {cursors: curs,previous:prev,next:next};
-            res.status(200).send({sports:sports,paging:pag});
+            res.status(200).send({sports:sports,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
           })
         }).catch(function(err){
           res.status(500).send(err);
@@ -44,7 +44,7 @@ router.get('', function(req, res) {
             }
             var curs = {before: before, after: after};
             var pag = {cursors: curs,previous:prev,next:next};
-            res.status(200).send({sports:sports,paging:pag});
+            res.status(200).send({sports:sports,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
           })
         }).catch(function(err){
           console.log(err)
@@ -70,7 +70,7 @@ router.get('', function(req, res) {
           var curs = {before: before, after: after};
           var prev = 'none';
           var pag = {cursors: curs, previous: prev, next: next};
-          res.status(200).send({sports: sports, paging: pag});
+          res.status(200).send({sports: sports, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
         })
       }).catch(function (err) {
         res.status(500).send(err);
@@ -87,8 +87,14 @@ router.get('/:id', function(req, res) {
     models.sport.findById(req.params.id).then(function (sport) {
       if (sport == undefined)
         res.status(404).send({message: "The sport was not found"});
-      else
-        res.status(200).send(sport);
+      else {
+        var links = new Array();
+        var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/sports/"+req.params.id};
+        var link2 = {rel: 'establishments',
+          href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/sports/"+req.params.id+"/establishments"};
+        links.push([link1,link2]);
+        res.status(200).send({id: sport.id, name: sport.name,links:links});
+      }
     }).catch(function(err){
       console.log(err)
       res.status(500).send(err);
@@ -131,7 +137,15 @@ router.post('/new', authController.isBearerAuthenticated, function(req, res) {
       }).then(function (sport) {
         var url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/" + sport.id;
         res.setHeader("Location", url);
-        res.status(201).send(sport);
+        var links = new Array();
+        var link1 = {rel: 'self',
+          href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/sports/new"};
+        var link2 = {rel: 'update',
+          href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/sports/"+sport.id};
+        var link3 = {rel: 'delete',
+          href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/sports/"+sport.id};
+        links.push([link1,link2,link3]);
+        res.status(201).send({id: sport.id, name: sport.name, links: links});
       }).catch(function (err) {
         res.status(500).send(err);
       })
