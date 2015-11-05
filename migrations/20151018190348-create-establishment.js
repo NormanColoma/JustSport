@@ -28,6 +28,27 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      phone: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        unique: true
+      },
+      owner: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {model: "users", key: "uuid"},
+        onDelete: 'CASCADE'
+      },
+      website: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: 'none'
+      },
+      main_img: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: 'default.jpeg'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

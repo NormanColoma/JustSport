@@ -29,9 +29,19 @@ var umzug = new Umzug({
     logging: false
 });
 
+var seeder = new Umzug({
+    migrations: {
+        params: [ sequelize.getQueryInterface(), Sequelize ],
+        path: "seeders/test"
+    },
+    storage: "sequelize",
+    storageOptions: {
+        sequelize: sequelize
+    },
+    logging: false
+});
+
 describe('Establishments', function(){
-    var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
-    var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -39,36 +49,25 @@ describe('Establishments', function(){
     };
     var owner_token = "";
     var user_token = "";
+    var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     before('Setting database in a known state',function(done) {
-        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner.uuid};
-        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg',owner: owner.uuid};
-        var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
-            city: 'Valencia', province: 'Valencia', addr: 'Calle Arco nº32',
-            phone: '965663057', website: 'http://wwww.masport.es', main_img:'mas.jpeg',owner: owner.uuid};
-        var est4 = {name: 'Montemar', desc: 'Especializados en cursos y clases de ténis.',
-            city: 'Alicante', province: 'Alicante', addr: 'Avenida Novelda Km 14',
-            phone: '965662268', website: 'http://wwww.montemar.es', main_img:'montemar.jpeg',owner: owner.uuid};
-        var est5 = {name: 'Gimnasio 13', desc: 'El mejor lugar para ponerte en forma.',
-            city: 'Barcelona', province: 'Barcelona', addr: 'Gran Vía nº15',
-            phone: '965662257', website: 'http://wwww.13gym.es', main_img:'13gym.jpeg',owner: owner.uuid};
         umzug.execute({
-            migrations: ['20151022133423-create-user', '20151018190348-create-establishment'],
+            migrations: ['20151018190348-create-establishment','20151022133423-create-user'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151018190348-create-establishment','20151022133423-create-user']).then(function(){
-                models.user.create(owner).then(function(){
-                    models.user.create(user).then(function(){
-                        models.establishment.bulkCreate([est1,est2,est3,est4,est5]).then(function(){
-                            done();
-                        })
-                    })
+            umzug.up(['20151022133423-create-user','20151018190348-create-establishment']).then(function(migrations){
+                seeder.execute({
+                    migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
+                    method: 'up'
+                }).then(function(mig){
+                    done();
+                }).catch(function(err){
+                    done();
                 })
             })
-        });
+        }).catch(function(err){
+            done();
+        })
     });
 
     it('Getting access token', function(done){
@@ -86,7 +85,7 @@ describe('Establishments', function(){
             .post('/api/oauth2/token').send({
                 "grant_type" : "password",
                 "username" : "pepe@mail.com",
-                "password" : "adi2015"
+                "password" : "pepito15"
             })
             .expect(200).expect(function(res){
                 assert(res.body.access_token);
@@ -95,12 +94,12 @@ describe('Establishments', function(){
 
     });
 
-    it('Registering new establishment. Should return status 201',function(){
+    it('Registering new establishment. Should return status 201',function(done){
         var est = {name: 'Just Sport', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner.uuid};
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nÂº100',
+            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         supertest(app)
-            .get('/api/establishments/new').send(est)
+            .post('/api/establishments/new').send(est)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(201)
             .expect('Content-type', 'application/json; charset=utf-8')
@@ -118,12 +117,12 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Registering new establishment with duplicated phone. Should return status 500',function(){
+    it('Registering new establishment with duplicated phone. Should return status 500',function(done){
         var est = {name: 'Just Sport', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner.uuid};
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nÂº100',
+            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         supertest(app)
-            .get('/api/establishments/new').send(est)
+            .post('/api/establishments/new').send(est)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
@@ -133,11 +132,11 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Registering new establishment passing malformed JSON. Should return status 400',function(){
+    it('Registering new establishment passing malformed JSON. Should return status 400',function(done){
         var est = {name: 'Just Sport', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',owner: owner.uuid};
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nÂº100',owner: owner_id};
         supertest(app)
-            .get('/api/establishments/new').send(est)
+            .post('/api/establishments/new').send(est)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400)
             .expect('Content-type', 'application/json; charset=utf-8')
@@ -146,12 +145,12 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Registering new establishment without being owner. Should return status 403',function(){
+    it('Registering new establishment without being owner. Should return status 403',function(done){
         var est = {name: 'Just Sport', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner.uuid};
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nÂº100',
+            phone: '965661010', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         supertest(app)
-            .get('/api/establishments/new').send(est)
+            .post('/api/establishments/new').send(est)
             .set('Authorization', 'Bearer '+user_token)
             .expect(403)
             .expect('Content-type', 'application/json; charset=utf-8')
@@ -161,8 +160,13 @@ describe('Establishments', function(){
     });
 
     after('Dropping database',function(done) {
-        umzug.down(['20151022133423-create-user','20151018190348-create-establishment']).then(function (migrations) {
-            done();
-        });
+        seeder.execute({
+            migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
+            method: 'down'
+        }).then(function(mig){
+            umzug.down(['20151018190348-create-establishment','20151022133423-create-user']).then(function (migrations) {
+                done();
+            });
+        })
     });
 });

@@ -76,7 +76,6 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, do
 
 server.exchange(oauth2orize.exchange.password(function(clientId,username, password, done) {
     models.user.findOne({where:{email:username}}).then(function(user){
-
         if(user === undefined)
             return done(null,false);
         if(!models.user.verifyPassword(password, user.pass))
