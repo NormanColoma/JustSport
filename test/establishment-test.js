@@ -52,10 +52,10 @@ describe('Establishments', function(){
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     before('Setting database in a known state',function(done) {
         umzug.execute({
-            migrations: ['20151018190348-create-establishment','20151022133423-create-user'],
+            migrations: ['20151106004253-create-establishment','20151022133423-create-user'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user','20151018190348-create-establishment']).then(function(migrations){
+            umzug.up(['20151022133423-create-user','20151106004253-create-establishment']).then(function(migrations){
                 seeder.execute({
                     migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
                     method: 'up'
@@ -164,7 +164,7 @@ describe('Establishments', function(){
             migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
-            umzug.down(['20151018190348-create-establishment','20151022133423-create-user']).then(function (migrations) {
+            umzug.down(['20151106004253-create-establishment','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         })
