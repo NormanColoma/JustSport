@@ -393,6 +393,49 @@ describe('Establishments', function(){
             .end(done);
     })
 
+    it('Getting establishment that exists. Should return status 200',function(done){
+        var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
+            city: 'Valencia', province: 'Valencia', addr: 'Calle Arco nº32',
+            phone: '965663057', website: 'http://wwww.masport.es', main_img:'mas.jpeg',owner: owner_id};
+        var owner =  {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+            email: 'ua.norman@mail.com', gender: 'male'}
+        supertest(app)
+            .get('/api/establishments/3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.name, est3.name);
+                assert.equal(res.body.desc, est3.desc);
+                assert.equal(res.body.city, est3.city);
+                assert.equal(res.body.province, est3.province);
+                assert.equal(res.body.phone, est3.phone);
+                assert.equal(res.body.website, est3.website);
+                assert.equal(res.body.main_img, est3.main_img);
+                assert.equal(res.body.owner, owner )
+            })
+            .end(done);
+    })
+
+
+    it('Getting establishment that does not exist. Should return status 404',function(done){
+        supertest(app)
+            .get('/api/establishments/3')
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The establishment was not found');
+            })
+            .end(done);
+    })
+
+    it('Getting establishment passing string as id.Should return status 400',function(done){
+        supertest(app)
+            .get('/api/establishments/3')
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+            })
+            .end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
