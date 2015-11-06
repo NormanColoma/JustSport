@@ -66,4 +66,6 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
     }
 });
 
+
+
 module.exports = router;

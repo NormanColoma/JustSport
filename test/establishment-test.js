@@ -280,6 +280,17 @@ describe('Establishments', function(){
             });
     })
 
+    it('Updating establishment passing a string as id. Should return status 400', function(done){
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado'}
+        supertest(app)
+            .put('/api/establishments/Gym').send(update)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(400)
+            .expect(function(res){
+                assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+            }).end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
