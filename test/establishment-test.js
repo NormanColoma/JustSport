@@ -50,6 +50,7 @@ describe('Establishments', function(){
     var owner_token = "";
     var user_token = "";
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
+    var id_gym_to_remove = "";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment','20151022133423-create-user'],
@@ -156,6 +157,60 @@ describe('Establishments', function(){
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
                 assert.equal(res.body.message, 'You are not authorized to perform this action');
+            }).end(done);
+    });
+
+    it('Deleting establishment that exists. Should return status 204', function(done){
+        var est = {name: 'Gym Borrar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
+        models.establishment.create(est).then(function(est){
+            id_gym_to_remove = est.id;
+            supertest(app)
+                .delete('/api/establishments/'+id_gym_to_remove)
+                .set('Authorization', 'Bearer '+owner_token)
+                .expect(204)
+                .end(done);
+        })
+    });
+
+    it('Deleting establishment that does not exits. Should return status 404', function(done){
+            supertest(app)
+                .delete('/api/establishments/120')
+                .set('Authorization', 'Bearer '+owner_token)
+                .expect(404)
+                .expect(function(res){
+                    assert.equal(res.body.message, 'The establishment was not found');
+                }).end(done);
+    });
+
+    it('Deleting establishment without being owner. Should return status 403', function(done){
+        supertest(app)
+            .delete('/api/establishments/'+id_gym_to_remove)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403)
+            .expect(function(res){
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
+            }).end(done);
+    });
+
+    it('Deleting establishment without being owner. Should return status 403', function(done){
+        supertest(app)
+            .delete('/api/establishments/'+id_gym_to_remove)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(403)
+            .expect(function(res){
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
+            }).end(done);
+    });
+
+    it('Deleting establishment passing a string as id. Should return status 400', function(done){
+        supertest(app)
+            .delete('/api/establishments/GymATope')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400)
+            .expect(function(res){
+                assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
             }).end(done);
     });
 
