@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         establishment.belongsToMany(models.sport, {through: 'establishmentsports'});
-        establishment.belongsTo(models.user);
+        establishment.belongsTo(models.user, {foreignKey: 'owner'});
       }
     }
   });

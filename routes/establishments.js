@@ -67,5 +67,29 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
 });
 
 
-
+router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
+    if (req.params.id != parseInt(req.params.id, 10)){
+        res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
+    }
+    else {
+        if(req.body.owner) {
+            var values = req.body;
+            var where = {where: {id: req.params.id, owner: req.body.owner}};
+            if (models.user.isOwner(req.get('Authorization').slice('7'))) {
+                models.establishment.update(values, where).then(function (updated) {
+                    if (updated > 0)
+                        res.status(204).send();
+                    else
+                        res.status(404).send({message: "The establishment was not found"});
+                }).catch(function (err) {
+                    res.status(500).send(err);
+                })
+            }
+            else
+                res.status(403).send({message: "You are not authorized to perform this action"});
+        }
+        else
+            res.status(400).send({message: "Json is malformed: owner field is required for updatings"});
+    }
+});
 module.exports = router;

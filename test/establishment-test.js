@@ -210,8 +210,8 @@ describe('Establishments', function(){
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
             phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg'}
+            city: 'Alicante', province: 'Alicante', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id}
         models.establishment.create(est).then(function(est){
             id_gym_to_update = est.id;
             supertest(app)
@@ -222,33 +222,37 @@ describe('Establishments', function(){
         })
     })
 
-    it('Updating establishment that exists with incorrect fields. Should return status 400', function(done){
+    it('Checking out the establishment after full update.', function (done) {
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
-            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
-            supertest(app)
-                .put('/api/establishments/'+id_gym_to_update).send(update)
-                .set('Authorization', 'Bearer '+owner_token)
-                .expect(400)
-                .expect(function(res){
-                    assert.equal(res.body.message, 'Owner could not be changed');
-                }).end(done);
+            city: 'Alicante', province: 'Alicante', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id}
+        models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
+            assert.equal(est.name, update.name);
+            assert.equal(est.desc, update.desc);
+            assert.equal(est.city, update.city);
+            assert.equal(est.province, update.province);
+            assert.equal(est.phone, update.phone);
+            assert.equal(est.website, update.website);
+            assert.equal(est.main_img, update.main_img);
+            assert.equal(est.owner, owner_id);
+            done();
+        })
     })
 
     it('Updating establishment with malformed JSON. Should return status 400', function(done){
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg'}
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400)
             .expect(function(res){
-                assert.equal(res.body.message, 'Owner could not be changed');
+                assert.equal(res.body.message, 'Json is malformed: owner field is required for updatings');
             }).end(done);
     })
 
-    it('Updating establishment without access token. Should return status 401', function(done){
+   it('Updating establishment without access token. Should return status 401', function(done){
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
             phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
@@ -259,25 +263,27 @@ describe('Establishments', function(){
     })
 
     it('Updating only certain fields. Should return status 204', function(done){
-        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado'}
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id}
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+owner_token)
             .expect(204)
-            .end(function(){
-                //Checking out the establishment after update.
-                models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
-                    assert.equal(est.name, update.name);
-                    assert.equal(est.desc, update.desc);
-                    assert.equal(est.city, 'Madrid');
-                    assert.equal(est.province, 'Madrid');
-                    assert.equal(est.phone, '965661520');
-                    assert.equal(est.website, 'http://wwww.justsport-gym.com');
-                    assert.equal(est.main_img, 'js.jpeg');
-                    assert.equal(est.owner, owner_id);
-                    done();
-                })
-            });
+            .end(done);
+    })
+
+    it('Checking out the establishment after partil update.',function(done){
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id}
+        models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
+            assert.equal(est.name, update.name);
+            assert.equal(est.desc, update.desc);
+            assert.equal(est.city, 'Alicante');
+            assert.equal(est.province, 'Alicante');
+            assert.equal(est.phone, '965661520');
+            assert.equal(est.website, 'http://wwww.justsport-gym.com');
+            assert.equal(est.main_img, 'js.jpeg');
+            assert.equal(est.owner, owner_id);
+            done();
+        })
     })
 
     it('Updating establishment passing a string as id. Should return status 400', function(done){
@@ -288,6 +294,18 @@ describe('Establishments', function(){
             .expect(400)
             .expect(function(res){
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+            }).end(done);
+    })
+
+    it('Updating establishment with duplicated phone. Should return status 500', function(done){
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', phone: '965660327', owner: owner_id}
+        supertest(app)
+            .put('/api/establishments/'+id_gym_to_update).send(update)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500)
+            .expect(function(res){
+                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+                assert.equal(res.body.errors[0].message, 'phone must be unique');
             }).end(done);
     })
 
