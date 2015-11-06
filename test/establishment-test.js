@@ -194,16 +194,6 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Deleting establishment without being owner. Should return status 403', function(done){
-        supertest(app)
-            .delete('/api/establishments/'+id_gym_to_remove)
-            .set('Authorization', 'Bearer '+owner_token)
-            .expect(403)
-            .expect(function(res){
-                assert.equal(res.body.message, 'You are not authorized to perform this action');
-            }).end(done);
-    });
-
     it('Deleting establishment passing a string as id. Should return status 400', function(done){
         supertest(app)
             .delete('/api/establishments/GymATope')

@@ -26,7 +26,7 @@ var umzug = new Umzug({
     logging: false
 });
 
-describe('Sports', function(){
+xdescribe('Sports', function(){
     var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
     var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
     var admin = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'admin2015', gender: 'male', role: "admin"}

@@ -5,6 +5,7 @@ var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
 var authController = require('../routes/auth');
+var jwt = require('jwt-simple');
 
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
@@ -38,6 +39,31 @@ router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     else
         res.status(403).send({message: "You are not authorized to perform this action"});
 
+});
+
+router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
+    if (req.params.id != parseInt(req.params.id, 10)){
+        res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
+    }
+    else {
+        if(models.user.isOwner(req.get('Authorization').slice('7'))) {
+            models.establishment.destroy({
+                where: {
+                    id: req.params.id,
+                    owner: jwt.decode(req.get('Authorization').slice('7'), global.secret).sub
+                }
+            }).then(function (rows) {
+                if (rows > 0)
+                    res.status(204).send();
+                else
+                    res.status(404).send({message: "The establishment was not found"});
+            }).catch(function (err) {
+                res.status(500).send(err);
+            })
+        }
+        else
+            res.status(403).send({message: "You are not authorized to perform this action"});
+    }
 });
 
 module.exports = router;
