@@ -1,7 +1,4 @@
 /**
- * Created by Norman on 05/11/2015.
- */
-/**
  * Created by Norman on 04/11/2015.
  */
 var supertest = require('supertest');
@@ -58,19 +55,19 @@ describe('Establishments', function(){
             method: 'down'
         }).then(function (migrations) {
             umzug.up(['20151022133423-create-user','20151106004253-create-establishment']).then(function(migrations){
-                seeder.execute({
-                    migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
-                    method: 'up'
-                }).then(function(mig){
-                    done();
-                }).catch(function(err){
-                    done();
-                })
+                done();
             })
-        }).catch(function(err){
-            done();
         })
     });
+
+    before('Filling database', function(done){
+        seeder.execute({
+            migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
+            method: 'up'
+        }).then(function(mig){
+            done();
+        })
+    })
 
     it('Getting access token', function(done){
         supertest(app)
@@ -307,6 +304,93 @@ describe('Establishments', function(){
                 assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
                 assert.equal(res.body.errors[0].message, 'phone must be unique');
             }).end(done);
+    })
+
+    it('Getting establishments without specify cursor. Should return status 200 and the first 5 establishments',function(done){
+        supertest(app)
+            .get('/api/establishments')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 5);
+                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
+                assert.equal(res.body.establishments[1].name, 'Gym Noray');
+                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.establishments[3].name, 'Montemar');
+                assert.equal(res.body.establishments[4].name, 'Gimnasio 13');
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.establishments[4].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/establishments?after='+
+                    new Buffer(res.body.establishments[4].id.toString()).toString('base64')+'&limit=5');
+            })
+            .end(done);
+    })
+
+    it('Getting establishments specifying cursor but limit. Should return status 200 and the first n establishments', function(done){
+        supertest(app)
+            .get('/api/establishments?limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 3);
+                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
+                assert.equal(res.body.establishments[1].name, 'Gym Noray');
+                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/establishments?after='+
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
+    })
+
+    it('Getting establishments specifying after cursor. Should return status 200 and the first n establishments', function(done){
+        var id = 3;
+        var after = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/establishments?after='+after+'&limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 3);
+                assert.equal(res.body.establishments[0].name, 'Montemar');
+                assert.equal(res.body.establishments[1].name, 'Gimnasio 13');
+                assert.equal(res.body.establishments[2].name, 'Just Sport');
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments?before='+
+                    new Buffer(res.body.establishments[0].id.toString()).toString('base64')+'&limit=3');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/establishments?after='+
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
+    })
+
+    it('Getting establishments specifying before cursor. Should return status 200 and the first n establishments', function(done){
+        var id = 6;
+        var before = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/establishments?before='+before+'&limit=3')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 3);
+                assert.equal(res.body.establishments[0].name, 'Más Sport');
+                assert.equal(res.body.establishments[1].name, 'Montemar');
+                assert.equal(res.body.establishments[2].name, 'Gimnasio 13');
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next,
+                    'http://127.0.0.1:3000/api/establishments?after='+
+                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+            })
+            .end(done);
     })
 
     after('Dropping database',function(done) {
