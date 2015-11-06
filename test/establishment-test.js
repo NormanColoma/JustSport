@@ -397,8 +397,6 @@ describe('Establishments', function(){
         var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
             city: 'Valencia', province: 'Valencia', addr: 'Calle Arco nº32',
             phone: '965663057', website: 'http://wwww.masport.es', main_img:'mas.jpeg',owner: owner_id};
-        var owner =  {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
-            email: 'ua.norman@mail.com', gender: 'male'}
         supertest(app)
             .get('/api/establishments/3')
             .expect(200)
@@ -410,7 +408,7 @@ describe('Establishments', function(){
                 assert.equal(res.body.phone, est3.phone);
                 assert.equal(res.body.website, est3.website);
                 assert.equal(res.body.main_img, est3.main_img);
-                assert.equal(res.body.owner, owner )
+                assert.equal(res.body.owner, owner_id);
             })
             .end(done);
     })
@@ -418,7 +416,7 @@ describe('Establishments', function(){
 
     it('Getting establishment that does not exist. Should return status 404',function(done){
         supertest(app)
-            .get('/api/establishments/3')
+            .get('/api/establishments/25')
             .expect(404)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The establishment was not found');
@@ -428,7 +426,7 @@ describe('Establishments', function(){
 
     it('Getting establishment passing string as id.Should return status 400',function(done){
         supertest(app)
-            .get('/api/establishments/3')
+            .get('/api/establishments/GymATope')
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
