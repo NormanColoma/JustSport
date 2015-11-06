@@ -434,6 +434,39 @@ describe('Establishments', function(){
             .end(done);
     })
 
+    it('Getting all sports imparted in the establishment.Should return status 200', function(done){
+        supertest(app)
+            .get('/api/establishments/1/sports')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.sports.length, 3);
+                assert.equal(res.body.sports[0].name, 'Crossfit');
+                assert.equal(res.body.sports[1].name, 'Spinning');
+                assert.equal(res.body.sports[2].name, 'Pilates');
+            })
+            .end(done);
+    })
+
+    it('Getting all sports imparted in establishment that does not exist.Should return status 404', function(done){
+        supertest(app)
+            .get('/api/establishments/1/sports')
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The establishment was not found');
+            })
+            .end(done);
+    })
+
+    it('Getting all sports imparted from establishment that is empty yet.Should return status 200', function(done){
+        supertest(app)
+            .get('/api/establishments/5/sports')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.sports.length, 0);
+            })
+            .end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
