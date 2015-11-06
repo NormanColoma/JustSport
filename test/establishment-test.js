@@ -379,9 +379,9 @@ describe('Establishments', function(){
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Más Sport');
-                assert.equal(res.body.establishments[1].name, 'Montemar');
-                assert.equal(res.body.establishments[2].name, 'Gimnasio 13');
+                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
+                assert.equal(res.body.establishments[1].name, 'Gym Noray');
+                assert.equal(res.body.establishments[2].name, 'Más Sport');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
                     new Buffer(res.body.establishments[2].id.toString()).toString('base64'));

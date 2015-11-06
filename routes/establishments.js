@@ -7,6 +7,81 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
 
+
+router.get('', function(req, res) {
+    if(req.query.after){
+        if(req.query.limit){
+            var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+            models.establishment.findAll({where:{id:{$gt:after}},limit:req.query.limit}).then(function (establishments) {
+                var before = new Buffer(establishments[0].id.toString()).toString('base64');
+                models.establishment.max('id').then(function(max){
+                    var after = 0;
+                    var next = 'none';
+                    if(establishments[establishments.length-1].id < max) {
+                        after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
+                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+req.query.limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?before="+before+'&limit='+req.query.limit;
+                    var pag = {cursors: curs,previous:prev,next:next};
+                    res.status(200).send({establishments:establishments,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
+                })
+            }).catch(function(err){
+                res.status(500).send(err);
+            })
+        }
+        else
+            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+    }
+    else if(req.query.before){
+        if(req.query.limit){
+            var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+            models.establishment.findAll({where:{id:{$lt:before}},limit:req.query.limit}).then(function (establishments) {
+                models.establishment.min('id').then(function(min){
+                    var after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
+                    var next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+req.query.limit;
+                    var before= 0;
+                    var prev = 'none';
+                    if(establishments[0].id > min) {
+                        before = new Buffer(establishments[0].id.toString()).toString('base64');
+                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?before="+before+'&limit='+req.query.limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs,previous:prev,next:next};
+                    res.status(200).send({establishments:establishments,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
+                })
+            }).catch(function(err){
+                console.log(err)
+                res.status(500).send(err);
+            })
+        }
+        else
+            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+    }
+    else {
+        var limit = 5;
+        if(req.query.limit)
+            limit=req.query.limit;
+        models.establishment.findAll({limit: limit}).then(function (establishments) {
+            var before = 0;
+            models.establishment.max('id').then(function (max) {
+                var after = 0;
+                var next = 'none';
+                if(establishments[establishments.length-1].id < max) {
+                    after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
+                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+limit;
+                }
+                var curs = {before: before, after: after};
+                var prev = 'none';
+                var pag = {cursors: curs, previous: prev, next: next};
+                res.status(200).send({establishments: establishments, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
+            })
+        }).catch(function (err) {
+            res.status(500).send(err);
+        })
+    }
+});
+
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
