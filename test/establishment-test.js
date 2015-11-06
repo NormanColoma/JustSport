@@ -51,6 +51,7 @@ describe('Establishments', function(){
     var user_token = "";
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     var id_gym_to_remove = "";
+    var id_gym_to_update = "";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment','20151022133423-create-user'],
@@ -203,6 +204,81 @@ describe('Establishments', function(){
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
             }).end(done);
     });
+
+    it('Updating establishment that exists with correct fields. Should return status 204', function(done){
+        var est = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
+        var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg'}
+        models.establishment.create(est).then(function(est){
+            id_gym_to_update = est.id;
+            supertest(app)
+                .put('/api/establishments/'+id_gym_to_update).send(update)
+                .set('Authorization', 'Bearer '+owner_token)
+                .expect(204)
+                .end(done);
+        })
+    })
+
+    it('Updating establishment that exists with incorrect fields. Should return status 400', function(done){
+        var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
+            supertest(app)
+                .put('/api/establishments/'+id_gym_to_update).send(update)
+                .set('Authorization', 'Bearer '+owner_token)
+                .expect(400)
+                .expect(function(res){
+                    assert.equal(res.body.message, 'Owner could not be changed');
+                }).end(done);
+    })
+
+    it('Updating establishment with malformed JSON. Should return status 400', function(done){
+        var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
+        supertest(app)
+            .put('/api/establishments/'+id_gym_to_update).send(update)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400)
+            .expect(function(res){
+                assert.equal(res.body.message, 'Owner could not be changed');
+            }).end(done);
+    })
+
+    it('Updating establishment without access token. Should return status 401', function(done){
+        var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
+        supertest(app)
+            .put('/api/establishments/'+id_gym_to_update).send(update)
+            .expect(401)
+            .end(done);
+    })
+
+    it('Updating only certain fields. Should return status 204', function(done){
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado'}
+        supertest(app)
+            .put('/api/establishments/'+id_gym_to_update).send(update)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(204)
+            .end(function(){
+                //Checking out the establishment after update.
+                models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
+                    assert.equal(est.name, update.name);
+                    assert.equal(est.desc, update.desc);
+                    assert.equal(est.city, 'Madrid');
+                    assert.equal(est.province, 'Madrid');
+                    assert.equal(est.phone, '965661520');
+                    assert.equal(est.website, 'http://wwww.justsport-gym.com');
+                    assert.equal(est.main_img, 'js.jpeg');
+                    assert.equal(est.owner, owner_id);
+                    done();
+                })
+            });
+    })
 
     after('Dropping database',function(done) {
         seeder.execute({
