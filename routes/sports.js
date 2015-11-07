@@ -102,33 +102,6 @@ router.get('/:id', function(req, res) {
   }
 });
 
-
-
-router.get('/:id/establishments', function(req, res) {
-  if (req.params.id != parseInt(req.params.id, 10)){
-    res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
-  }
-  else {
-    models.sport.findById(req.params.id).then(function (sport) {
-      if (sport == undefined)
-        res.status(404).send({message: "The sport was not found"});
-      else
-        return sport.getEstablishments({attributes: ['id','name','desc','city','province','addr','createdAt','updatedAt'], joinTableAttributes: []});
-    }).then(function (establishments) {
-      if (establishments.length == 0) {
-        res.status(404).send({message: "There were no establishments found for the supplied sport"});
-      }
-      else
-        res.status(200).send(establishments);
-    }).catch(function(err){
-      res.status(500).send(err);
-    });
-  }
-
-});
-
-
-
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
   if(models.user.isOwner(req.get('Authorization').slice('7'))){
     if (req.body.name) {

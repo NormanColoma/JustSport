@@ -369,6 +369,174 @@ describe('Sports', function(){
             .end(done);
     })
 
+    it('Getting all establishments where the sport is imparted.Should return status 200', function(done){
+        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
+        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+            email: 'ua.norman@mail.com', gender: 'male'}
+        supertest(app)
+            .get('/api/sports/1/establishments')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 2);
+                assert.equal(res.body.establishments[0], est1);
+                assert.equal(res.body.establishments[0].Owner, owner);
+                assert.equal(res.body.establishments[1], est2);
+                assert.equal(res.body.establishments[1].Owner, owner);
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after, 0);
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next, 'none');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishments where the sport is imparted, which does not exists.Should return status 400', function(done){
+        supertest(app)
+            .get('/api/sports/15/establishments')
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The sport was not found');
+            })
+            .end(done);
+    })
+    it('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
+        supertest(app)
+            .get('/api/sports/Zumba/establishments')
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
+        function(done){
+        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
+        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+            email: 'ua.norman@mail.com', gender: 'male'}
+        supertest(app)
+            .get('/api/sports/1/establishments?limit=2')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 2);
+                assert.equal(res.body.establishments[0], est1);
+                assert.equal(res.body.establishments[0].Owner, owner);
+                assert.equal(res.body.establishments[1], est2);
+                assert.equal(res.body.establishments[1].Owner, owner);
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after, 0);
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next, 'none');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
+        function(done){
+        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
+        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+            email: 'ua.norman@mail.com', gender: 'male'}
+        var id = 1;
+        var after = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/sports/1/establishments?after='+after+'limit=1')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 2);
+                assert.equal(res.body.establishments[0], est1);
+                assert.equal(res.body.establishments[0].Owner, owner);
+                assert.equal(res.body.establishments[1], est2);
+                assert.equal(res.body.establishments[1].Owner, owner);
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after,
+                    new Buffer(res.body.establishments[1].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/sports/1/establishments?after='+
+                new Buffer(res.body.establishments[1].id.toString()).toString('base64')+'&limit=1');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
+        function(done){
+        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
+        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+            email: 'ua.norman@mail.com', gender: 'male'}
+        var id = 1;
+        var before = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/sports/1/establishments?before='+before+'limit=1')
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.establishments.length, 2);
+                assert.equal(res.body.establishments[0], est1);
+                assert.equal(res.body.establishments[0].Owner, owner);
+                assert.equal(res.body.paging.cursors.before,
+                    new Buffer(res.body.establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after, 0);
+                assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports/1/establishments?before='+
+                    new Buffer(res.body.establishments[0].id.toString()).toString('base64')+'&limit=1');
+                assert.equal(res.body.paging.next, 'none');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
+        function(done){
+        var id = 1;
+        var before = new Buffer(id.toString()).toString('base64');
+        supertest(app)
+            .get('/api/sports/1/establishments?before='+before)
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
+            })
+            .end(done);
+        })
+    it('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
+        function(done){
+            var id = 1;
+            var before = new Buffer(id.toString()).toString('base64');
+            supertest(app)
+                .get('/api/sports/1/establishments?before='+before+'&limit=0')
+                .expect(400)
+                .expect(function (res) {
+                    assert.equal(res.body.message, "The limit for pagination, must be greater than 0");
+                })
+                .end(done);
+        })
+    it('Getting all establishments where the sport, but got 0 recors.Should return status 200',
+        function(done){
+            var id = 1;
+            var before = new Buffer(id.toString()).toString('base64');
+            supertest(app)
+                .get('/api/sports/5/establishments?before='+before+'&limit=0')
+                .expect(200)
+                .expect(function (res) {
+                    assert.equal(res.body.length, 0);
+                })
+                .end(done);
+        })
     after('Dropping database',function(done) {
         umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
             done();
