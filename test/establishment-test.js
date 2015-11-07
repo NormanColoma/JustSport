@@ -49,6 +49,13 @@ describe('Establishments', function(){
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     var id_gym_to_remove = "";
     var id_gym_to_update = "";
+    var owner = {
+        uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738',
+        name: 'Norman',
+        lname: 'Coloma García',
+        email: 'ua.norman@mail.com',
+        gender: 'male'
+    }
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment','20151022133423-create-user','20151016205501-sport-migration',
@@ -410,7 +417,11 @@ describe('Establishments', function(){
                 assert.equal(res.body.phone, est3.phone);
                 assert.equal(res.body.website, est3.website);
                 assert.equal(res.body.main_img, est3.main_img);
-                assert.equal(res.body.owner, owner_id);
+                assert.equal(res.body.Owner.uuid, owner.uuid);
+                assert.equal(res.body.Owner.name, owner.name);
+                assert.equal(res.body.Owner.lname, owner.lname);
+                assert.equal(res.body.Owner.email, owner.email);
+                assert.equal(res.body.Owner.gender, owner.gender);
             })
             .end(done);
     })

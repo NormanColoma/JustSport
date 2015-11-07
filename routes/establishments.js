@@ -89,15 +89,17 @@ router.get('/:id', function(req, res) {
             if (establishment == undefined)
                 res.status(404).send({message: "The establishment was not found"});
             else {
-                var links = new Array();
-                var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
-                var link2 = {rel: 'sports',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
-                links.push([link1,link2]);
-                res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
-                    city: establishment.city, province: establishment.province, addr: establishment.addr,
-                    phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
-                    owner: establishment.owner, links:links});
+                establishment.getUser({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
+                    var links = new Array();
+                    var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
+                    var link2 = {rel: 'sports',
+                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
+                    links.push([link1,link2]);
+                    res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
+                        city: establishment.city, province: establishment.province, addr: establishment.addr,
+                        phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
+                        Owner: owner, links:links});
+                })
             }
         }).catch(function(err){
             console.log(err)
