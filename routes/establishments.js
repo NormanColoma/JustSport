@@ -89,7 +89,7 @@ router.get('/:id', function(req, res) {
             if (establishment == undefined)
                 res.status(404).send({message: "The establishment was not found"});
             else {
-                establishment.getUser({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
+                establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
                     var links = new Array();
                     var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
                     var link2 = {rel: 'sports',
