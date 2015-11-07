@@ -51,10 +51,11 @@ describe('Establishments', function(){
     var id_gym_to_update = "";
     before('Setting database in a known state',function(done) {
         umzug.execute({
-            migrations: ['20151106004253-create-establishment','20151022133423-create-user'],
+            migrations: ['20151106004253-create-establishment','20151022133423-create-user','20151016205501-sport-migration',
+            '20151106004323-create-establishmentsport'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user','20151106004253-create-establishment']).then(function(migrations){
+            umzug.up(['20151022133423-create-user','20151106004253-create-establishment','20151016205501-sport-migration','20151106004323-create-establishmentsport']).then(function(migrations){
                 done();
             })
         })
@@ -62,7 +63,8 @@ describe('Establishments', function(){
 
     before('Filling database', function(done){
         seeder.execute({
-            migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
+            migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder','20151106235642-sport-test-seeder', '' +
+            '20151106235801-sportestablishment-test-seeder'],
             method: 'up'
         }).then(function(mig){
             done();
@@ -440,16 +442,16 @@ describe('Establishments', function(){
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.sports.length, 3);
-                assert.equal(res.body.sports[0].name, 'Crossfit');
-                assert.equal(res.body.sports[1].name, 'Spinning');
-                assert.equal(res.body.sports[2].name, 'Pilates');
+                assert.equal(res.body.sports[0].name, 'Spinning');
+                assert.equal(res.body.sports[1].name, 'GAP');
+                assert.equal(res.body.sports[2].name, 'Body Jump');
             })
             .end(done);
     })
 
     it('Getting all sports imparted in establishment that does not exist.Should return status 404', function(done){
         supertest(app)
-            .get('/api/establishments/1/sports')
+            .get('/api/establishments/15/sports')
             .expect(404)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The establishment was not found');
@@ -462,17 +464,21 @@ describe('Establishments', function(){
             .get('/api/establishments/5/sports')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 0);
+                assert.equal(res.body.length, 0);
             })
             .end(done);
     })
 
+    
+
     after('Dropping database',function(done) {
         seeder.execute({
-            migrations: ['20151105165531-user-test-seeder','20151105165744-establishments-test-seeder'],
+            migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
+            '20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
-            umzug.down(['20151106004253-create-establishment','20151022133423-create-user']).then(function (migrations) {
+            umzug.down(['20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
+                '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         })

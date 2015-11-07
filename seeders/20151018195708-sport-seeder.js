@@ -16,6 +16,6 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('establishments', null, {});
+    return queryInterface.bulkDelete('sports', null, {});
   }
 };

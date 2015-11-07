@@ -105,7 +105,135 @@ router.get('/:id', function(req, res) {
         });
     }
 });
-
+router.get('/:id/sports', function(req, res) {
+    if(req.query.after){
+        if(req.query.limit){
+            models.establishment.findOne({where:{id:req.params.id}}).then(function(est){
+                if (est == undefined)
+                    res.status(404).send({message: "The establishment was not found"});
+                else{
+                    if(req.query.limit == 0)
+                        res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+                    else {
+                        var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+                        est.getSports({
+                            attributes: ['id', 'name'], joinTableAttributes: [], limit: req.query.limit,
+                            where: {id: {$gt: after}}
+                        }).then(function (sports) {
+                            var before = new Buffer(sports[0].id.toString()).toString('base64');
+                            est.getSports().then(function (count) {
+                                var after = 0;
+                                var next = 'none';
+                                if (sports[sports.length - 1].id < count[count.length - 1].id && count.length > req.query.limit) {
+                                    after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
+                                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + req.query.limit;
+                                }
+                                var curs = {before: before, after: after};
+                                var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?before=" + before + '&limit=' + req.query.limit;
+                                var pag = {cursors: curs, previous: prev, next: next};
+                                res.status(200).send({
+                                    sports: sports, paging: pag, links: {
+                                        rel: 'self', href: req.protocol + "://" + req.hostname + ":3000" +
+                                        "/api/establishments" + req.params.id + "/sports"
+                                    }
+                                });
+                            })
+                        })
+                    }
+                }
+            })
+        }
+        else
+            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+    }
+    else if(req.query.before){
+        if(req.query.limit){
+            models.establishment.findOne({where:{id:req.params.id}}).then(function(est) {
+                if (est == undefined)
+                    res.status(404).send({message: "The establishment was not found"});
+                else {
+                    if(req.query.limit == 0)
+                        res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+                    else {
+                        var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+                        est.getSports({
+                            attributes: ['id', 'name'], joinTableAttributes: [], limit: req.query.limit,
+                            where: {id: {$lt: before}}
+                        }).then(function (sports) {
+                            est.getSports().then(function (count) {
+                                var after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
+                                var next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + req.query.limit;
+                                var before = 0;
+                                var prev = 'none';
+                                //In this case, there is no need to lookup the total value of the sports
+                                if (sports[0].id > count[0].id) {
+                                    before = new Buffer(sports[0].id.toString()).toString('base64');
+                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?before=" + before + '&limit=' + req.query.limit;
+                                }
+                                var curs = {before: before, after: after};
+                                var pag = {cursors: curs, previous: prev, next: next};
+                                res.status(200).send({
+                                    sports: sports, paging: pag, links: {
+                                        rel: 'self',
+                                        href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports"
+                                    }
+                                });
+                            })
+                        })
+                    }
+                }
+            })
+        }
+        else
+            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+    }
+    else {
+        var limit = 5;
+        if(req.query.limit)
+            limit=req.query.limit;
+        //Checking that establishment exists
+        models.establishment.findOne({where:{id:req.params.id}}).then(function(est) {
+            if (est == undefined)
+                res.status(404).send({message: "The establishment was not found"});
+            else {
+                //If establishment exists, we retrieve the sports
+                if(limit == 0)
+                    res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+                else {
+                    est.getSports({attributes: ['id', 'name'], joinTableAttributes: [], limit: limit}).then(function (sports) {
+                        var before = 0;
+                        var after = 0;
+                        var next = 'none';
+                        if(sports.length == 0)
+                            res.status(200).send(sports);
+                        else {
+                            //We get the total number of the sports
+                            est.getSports().then(function (count) {
+                                //If last item retrieved is lower than max id and the number of total sports is greater than the limit
+                                //Then we'll have after cursors
+                                if (sports[sports.length - 1].id < count[count.length - 1].id && count.length > limit) {
+                                    after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
+                                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + limit;
+                                }
+                                var curs = {before: before, after: after};
+                                var prev = 'none';
+                                var pag = {cursors: curs, previous: prev, next: next};
+                                res.status(200).send({
+                                    sports: sports,
+                                    paging: pag,
+                                    links: {
+                                        rel: 'self',
+                                        href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports"
+                                    }
+                                });
+                            })
+                        }
+                    })
+                }
+            }
+        })
+    }
+});
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
