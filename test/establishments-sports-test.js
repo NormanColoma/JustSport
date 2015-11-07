@@ -35,7 +35,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Establishments', function(){
+describe('EstablishmentsSports', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -49,7 +49,7 @@ xdescribe('Establishments', function(){
     var owner = {
         uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738',
         name: 'Norman',
-        lname: 'Coloma García',
+        lname: 'Coloma GarcÃ­a',
         email: 'ua.norman@mail.com',
         gender: 'male'
     }
@@ -76,23 +76,21 @@ xdescribe('Establishments', function(){
     })
 
     it('Getting all establishments where the sport is imparted.Should return status 200', function(done){
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma GarcÃ­a',
+            email: 'ua.norman@mail.com', gender: 'male'};
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-        city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
-        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
+        city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nÂº15',
+        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg', Owner: owner};
     var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-        city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
-        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
-    var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
-        email: 'ua.norman@mail.com', gender: 'male'}
+        city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nÂº34',
+        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg', Owner: owner};
     supertest(app)
         .get('/api/sports/1/establishments')
         .expect(200)
         .expect(function (res) {
-            assert.equal(res.body.establishments.length, 2);
-            assert.equal(res.body.establishments[0], est1);
-            assert.equal(res.body.establishments[0].Owner, owner);
-            assert.equal(res.body.establishments[1], est2);
-            assert.equal(res.body.establishments[1].Owner, owner);
+            assert.equal(res.body.Establishments.length, 2);
+            assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
+            assert.equal(JSON.stringify(res.body.Establishments[1]), JSON.stringify(est2));
             assert.equal(res.body.paging.cursors.before, 0);
             assert.equal(res.body.paging.cursors.after, 0);
             assert.equal(res.body.paging.previous, 'none');
@@ -101,10 +99,10 @@ xdescribe('Establishments', function(){
         .end(done);
 })
 
-it('Getting all establishments where the sport is imparted, which does not exists.Should return status 400', function(done){
+it('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
     supertest(app)
         .get('/api/sports/15/establishments')
-        .expect(400)
+        .expect(404)
         .expect(function (res) {
             assert.equal(res.body.message, 'The sport was not found');
         })
@@ -122,23 +120,21 @@ it('Getting all establishments where the sport is imparted, by passing the id as
 
 it('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
     function(done){
-        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
-        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
-        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma GarcÃ­a',
             email: 'ua.norman@mail.com', gender: 'male'}
+        var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nÂº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg', Owner: owner};
+        var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nÂº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg', Owner: owner};
         supertest(app)
             .get('/api/sports/1/establishments?limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 2);
-                assert.equal(res.body.establishments[0], est1);
-                assert.equal(res.body.establishments[0].Owner, owner);
-                assert.equal(res.body.establishments[1], est2);
-                assert.equal(res.body.establishments[1].Owner, owner);
+                assert.equal(res.body.Establishments.length, 2);
+                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
+                assert.equal(JSON.stringify(res.body.Establishments[1]), JSON.stringify(est2));
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'none');
@@ -149,60 +145,48 @@ it('Getting all establishments where the sport is imparted without specify curso
 
 it('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
     function(done){
-        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
-        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
-        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma GarcÃ­a',
             email: 'ua.norman@mail.com', gender: 'male'}
+        var est2 = {id:2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
+            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nÂº34',
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg', Owner: owner};
         var id = 1;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/sports/1/establishments?after='+after+'limit=1')
+            .get('/api/sports/1/establishments?after='+after+'&limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 2);
-                assert.equal(res.body.establishments[0], est1);
-                assert.equal(res.body.establishments[0].Owner, owner);
-                assert.equal(res.body.establishments[1], est2);
-                assert.equal(res.body.establishments[1].Owner, owner);
-                assert.equal(res.body.paging.cursors.before, 0);
-                assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[1].id.toString()).toString('base64'));
-                assert.equal(res.body.paging.previous, 'none');
-                assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/sports/1/establishments?after='+
-                    new Buffer(res.body.establishments[1].id.toString()).toString('base64')+'&limit=1');
+                assert.equal(res.body.Establishments.length, 1);
+                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est2));
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after, 0);
+                assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports/1/establishments?before='+
+                    new Buffer(res.body.Establishments[0].id.toString()).toString('base64')+'&limit=1');
+                assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
     })
 
 it('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
     function(done){
-        var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
-        var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-            city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
-        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+        var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma GarcÃ­a',
             email: 'ua.norman@mail.com', gender: 'male'}
-        var id = 1;
+        var est1 = {id:1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+            city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nÂº15',
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg', Owner: owner};
+        var id = 2;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/sports/1/establishments?before='+before+'limit=1')
+            .get('/api/sports/1/establishments?before='+before+'&limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 2);
-                assert.equal(res.body.establishments[0], est1);
-                assert.equal(res.body.establishments[0].Owner, owner);
-                assert.equal(res.body.paging.cursors.before,
-                    new Buffer(res.body.establishments[0].id.toString()).toString('base64'));
-                assert.equal(res.body.paging.cursors.after, 0);
-                assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports/1/establishments?before='+
-                    new Buffer(res.body.establishments[0].id.toString()).toString('base64')+'&limit=1');
-                assert.equal(res.body.paging.next, 'none');
+                assert.equal(res.body.Establishments.length, 1);
+                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
+                assert.equal(res.body.paging.cursors.before, 0);
+                assert.equal(res.body.paging.cursors.after, new Buffer(res.body.Establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.previous, 'none');
+                assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/sports/1/establishments?after='+
+                    new Buffer(res.body.Establishments[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
     })
@@ -236,7 +220,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/sports/5/establishments?before='+before+'&limit=0')
+            .get('/api/sports/5/establishments?before='+before+'&limit=1')
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.length, 0);
