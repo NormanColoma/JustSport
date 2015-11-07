@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var sports = require('./routes/sports');
+var establishments = require('./routes/establishments');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var clients = require('./routes/clients');
@@ -59,6 +60,7 @@ app.use('/', routes);
 app.use('/api/sports', sports);
 app.use('/api/clients',authController.isBearerAuthenticated, clients);
 app.use('/api/users', users);
+app.use('/api/establishments', establishments);
 
 
 // catch 404 and forward to error handler
