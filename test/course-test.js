@@ -39,23 +39,18 @@ var seeder = new Umzug({
 });
 
 describe('Course', function() {
-    var credentials = {
-        "grant_type": "password",
-        "username": "ua.norman@mail.com",
-        "password": "adi2015"
+    var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
     var user_token = "";
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
-    var id_gym_to_remove = "";
-    var id_gym_to_update = "";
-    var owner = {
-        uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738',
-        name: 'Norman',
-        lname: 'Coloma García',
-        email: 'ua.norman@mail.com',
-        gender: 'male'
-    }
+    var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
+        email: 'ua.norman@mail.com', gender: 'male'}
+    var est = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+        city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
+    var sport = {id: 1,name: 'Spinning'};
+    var course1 = {id: 1,sportId:'1', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
     before('Setting database in a known state', function (done) {
         umzug.execute({
             migrations: ['20151108193656-create-course','20151106004323-create-establishmentsport','20151106004253-create-establishment',
@@ -105,11 +100,53 @@ describe('Course', function() {
 
     });
 
-    xit('Adding new course of sport that is imparted in the specified establishment.Should return status 200',function(done){
-
+    it('Adding new course of sport that is imparted in the specified establishment.Should return status 201',function(done){
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(201).expect(function(res){
+                assert.equal(JSON.stringify(res.body), JSON.stringify(est));
+            }).end(done);
     })
 
+    it('Adding new course of sport that is imparted in the specified establishment without access token.Should return status 400',function(done){
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(400)
+            .end(done);
+    })
 
+    it('Adding new course of sport that is imparted in the specified establishment without permisions.Should return status 403',function(done){
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Adding new course with a nonexistent establishment.Should return status 500',function(done){
+        var nonexistent_est = {id: 1,sportId:'1', establishmentId:'25',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(nonexistent_est)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Adding new course with a nonexistent sport.Should return status 500',function(done){
+        var nonexistent_sp = {id: 1,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(nonexistent_sp)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    
 
     after('Dropping database',function(done) {
         seeder.execute({
