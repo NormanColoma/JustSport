@@ -59,9 +59,8 @@ describe('Course', function() {
         }).then(function (migrations) {
             umzug.up(['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
                 '20151106004323-create-establishmentsport', '20151108193656-create-course']).then(function (migrations) {
+
                 done();
-            }).catch(function(err){
-                console.log(err);
             })
         })
     });
@@ -102,24 +101,28 @@ describe('Course', function() {
 
     it('Adding new course of sport that is imparted in the specified establishment.Should return status 201',function(done){
         supertest(app)
-            .post('/api/courses/new').send(course)
+            .post('/api/courses/new').send(course1)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(201).expect(function(res){
-                assert.equal(JSON.stringify(res.body), JSON.stringify(est));
+                assert.equal(res.body.sportId, course1.sportId);
+                assert.equal(res.body.establishmentId, course1.establishmentId);
+                assert.equal(res.body.instructor, course1.instructor);
+                assert.equal(res.body.price, course1.price);
+                assert.equal(res.body.info, course1.info);
+                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/courses/'+res.body.id);
             }).end(done);
     })
 
-    it('Adding new course of sport that is imparted in the specified establishment without access token.Should return status 400',function(done){
+    it('Adding new course of sport that is imparted in the specified establishment without access token.Should return status 401',function(done){
         supertest(app)
-            .post('/api/courses/new').send(course)
-            .set('Authorization', 'Bearer '+user_token)
-            .expect(400)
+            .post('/api/courses/new').send(course1)
+            .expect(401)
             .end(done);
     })
 
     it('Adding new course of sport that is imparted in the specified establishment without permisions.Should return status 403',function(done){
         supertest(app)
-            .post('/api/courses/new').send(course)
+            .post('/api/courses/new').send(course1)
             .set('Authorization', 'Bearer '+user_token)
             .expect(403).expect(function(res){
                 assert.equal(res.body.message, "You are not authorized to perform this action");
@@ -130,9 +133,9 @@ describe('Course', function() {
         var nonexistent_est = {id: 1,sportId:'1', establishmentId:'25',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
         supertest(app)
             .post('/api/courses/new').send(nonexistent_est)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.message, "You are not authorized to perform this action");
+                assert.equal(res.body.name, 'SequelizeForeignKeyConstraintError');
             }).end(done);
     })
 
@@ -140,13 +143,13 @@ describe('Course', function() {
         var nonexistent_sp = {id: 1,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
         supertest(app)
             .post('/api/courses/new').send(nonexistent_sp)
-            .set('Authorization', 'Bearer '+user_token)
+            .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.message, "You are not authorized to perform this action");
+                assert.equal(res.body.name, 'SequelizeForeignKeyConstraintError');
             }).end(done);
     })
 
-    
+
 
     after('Dropping database',function(done) {
         seeder.execute({
