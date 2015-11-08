@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Course = sequelize.define('Course', {
+  var course = sequelize.define('course', {
     sportId: DataTypes.INTEGER,
     establishmentId: DataTypes.INTEGER,
     instructor: DataTypes.STRING,
@@ -9,10 +9,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-          establishment.belongsTo(models.sport, {foreignKey: 'id', as:'Sport'}),
-          establishment.belongsTo(models.establishment, {foreignKey: 'id', as:'Establishment'})
+          course.belongsTo(models.sport, {foreignKey: 'id', as:'Sport'}),
+          course.belongsTo(models.establishment, {foreignKey: 'id', as:'Establishment'})
       }
     }
   });
-  return Course;
+  return course;
 };

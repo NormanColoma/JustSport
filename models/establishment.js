@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         establishment.belongsToMany(models.sport, {through: 'establishmentsports'}),
         establishment.belongsTo(models.user, {foreignKey: 'owner', as:'Owner'}),
-        establishment.hasMany(models.course,{through: 'Courses'})
+        establishment.hasMany(models.course,{as: 'Courses'})
       }
     }
   });
