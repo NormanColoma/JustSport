@@ -138,7 +138,7 @@ describe('Course', function() {
             .post('/api/courses/new').send(nonexistent_est)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.name, 'SequelizeForeignKeyConstraintError');
+                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
             }).end(done);
     })
 
@@ -148,7 +148,7 @@ describe('Course', function() {
             .post('/api/courses/new').send(nonexistent_sp)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.name, 'SequelizeForeignKeyConstraintError');
+                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
             }).end(done);
     })
 
@@ -166,7 +166,7 @@ describe('Course', function() {
 
     it('Getting a course that exists. Should return status 200',function(done){
         supertest(app)
-            .post('/api/courses/1').send(nonexistent_sp)
+            .get('/api/courses/1')
             .expect(200).expect(function(res){
                 assert.equal(res.body.sportId, course1.sportId);
                 assert.equal(res.body.establishmentId, course1.establishmentId);
@@ -178,7 +178,7 @@ describe('Course', function() {
 
     it('Getting a course that does not exist. Should return status 404',function(done){
         supertest(app)
-            .post('/api/courses/15').send(nonexistent_sp)
+            .get('/api/courses/15')
             .expect(404).expect(function(res){
                 assert.equal(res.body.message, 'The course was not found');
             }).end(done);
@@ -186,7 +186,7 @@ describe('Course', function() {
 
     it('Getting a course passing id as string. Should return status 400',function(done){
         supertest(app)
-            .post('/api/courses/1').send(nonexistent_sp)
+            .get('/api/courses/Curso')
             .expect(400).expect(function(res){
                 assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
             }).end(done);
