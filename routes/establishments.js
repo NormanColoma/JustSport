@@ -236,6 +236,15 @@ router.get('/:id/sports', function(req, res) {
         })
     }
 });
+router.get('sport/:id/location/:location',function(req,res){
+    models.establishment.findAll({where:
+    {$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
+        attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+        include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}]}).then(function(ests){
+        res.status(200)
+    })
+})
+
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
