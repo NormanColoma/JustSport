@@ -19,7 +19,10 @@ module.exports = {
             type: Sequelize.DATE,
             defaultValue: new Date()
           },
-          name: Sequelize.STRING,
+          name:{
+            type: Sequelize.STRING,
+            unique: true
+          }
         }
     )
   },

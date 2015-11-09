@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('establishmentsports',[{
@@ -17,6 +15,9 @@ module.exports = {
     },{
       sportId: '3',
       establishmentId: '1'
+    },{
+      sportId: '1',
+      establishmentId: '4'
     }]);
   },
 
