@@ -38,14 +38,14 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Course', function() {
+describe('Establishments filtered by city and location', function() {
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-        city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
+        city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nÂº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
     var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-        city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
+        city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nÂº34',
         phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg'};
-    var est3 = {id: 4, name: 'Montemar', desc: 'Especializados en cursos y clases de ténis.',
+    var est3 = {id: 4, name: 'Montemar', desc: 'Especializados en cursos y clases de tÃ©nis.',
         city: 'Alicante', province: 'Alicante', addr: 'Avenida Novelda Km 14',
         phone: '965662268', website: 'http://wwww.montemar.es', main_img:'montemar.jpeg'};
     before('Setting database in a known state: Deleting', function (done) {
@@ -80,34 +80,31 @@ describe('Course', function() {
             .get('/api/establishments/sport/1/location/Alicante')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 2);
-                assert.equal(res.body[0].id, est1.id);
-                assert.equal(res.body[0].name, est1.name);
-                assert.equal(res.body[0].desc, est1.desc);
-                assert.equal(res.body[0].city, est1.city);
-                assert.equal(res.body[0].province, est1.province);
-                assert.equal(res.body[0].website, est1.website);
-                assert.equal(res.body[0].phone, est1.phone);
-                assert.equal(res.body[0].main_img, est1.main_img);
-                assert.equal(res.body.Establishments[0].Course);
-                assert.equal(res.body[1].id, est2.id);
-                assert.equal(res.body[1].name, est2.name);
-                assert.equal(res.body[1].desc, est2.desc);
-                assert.equal(res.body[1].city, est2.city);
-                assert.equal(res.body[1].province, est2.province);
-                assert.equal(res.body[1].website, est2.website);
-                assert.equal(res.body[1].phone, est2.phone);
-                assert.equal(res.body[1].main_img, est2.main_img);
-                assert.equal(res.body.Establishments[1].Course);
-                assert.equal(res.body[2].id, est3.id);
-                assert.equal(res.body[2].name, est3.name);
-                assert.equal(res.body[2].desc, est3.desc);
-                assert.equal(res.body[2].city, est3.city);
-                assert.equal(res.body[2].province, est3.province);
-                assert.equal(res.body[2].website, est3.website);
-                assert.equal(res.body[2].phone, est3.phone);
-                assert.equal(res.body[2].main_img, est3.main_img);
-                assert.equal(res.body.Establishments[2].Course);
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].id, est1.id);
+                assert.equal(res.body.Establishments.rows[0].name, est1.name);
+                assert.equal(res.body.Establishments.rows[0].desc, est1.desc);
+                assert.equal(res.body.Establishments.rows[0].city, est1.city);
+                assert.equal(res.body.Establishments.rows[0].province, est1.province);
+                assert.equal(res.body.Establishments.rows[0].website, est1.website);
+                assert.equal(res.body.Establishments.rows[0].phone, est1.phone);
+                assert.equal(res.body.Establishments.rows[0].main_img, est1.main_img);
+                assert.equal(res.body.Establishments.rows[1].id, est2.id);
+                assert.equal(res.body.Establishments.rows[1].name, est2.name);
+                assert.equal(res.body.Establishments.rows[1].desc, est2.desc);
+                assert.equal(res.body.Establishments.rows[1].city, est2.city);
+                assert.equal(res.body.Establishments.rows[1].province, est2.province);
+                assert.equal(res.body.Establishments.rows[1].website, est2.website);
+                assert.equal(res.body.Establishments.rows[1].phone, est2.phone);
+                assert.equal(res.body.Establishments.rows[1].main_img, est2.main_img);
+                assert.equal(res.body.Establishments.rows[2].id, est3.id);
+                assert.equal(res.body.Establishments.rows[2].name, est3.name);
+                assert.equal(res.body.Establishments.rows[2].desc, est3.desc);
+                assert.equal(res.body.Establishments.rows[2].city, est3.city);
+                assert.equal(res.body.Establishments.rows[2].province, est3.province);
+                assert.equal(res.body.Establishments.rows[2].website, est3.website);
+                assert.equal(res.body.Establishments.rows[2].phone, est3.phone);
+                assert.equal(res.body.Establishments.rows[2].main_img, est3.main_img);
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'none');
@@ -122,31 +119,29 @@ describe('Course', function() {
             .get('/api/establishments/sport/1/location/Alicante?limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 2);
-                assert.equal(res.body[0].id, est1.id);
-                assert.equal(res.body[0].name, est1.name);
-                assert.equal(res.body[0].desc, est1.desc);
-                assert.equal(res.body[0].city, est1.city);
-                assert.equal(res.body[0].province, est1.province);
-                assert.equal(res.body[0].website, est1.website);
-                assert.equal(res.body[0].phone, est1.phone);
-                assert.equal(res.body[0].main_img, est1.main_img);
-                assert.equal(res.body.Establishments[0].Course);
-                assert.equal(res.body[1].id, est2.id);
-                assert.equal(res.body[1].name, est2.name);
-                assert.equal(res.body[1].desc, est2.desc);
-                assert.equal(res.body[1].city, est2.city);
-                assert.equal(res.body[1].province, est2.province);
-                assert.equal(res.body[1].website, est2.website);
-                assert.equal(res.body[1].phone, est2.phone);
-                assert.equal(res.body[1].main_img, est2.main_img);
-                assert.equal(res.body.Establishments[1].Course);
+                assert.equal(res.body.Establishments.rows.length, 2);
+                assert.equal(res.body.Establishments.rows[0].id, est1.id);
+                assert.equal(res.body.Establishments.rows[0].name, est1.name);
+                assert.equal(res.body.Establishments.rows[0].desc, est1.desc);
+                assert.equal(res.body.Establishments.rows[0].city, est1.city);
+                assert.equal(res.body.Establishments.rows[0].province, est1.province);
+                assert.equal(res.body.Establishments.rows[0].website, est1.website);
+                assert.equal(res.body.Establishments.rows[0].phone, est1.phone);
+                assert.equal(res.body.Establishments.rows[0].main_img, est1.main_img);
+                assert.equal(res.body.Establishments.rows[1].id, est2.id);
+                assert.equal(res.body.Establishments.rows[1].name, est2.name);
+                assert.equal(res.body.Establishments.rows[1].desc, est2.desc);
+                assert.equal(res.body.Establishments.rows[1].city, est2.city);
+                assert.equal(res.body.Establishments.rows[1].province, est2.province);
+                assert.equal(res.body.Establishments.rows[1].website, est2.website);
+                assert.equal(res.body.Establishments.rows[1].phone, est2.phone);
+                assert.equal(res.body.Establishments.rows[1].main_img, est2.main_img);
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body[0].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[res.body.Establishments.rows.length -1].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/establishments/sport/1/location/Alicante?after='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Establishments.rows[res.body.Establishments.rows.length -1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
     })
@@ -157,23 +152,22 @@ describe('Course', function() {
         var id=2;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/establishments/sport/1/location/Alicante?after'+after+'&limit=2')
+            .get('/api/establishments/sport/1/location/Alicante?after='+after+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 1);
-                assert.equal(res.body[0].id, est3.id);
-                assert.equal(res.body[0].name, est3.name);
-                assert.equal(res.body[0].desc, est3.desc);
-                assert.equal(res.body[0].city, est3.city);
-                assert.equal(res.body[0].province, est3.province);
-                assert.equal(res.body[0].website, est3.website);
-                assert.equal(res.body[0].phone, est3.phone);
-                assert.equal(res.body[0].main_img, est3.main_img);
-                assert.equal(res.body.Establishments[0].Course);
-                assert.equal(res.body.paging.cursors.before, new Buffer(res.body[0].id.toString()).toString('base64'));
+                assert.equal(res.body.Establishments.rows.length, 1);
+                assert.equal(res.body.Establishments.rows[0].id, est3.id);
+                assert.equal(res.body.Establishments.rows[0].name, est3.name);
+                assert.equal(res.body.Establishments.rows[0].desc, est3.desc);
+                assert.equal(res.body.Establishments.rows[0].city, est3.city);
+                assert.equal(res.body.Establishments.rows[0].province, est3.province);
+                assert.equal(res.body.Establishments.rows[0].website, est3.website);
+                assert.equal(res.body.Establishments.rows[0].phone, est3.phone);
+                assert.equal(res.body.Establishments.rows[0].main_img, est3.main_img);
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after,0);
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments/sport/1/location/Alicante?before='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=2');
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
@@ -184,33 +178,31 @@ describe('Course', function() {
         var id=4;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/establishments/sport/1/location/Alicante?before'+before+'&limit=2')
+            .get('/api/establishments/sport/1/location/Alicante?before='+before+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 1);
-                assert.equal(res.body[0].id, est3.id);
-                assert.equal(res.body[0].name, est3.name);
-                assert.equal(res.body[0].desc, est3.desc);
-                assert.equal(res.body[0].city, est3.city);
-                assert.equal(res.body[0].province, est3.province);
-                assert.equal(res.body[0].website, est3.website);
-                assert.equal(res.body[0].phone, est3.phone);
-                assert.equal(res.body[0].main_img, est3.main_img);
-                assert.equal(res.body.Establishments[0].Course);
-                assert.equal(res.body[1].id, est2.id);
-                assert.equal(res.body[1].name, est2.name);
-                assert.equal(res.body[1].desc, est2.desc);
-                assert.equal(res.body[1].city, est2.city);
-                assert.equal(res.body[1].province, est2.province);
-                assert.equal(res.body[1].website, est2.website);
-                assert.equal(res.body[1].phone, est2.phone);
-                assert.equal(res.body[1].main_img, est2.main_img);
-                assert.equal(res.body.Establishments[1].Course);
+                assert.equal(res.body.Establishments.rows.length, 2);
+                assert.equal(res.body.Establishments.rows[0].id, est1.id);
+                assert.equal(res.body.Establishments.rows[0].name, est1.name);
+                assert.equal(res.body.Establishments.rows[0].desc, est1.desc);
+                assert.equal(res.body.Establishments.rows[0].city, est1.city);
+                assert.equal(res.body.Establishments.rows[0].province, est1.province);
+                assert.equal(res.body.Establishments.rows[0].website, est1.website);
+                assert.equal(res.body.Establishments.rows[0].phone, est1.phone);
+                assert.equal(res.body.Establishments.rows[0].main_img, est1.main_img);
+                assert.equal(res.body.Establishments.rows[1].id, est2.id);
+                assert.equal(res.body.Establishments.rows[1].name, est2.name);
+                assert.equal(res.body.Establishments.rows[1].desc, est2.desc);
+                assert.equal(res.body.Establishments.rows[1].city, est2.city);
+                assert.equal(res.body.Establishments.rows[1].province, est2.province);
+                assert.equal(res.body.Establishments.rows[1].website, est2.website);
+                assert.equal(res.body.Establishments.rows[1].phone, est2.phone);
+                assert.equal(res.body.Establishments.rows[1].main_img, est2.main_img);
                 assert.equal(res.body.paging.cursors.before, 0);
-                assert.equal(res.body.paging.cursors.after,new Buffer(res.body[1].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after,new Buffer(res.body.Establishments.rows[1].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/establishments/sport/1/location/Alicante?after='+
-                    new Buffer(res.body.sports[1].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Establishments.rows[1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
     })
@@ -220,10 +212,10 @@ describe('Course', function() {
         var id=2;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/establishments/sport/1/location/Alicante?after'+after)
+            .get('/api/establishments/sport/1/location/Alicante?after=5'+after)
             .expect(400)
             .expect(function (res) {
-                assert.equal("Wrong parameters, limit parameter must be set for paging");
+                assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             })
             .end(done);
     })
@@ -233,10 +225,10 @@ describe('Course', function() {
         var id=2;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
-            .get('/api/establishments/sport/1/location/Alicante?before'+before)
+            .get('/api/establishments/sport/1/location/Alicante?before=5'+before)
             .expect(400)
             .expect(function (res) {
-                assert.equal("Wrong parameters, limit parameter must be set for paging");
+                assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             })
             .end(done);
     })
