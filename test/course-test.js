@@ -150,7 +150,16 @@ describe('Course', function() {
     })
 
 
-
+    it('Adding new course with a malformed JSON.Should return status 400', function(done){
+        var nonexistent_sp = {establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(nonexistent_sp)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400).expect(function(res){
+                assert.equal(res.body.message, 'Json is malformed, it must include the following fields: establishmentId,' +
+                'sportId, instructor(optional), price, info(optional)');
+            }).end(done);
+    })
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
