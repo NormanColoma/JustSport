@@ -46,8 +46,8 @@ describe('Course', function() {
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
         email: 'ua.norman@mail.com', gender: 'male'}
-    var est = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-        city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+    var est = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
+        city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
     var sport = {id: 1,name: 'Spinning'};
     var course1 = {id: 1,sportId:'1', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
@@ -165,14 +165,15 @@ describe('Course', function() {
     })
 
     it('Getting a course that exists. Should return status 200',function(done){
+        var course =
         supertest(app)
             .get('/api/courses/1')
             .expect(200).expect(function(res){
-                assert.equal(res.body.sportId, course1.sportId);
-                assert.equal(res.body.establishmentId, course1.establishmentId);
-                assert.equal(res.body.instructor, course1.instructor);
-                assert.equal(res.body.price, course1.price);
+                assert.equal(JSON.stringify(res.body.Sport), JSON.stringify(sport));
+                assert.equal(JSON.stringify(res.body.Establishment), JSON.stringify(est));
                 assert.equal(res.body.info, course1.info);
+                assert.equal(res.body.price, course1.price);
+                assert.equal(res.body.instructor, course1.instructor);
             }).end(done);
     })
 
