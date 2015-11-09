@@ -300,7 +300,7 @@ describe('Course', function() {
 
     it('Deleting a course passing id as string. Should return status 400', function(done){
         supertest(app)
-            .delete('/api/courses/1')
+            .delete('/api/courses/Curso')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
                 assert.equal(res.body.message, "The supplied id that specifies the course is not a numercial id");

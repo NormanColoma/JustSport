@@ -87,4 +87,16 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdC
         res.status(500).send(err);
     })
 });
+
+router.delete('/:id', authController.isBearerAuthenticated, middleware.numericalIdCourse, user.isOwner,
+    user.isEstabOwner2, function(req, res) {
+        models.course.destroy({where:{id: req.params.id}}).then(function (rows) {
+            if (rows > 0)
+                res.status(204).send();
+            else
+                res.status(404).send({message: "The course was not found"});
+        }).catch(function (err) {
+            res.status(500).send(err);
+        })
+});
 module.exports = router;
