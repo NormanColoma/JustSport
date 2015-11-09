@@ -43,6 +43,7 @@ describe('Course', function() {
     };
     var owner_token = "";
     var user_token = "";
+    var another_owner_token = "";
     var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
     var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
         email: 'ua.norman@mail.com', gender: 'male'}
@@ -102,6 +103,20 @@ describe('Course', function() {
 
     });
 
+    it('Getting access token for another owner that will not be the owner of establishments', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "pepito@mail.com",
+                "password" : "pepin15"
+            })
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                another_owner_token = res.body.access_token;
+            }).end(done);
+
+    });
+
     it('Adding new course of sport that is imparted in the specified establishment.Should return status 201',function(done){
         supertest(app)
             .post('/api/courses/new').send(course1)
@@ -132,13 +147,12 @@ describe('Course', function() {
             }).end(done);
     })
 
-    it('Adding new course with a nonexistent establishment.Should return status 500',function(done){
-        var nonexistent_est = {id: 1,sportId:'1', establishmentId:'25',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+    it('Adding new course without be a owner of any establishment. Should return status 403',function(done){
         supertest(app)
-            .post('/api/courses/new').send(nonexistent_est)
-            .set('Authorization', 'Bearer '+owner_token)
-            .expect(500).expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+            .post('/api/courses/new').send(course1)
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, 'You are not authorized to perform this action');
             }).end(done);
     })
 
@@ -165,7 +179,6 @@ describe('Course', function() {
     })
 
     it('Getting a course that exists. Should return status 200',function(done){
-        var course =
         supertest(app)
             .get('/api/courses/1')
             .expect(200).expect(function(res){
@@ -192,6 +205,74 @@ describe('Course', function() {
                 assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
             }).end(done);
     })
+
+    it('Updating a course that exists. Should return status 204', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning'}
+        supertest(app)
+            .put('/api/courses/1').send(update)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(204)
+            .end(done);
+    })
+    it('Checking the course after updated it (only info was changed). Should return status 200', function(done){
+        supertest(app)
+            .get('/api/courses/1')
+            .expect(200).expect(function(res){
+                assert.equal(JSON.stringify(res.body.Sport), JSON.stringify(sport));
+                assert.equal(JSON.stringify(res.body.Establishment), JSON.stringify(est));
+                assert.equal(res.body.info, 'El curso está orientado para gente con un nivel alto en spinning');
+                assert.equal(res.body.price, course1.price);
+                assert.equal(res.body.instructor, course1.instructor);
+            }).end(done);
+    })
+    it('Updating a course passing id as string. Should return status 400', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning.'}
+        supertest(app)
+            .put('/api/courses/Curso1').send(update)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400).expect(function(res){
+                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
+            }).end(done);
+    })
+
+    it('Updating a course that does not exist. Should return status 404', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning.'}
+        supertest(app)
+            .put('/api/courses/150').send(update)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, 'The course was not found');
+            }).end(done);
+    })
+
+    it('Updating a course without access token. Should return status 401', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning.'}
+        supertest(app)
+            .put('/api/courses/1').send(update)
+            .expect(401)
+            .end(done);
+    })
+
+    it('Updating a course without permissions. Should return status 403', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning.'}
+        supertest(app)
+            .put('/api/courses/1').send(update)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Updating a course without be the owner of establishment. Should return status 403', function(done){
+        var update = {info: 'El curso está orientado para gente con un nivel alto en spinning.'}
+        supertest(app)
+            .put('/api/courses/1').send(update)
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',

@@ -1,4 +1,6 @@
 'use strict';
+var models  = require('../models');
+
 module.exports = function(sequelize, DataTypes) {
   var course = sequelize.define('course', {
     sportId: DataTypes.INTEGER,

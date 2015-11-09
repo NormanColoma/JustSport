@@ -5,26 +5,37 @@ var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
 var authController = require('../routes/auth');
+var user = require('../middlewares/checkUser');
+var middleware = require('../middlewares/paramMiddleware');
 
-router.post('/new', authController.isBearerAuthenticated, function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.sportId && req.body.establishmentId && req.body.price) {
             models.course.create(req.body).then(function (course) {
-                var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/" + course.id;
+                var url = req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/" + course.id;
                 res.setHeader("Location", url);
                 var links = new Array();
-                var link1 = {rel: 'self',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/new"};
-                var link2 = {rel: 'update',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+course.id};
-                var link3 = {rel: 'delete',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+course.id};
-                links.push([link1,link2,link3]);
-                res.status(201).send({id: course.id, sportId: course.sportId, establishmentId: course.establishmentId
-                    ,instructor: course.instructor,price: course.price, info: course.info,links: links});
+                var link1 = {
+                    rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/new"
+                };
+                var link2 = {
+                    rel: 'update',
+                    href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/" + course.id
+                };
+                var link3 = {
+                    rel: 'delete',
+                    href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/" + course.id
+                };
+                links.push([link1, link2, link3]);
+                res.status(201).send({
+                    id: course.id, sportId: course.sportId, establishmentId: course.establishmentId
+                    , instructor: course.instructor, price: course.price, info: course.info, links: links
+                });
             }).catch(function (err) {
                 res.status(500).send(err);
             })
+
         }
         else
             res.status(400).send({message: "Json is malformed, it must include the following fields: establishmentId," +
@@ -60,5 +71,20 @@ router.get('/:id',function(req, res) {
             }
         })
     }
+});
+
+router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdCourse, user.isOwner,
+    user.isEstabOwner2, function(req, res) {
+
+    var values = req.body;
+    var where = {where: {id: req.params.id}};
+    models.course.update(values, where).then(function (updated) {
+        if (updated > 0)
+            res.status(204).send();
+        else
+            res.status(404).send({message: "The course was not found"});
+    }).catch(function (err) {
+        res.status(500).send(err);
+    })
 });
 module.exports = router;
