@@ -1,10 +1,10 @@
 'use strict';
 var owner_id = '8a74a3aa-757d-46f1-ba86-a56a0f107735';
 var est1 = {name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
-  city: 'Alicante', province: 'San Vicente del Raspeig', addr: 'Calle San Franciso nº15',
+  city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
   phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
 var est2 = {name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
-  city: 'Alicante', province: 'Santa Pola', addr: 'Calle Falsa nº34',
+  city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
   phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg',owner: owner_id};
 var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
   city: 'Valencia', province: 'Valencia', addr: 'Calle Arco nº32',

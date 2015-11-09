@@ -11,7 +11,6 @@ module.exports = {
       sportId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true,
         references: {model: "establishmentsports", key: "sportId"},
         onDelete: 'CASCADE'
 
@@ -19,7 +18,6 @@ module.exports = {
       establishmentId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true,
         references: {model: "establishmentsports", key: "establishmentId"},
         onDelete: 'CASCADE'
       },

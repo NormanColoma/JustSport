@@ -236,6 +236,8 @@ router.get('/:id/sports', function(req, res) {
         })
     }
 });
+
+
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
