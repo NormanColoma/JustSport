@@ -164,8 +164,32 @@ describe('Course', function() {
             }).end(done);
     })
 
-    it('Getting all courses from specific sport and location. Should return status 200',function(done){
+    it('Getting a course that exists. Should return status 200',function(done){
+        supertest(app)
+            .post('/api/courses/1').send(nonexistent_sp)
+            .expect(200).expect(function(res){
+                assert.equal(res.body.sportId, course1.sportId);
+                assert.equal(res.body.establishmentId, course1.establishmentId);
+                assert.equal(res.body.instructor, course1.instructor);
+                assert.equal(res.body.price, course1.price);
+                assert.equal(res.body.info, course1.info);
+            }).end(done);
+    })
 
+    it('Getting a course that does not exist. Should return status 404',function(done){
+        supertest(app)
+            .post('/api/courses/15').send(nonexistent_sp)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, 'The course was not found');
+            }).end(done);
+    })
+
+    it('Getting a course passing id as string. Should return status 400',function(done){
+        supertest(app)
+            .post('/api/courses/1').send(nonexistent_sp)
+            .expect(400).expect(function(res){
+                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
+            }).end(done);
     })
     after('Dropping database',function(done) {
         seeder.execute({
