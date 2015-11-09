@@ -6,7 +6,7 @@ var express = require('express');
 var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
-
+var middleware = require('../middlewares/paramMiddleware');
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -236,13 +236,103 @@ router.get('/:id/sports', function(req, res) {
         })
     }
 });
-router.get('sport/:id/location/:location',function(req,res){
-    models.establishment.findAll({where:
-    {$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
-        attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
-        include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}]}).then(function(ests){
-        res.status(200)
-    })
+router.get('/sport/:id/location/:location', middleware.numericalIdSport, middleware.stringLocation, middleware.pagination,
+    function(req,res){
+        if(req.query.after){
+            var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+            models.establishment.findAndCountAll({where:
+            {id: {$gt: after},$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+                limit: req.query.limit}).then(function(ests){
+                var before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                var after = 0;
+                var next = 'none';
+                models.establishment.max('id').then(function(max){
+                    if (ests.rows[ests.rows.length - 1].id < max && ests.count > req.query.limit) {
+                        after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                            +req.params.location+"?after=" + after + '&limit=' + req.query.limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                        +req.params.location+"?before=" + before + '&limit=' + req.query.limit;
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {
+                            rel: 'self', href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/"
+                            + req.params.id + "/location/" +req.params.location
+                        }
+                    });
+                })
+            }).catch(function(err){
+                console.log(err);
+            })
+        }
+        else if(req.query.before){
+            var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+            models.establishment.findAndCountAll({where:
+            {id: {$lt: before},$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+            limit: req.query.limit}).then(function(ests){
+                var after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                var next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                    +req.params.location+"?after=" + after + '&limit=' + req.query.limit;
+                var before = 0;
+                var prev = 'none';
+                models.establishment.min('id').then(function(min){
+                    if (ests.rows[0].id > min) {
+                        before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                            +req.params.location+"?before=" + before + '&limit=' + req.query.limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {
+                            rel: 'self', href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/"
+                            + req.params.id + "/location/" +req.params.location
+                        }
+                    });
+                })
+            }).catch(function(err){
+                console.log(err);
+            })
+        }
+        else {
+            var limit = 5;
+            if(req.query.limit)
+                limit=req.query.limit;
+            //Checking that establishment exists
+            models.establishment.findAndCountAll({where:
+            {$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+                limit: limit}).then(function(ests){
+                var before = 0;
+                var prev = 'none';
+                var after = 0;
+                var next = 'none';
+                models.establishment.max('id').then(function(max){
+                    if (ests.rows[ests.rows.length - 1].id < max && ests.count > req.query.limit) {
+                        after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                            +req.params.location+"?after=" + after + '&limit=' + req.query.limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {
+                            rel: 'self', href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/"
+                            + req.params.id + "/location/" +req.params.location
+                        }
+                    });
+                })
+            }).catch(function(err){
+                console.log(err);
+            })
+        }
 })
 
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {

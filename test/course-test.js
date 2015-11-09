@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Course', function() {
+xdescribe('Course', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -72,7 +72,7 @@ describe('Course', function() {
     before('Filling database', function (done) {
         seeder.execute({
             migrations: ['20151105165531-user-test-seeder', '20151105165744-establishments-test-seeder', '20151106235642-sport-test-seeder', '' +
-            '20151109102627-sportestablishment-test-seeder2'],
+            '20151109102627-sportestablishment-test-seeder2', '20151108194604-course-test-seeder'],
             method: 'up'
         }).then(function (mig) {
             done();
@@ -326,7 +326,7 @@ describe('Course', function() {
 
     after('Dropping database',function(done) {
         seeder.execute({
-            migrations: ['20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
+            migrations: ['20151108194604-course-test-seeder','20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
                 '20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
