@@ -1,13 +1,41 @@
 #JustSport 
 
-JustSport es un API Rest diseñada para facilitar la difusión de los gimnasios, centros deportivos, y cualquier centro de dicho de ámbito.
-Con ella podrás anunciarte y facilitar a los usuarios, toda la información relativa a las clases y actividades deportivas que ofertas. 
+JustSport es un aplicaicón diseñada para facilitar la difusión de los gimnasios, centros deportivos, y cualquier centro de dicho de ámbito.
+Con ella podrás anunciarte y facilitar a los usuarios, toda la información relativa a las clases y actividades deportivas que ofertas. La 
+aplicación expone su propia API Rest.
 
 #Guía para desarrolladores 
 
-A continuación, se proporcionará una pequeña guía para los desarrolladores y cualquier persona que quiera hacer uso de ella. 
+A continuación, se proporcionará una pequeña guía para los desarrolladores y cualquier persona que quiera hacer uso de ella. JustSport está
+en estado de desarollo, por lo que la documentación se irá actualizando a medida que se vayan incorporando nuevas caracterísitcas, o se sufran 
+modificaciones.
 
 ##Endpoints 
+
+###Paginación 
+
+Todos los endpoints que apunten a la recopilación de colecciones, hacen uso de paginación mediante cursores. Por defecto, la paginación está limitada a 5 elementos, pero 
+se puede establecer el número que se crea conveniente:  
+
+**_api/sports?limit=2:_** Mediante el parámetro limit, se establece el límite de la paginación. 
+
+El uso de los cursores será de la siguiente forma: 
+
+**_api/sports?after=Mg==&limit=2:_** Mediante el parámetro after, se especifica, que la información de la colección, comenzará tras el elemento "after".
+
+**_api/sports?before=Mg==&limit=2:_** Mediante el parámetro before, se especifica, que la información de la colección, comenzará tras el elemento "before".
+
+###Autenticación 
+
+Muchas de las rutas están protegidas. La autenticación de la aplicación se maneja mediante OAuth2. Es las próximas versiones se especificará como hacer 
+uso de la autenticación en más detalle. 
+
+Por el momento, y tras estar registrado, basta con hacer una petición al siguiente endpoint: 
+
+**_/api/oauth2/token?username=ua.norman@gmail.com&password=norman2015&grant_type=password&client_id=2xa001za-78b3-4f38-9376-e2dd88b7c682_**
+
+El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
+La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
 
 ######Usuarios
 
@@ -17,6 +45,16 @@ A continuación, se proporcionará una pequeña guía para los desarrolladores y cua
 **_api/users/:id (GET)_:** Recopila la información del usuario mediante su id (excepto la contraseña, la cual se mantiene en secreto por razones de seguridad).
 
 **_api/users/:id (DELETE)_:** Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuestión.
+
+######Clientes
+
+Los clientes son necesarios para poder hacer uso de la API desde una aplicación externa a la oficial. Necesitarás estar registrado en la misma, antes
+de poder crear un Cliente.
+
+**_api/clients/new (POST)_:** Permite crear un nuevo cliente.
+
+**_api/users/:id_user (GET)_:** Recopila la información de todos los clientes en posesión del usuario especificado.
+
 
 ######Deportes
 
@@ -64,5 +102,7 @@ y del establecimiento en el que se da dicho curso.
 **_api/courses/:id (PUT)_:** Actualiza la información de un curso especificado mediante su id.
 
 **_api/courses/:id (Delete)_:** Permite la eliminación de un curso especificado mediante su id.
+
+
 
 
