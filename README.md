@@ -37,6 +37,11 @@ Por el momento, y tras estar registrado, basta con hacer una petición al siguien
 El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
 La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
 
+####Hipermedia 
+
+Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
+La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
+
 ######Usuarios
 
 **_api/users/new (POST)_:** Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
