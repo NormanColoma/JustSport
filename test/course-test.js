@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Course', function() {
+describe('Course', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -51,7 +51,7 @@ xdescribe('Course', function() {
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
     var sport = {id: 1,name: 'Spinning'};
-    var course1 = {id: 1,sportId:'1', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+    var course1 = {sportId:'1', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
     before('Setting database in a known state: Deleting', function (done) {
         umzug.execute({
             migrations: ['20151108193656-create-course','20151106004323-create-establishmentsport','20151106004253-create-establishment',
