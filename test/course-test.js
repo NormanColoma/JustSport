@@ -273,6 +273,57 @@ describe('Course', function() {
             }).end(done);
     })
 
+    it('Deleting a course without be the owner of the establishment. Should return status 403', function(done){
+        supertest(app)
+            .delete('/api/courses/1')
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Deleting a course without access token. Should return status 401', function(done){
+        supertest(app)
+            .delete('/api/courses/1')
+            .expect(401)
+            .end(done);
+    })
+
+    it('Deleting a course without owner token. Should return status 403', function(done){
+        supertest(app)
+            .delete('/api/courses/1')
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Deleting a course passing id as string. Should return status 400', function(done){
+        supertest(app)
+            .delete('/api/courses/1')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400).expect(function(res){
+                assert.equal(res.body.message, "The supplied id that specifies the course is not a numercial id");
+            }).end(done);
+    })
+
+    it('Deleting a course that does not exist. Should return status 404', function(done){
+        supertest(app)
+            .delete('/api/courses/150')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, "The course was not found");
+            }).end(done);
+    })
+
+    it('Deleting a course that exists. Should return status 204', function(done){
+        supertest(app)
+            .delete('/api/courses/1')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(204)
+            .end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
