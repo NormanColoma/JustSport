@@ -12,7 +12,7 @@ modificaciones.
 
 ##Endpoints 
 
-###Paginación 
+####Paginación 
 
 Todos los endpoints que apunten a la recopilación de colecciones, hacen uso de paginación mediante cursores. Por defecto, la paginación está limitada a 5 elementos, pero 
 se puede establecer el número que se crea conveniente:  
@@ -25,7 +25,7 @@ El uso de los cursores será de la siguiente forma:
 
 **_api/sports?before=Mg==&limit=2:_** Mediante el parámetro before, se especifica, que la información de la colección, comenzará tras el elemento "before".
 
-###Autenticación 
+####Autenticación 
 
 Muchas de las rutas están protegidas. La autenticación de la aplicación se maneja mediante OAuth2. Es las próximas versiones se especificará como hacer 
 uso de la autenticación en más detalle. 
