@@ -68,21 +68,52 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 | api/courses/:id                                        | PUT         |  Propietario | 
 | api/courses/:id                                        | DELETE      |  Propietario |
 
-####Usuarios
+###Usuarios
 
-#####POST api/users/new
+####POST api/users/new
 
 Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
 "owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". Devuelve el usuario 
 creado si ha la operación ha tenido éxito. 
 
-**Ruta Recurso**
+#####Ruta del Recurso
+
+__https://localhost:3000/api/users/new__
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol       |
+| ---------------------|:-------------:| :--------:|
+| JSON                 | No            | Público   |
+
+#####Parámetros 
+
+**name:**      El del usuario.
+*obligatorio*  
+     
+**lname:**     Los apellidos del usuario. 
+*obligatorio*  
+
+**email:**     El email que el usuario usará para autenticarse. 
+*obligatorio*  
+
+**pass:**      La contraseña que el usuario usará para autenticarse.
+*obligatorio*  
+
+**gender:**    El sexo del usuario. 
+*obligatorio*  
+
+**role:**      El nivel de privilegios que tendrá el usuario (por defecto se establecer a "user"). 
+*opcional*
+
+#####Ejemplo del Resultado
+
 
 **_api/users/:id (GET)_:** Recopila la información del usuario mediante su id (excepto la contraseña, la cual se mantiene en secreto por razones de seguridad).
 
 **_api/users/:id (DELETE)_:** Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuestión.
 
-####Clientes
+###Clientes
 
 Los clientes son necesarios para poder hacer uso de la API desde una aplicación externa a la oficial. Necesitarás estar registrado en la misma, antes
 de poder crear un Cliente.
@@ -92,7 +123,7 @@ de poder crear un Cliente.
 **_api/clients/:id_user (GET)_:** Recopila la información de todos los clientes en posesión del usuario especificado.
 
 
-####Deportes
+###Deportes
 
 **_api/sports/new (POST)_:** Permite al usuario registrar un nuevo deporte. Este no va vinculado de forma directa a ningún establecimiento, ya que los deportes 
 poseen muchos establecimientos y viceversa. Se establece una relación N:M entre ellos. Se requiere una cuenta con un nivel de propietario.
@@ -107,7 +138,7 @@ poseen muchos establecimientos y viceversa. Se establece una relación N:M entre 
 
 **_api/sports/:id (Delete)_:** Permite la eliminación del deporte especificado mediante su id. Se requiere una cuenta con un nivel de propietario.
 
-####Establecimientos
+###Establecimientos
 
 **_api/establishments/new (POST)_:** Permite al usuario registrar un nuevo establecimeinto. Un establecimiento posee muchos deportes, pero recordamos que la relación
 entre ambos es N:M, de forma que un establecimiento contendrá muchos deportes, pero un deporte pertenecerá a más de un establecimiento. Con esto se pretende conseguir
@@ -127,7 +158,7 @@ que se desee buscar.
 
 **_api/sports/:id (Delete)_:** Permite la eliminación del establecimiento especificado mediante su id. Se requiere una cuenta con un nivel de propietario.
 
-####Cursos
+###Cursos
 
 **_api/courses/new (POST)_:** Permite al usuario establecer un curso. Un curso está directamente relacionado con un establecimiento y un deporte. Por lo tanto
 es obligatorio establecer la id del establecimiento en el cual se quiere impartir dicho curso, y el deporte del cual será el curso. 
