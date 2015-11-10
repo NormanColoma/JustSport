@@ -44,8 +44,8 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 ####Endpoints 
 
-| Ruta          	                                     | Método      | Rol          |
-| -------------------------------------------------------|:-----------:| ------------:|
+| Ruta          	                                     | Método      |      Rol     |
+| -------------------------------------------------------|:-----------:|:------------:|
 | api/users/new                                          | POST        |  Propietario |
 | api/users/:id                                          | GET         |  Público     |
 | api/users/:id                                          | DELETE      |  Usuario     |
