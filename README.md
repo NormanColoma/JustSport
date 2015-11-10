@@ -68,10 +68,13 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 | api/courses/:id                                        | PUT         |  Propietario | 
 | api/courses/:id                                        | DELETE      |  Propietario |
 
-######Usuarios
+#####Usuarios
 
-**_api/users/new (POST)_:** Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
-"owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". 
+######POST api/users/new
+
+Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
+"owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". Devuelve el usuario 
+creado si ha la operación ha tenido éxito. 
 
 **_api/users/:id (GET)_:** Recopila la información del usuario mediante su id (excepto la contraseña, la cual se mantiene en secreto por razones de seguridad).
 
