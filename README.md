@@ -1,3 +1,6 @@
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+<body style="font-family: 'Open Sans', sans-serif">
 #JustSport 
 
 JustSport es un aplicaicón diseñada para facilitar la difusión de los gimnasios, centros deportivos, y cualquier centro de dicho de ámbito.
@@ -12,7 +15,7 @@ modificaciones.
 
 ##Endpoints 
 
-###Paginación 
+####Paginación 
 
 Todos los endpoints que apunten a la recopilación de colecciones, hacen uso de paginación mediante cursores. Por defecto, la paginación está limitada a 5 elementos, pero 
 se puede establecer el número que se crea conveniente:  
@@ -25,7 +28,7 @@ El uso de los cursores será de la siguiente forma:
 
 **_api/sports?before=Mg==&limit=2:_** Mediante el parámetro before, se especifica, que la información de la colección, comenzará tras el elemento "before".
 
-###Autenticación 
+####Autenticación 
 
 Muchas de las rutas están protegidas. La autenticación de la aplicación se maneja mediante OAuth2. Es las próximas versiones se especificará como hacer 
 uso de la autenticación en más detalle. 
@@ -36,6 +39,11 @@ Por el momento, y tras estar registrado, basta con hacer una petición al siguien
 
 El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
 La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
+
+####Hipermedia 
+
+Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
+La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
 ######Usuarios
 
@@ -102,6 +110,8 @@ y del establecimiento en el que se da dicho curso.
 **_api/courses/:id (PUT)_:** Actualiza la información de un curso especificado mediante su id.
 
 **_api/courses/:id (Delete)_:** Permite la eliminación de un curso especificado mediante su id.
+
+</body>
 
 
 
