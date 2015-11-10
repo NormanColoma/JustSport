@@ -108,6 +108,17 @@ __https://localhost:3000/api/users/new__
 
 #####Ejemplo del Resultado
 
+```javascript
+{
+  "uuid": "26b408e3-b1bc-4afb-b85a-211269eb7815",
+  "name": "Luis",
+  "lname": "Lillo Cano",
+  "email": "llca@gmail.com",
+  "gender": "male",
+  "role": "owner"
+}
+```
+
 
 **_api/users/:id (GET)_:** Recopila la información del usuario mediante su id (excepto la contraseña, la cual se mantiene en secreto por razones de seguridad).
 
