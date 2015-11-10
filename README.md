@@ -147,7 +147,7 @@ estado 204 en caso de éxito de la operación.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/users/:id__
+*https://localhost:3000/api/users/:id*
 
 #####Parámetros 
 
@@ -178,7 +178,7 @@ Crea un nuevo cliente asociado a un usuario. Este cliente es único. Devolverá la
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/clients/new__
+*https://localhost:3000/api/clients/new*
 
 #####Información del Recurso
 
@@ -222,7 +222,7 @@ Devuelve una colección de los clientes que pertenecen al usuario
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/clients/:user_id__
+*https://localhost:3000/api/clients/:user_id*
 
 #####Parámetros 
 
@@ -267,7 +267,7 @@ poseen muchos establecimientos y viceversa. Se establece una relación N:M entre 
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/new__
+*https://localhost:3000/api/sports/new*
 
 #####Información del Recurso
 
@@ -322,7 +322,7 @@ Devuelve la colección de todos los deportes registrados en la API.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/_
+*https://localhost:3000/api/sports/*
 
 #####Parámetros 
 
@@ -404,7 +404,7 @@ Devuelve la información del deporte especificado.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/:id_
+*https://localhost:3000/api/sports/:id*
 
 #####Parámetros 
 
@@ -450,7 +450,7 @@ la información pública de su propietario.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/:id/establishemnts_
+*https://localhost:3000/api/sports/:id/establishemnts*
 
 #####Parámetros 
 
@@ -560,7 +560,7 @@ estado 204 en caso de éxito de la operación.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/:id__
+*https://localhost:3000/api/sports/:id*
 
 #####Parámetros 
 
@@ -597,7 +597,7 @@ solo está permitida a usuarios con privilegios de administrador Devuelve el esta
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/sports/:id__
+*https://localhost:3000/api/sports/:id*
 
 #####Parámetros 
 
@@ -630,7 +630,7 @@ una mayor coperación por parte de los clientes que hagan uso de la API. Devolver
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/new__
+*https://localhost:3000/api/establishemnts/new*
 
 
 #####Información del Recurso
@@ -702,7 +702,7 @@ Devuelve la colección de todos los establecimientos, registrados en la API.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts_
+*https://localhost:3000/api/establishemnts*
 
 #####Parámetros 
 
@@ -827,7 +827,7 @@ Obtiene la información del establecimiento especificado. Devuelve también la inf
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/:id_
+*https://localhost:3000/api/establishemnts/:id*
 
 #####Parámetros 
 
@@ -888,7 +888,7 @@ También devuelve la id del curso asociado al deporte especificado.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/sports/:id/location/:location_
+*https://localhost:3000/api/establishemnts/sports/:id/location/:location*
 
 #####Parámetros 
 
@@ -999,7 +999,7 @@ Devuelve la colección de todos los deportes asociados al establecimiento que se 
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/:id/sports_
+*https://localhost:3000/api/establishemnts/:id/sports*
 
 #####Parámetros 
 
@@ -1067,7 +1067,7 @@ establecimiento a modificar en cuestión.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/:id__
+*https://localhost:3000/api/establishemnts/:id*
 
 #####Parámetros 
 
@@ -1104,7 +1104,7 @@ del establecimiento a eliminar en cuestión.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishments/:id__
+*https://localhost:3000/api/establishments/:id*
 
 #####Parámetros 
 
@@ -1139,7 +1139,7 @@ Devolverá el recurso creado.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/courses/new__
+*https://localhost:3000/api/courses/new*
 
 
 #####Información del Recurso
@@ -1200,7 +1200,7 @@ y del deporte el cual trata el curso.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/courses/:id_
+*https://localhost:3000/api/courses/:id*
 
 #####Parámetros 
 
@@ -1265,7 +1265,7 @@ establecimento en el cual se da el curso a modificar en cuestión.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/establishemnts/:id__
+*https://localhost:3000/api/courses/:id*
 
 #####Parámetros 
 
@@ -1301,7 +1301,7 @@ del establecimiento en el cual se imparte el curso a eliminar en cuestión.
 
 #####Ruta del Recurso
 
-__https://localhost:3000/api/courses/:id__
+*https://localhost:3000/api/courses/:id*
 
 #####Parámetros 
 
