@@ -1,7 +1,4 @@
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-
-
-<h1 style="font-family: 'Open Sans', sans-serif">JustSport</h1> 
+#JustSport 
 
 JustSport es un aplicaicón diseñada para facilitar la difusión de los gimnasios, centros deportivos, y cualquier centro de dicho de ámbito.
 Con ella podrás anunciarte y facilitar a los usuarios, toda la información relativa a las clases y actividades deportivas que ofertas. La 
@@ -13,7 +10,7 @@ A continuación, se proporcionará una pequeña guía para los desarrolladores y cua
 en estado de desarollo, por lo que la documentación se irá actualizando a medida que se vayan incorporando nuevas caracterísitcas, o se sufran 
 modificaciones.
 
-##Endpoints 
+##API
 
 ####Paginación 
 
@@ -45,6 +42,32 @@ La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso 
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
+####Endpoints 
+
+| Ruta          	                                     | Método      | Rol          |
+| -------------------------------------------------------|:-----------:| ------------:|
+| api/users/new                                          | POST        |  Propietario |
+| api/users/:id                                          | GET         |  Público     |
+| api/users/:id                                          | DELETE      |  Usuario     |
+| api/clients/new                                        | POST        |  Propietario | 
+| api/clients/:id_user                                   | GET         |  Propietario | 
+| api/sports/new                                         | POST        |  Propietario | 
+| api/sports/                                            | GET         |  Público     | 
+| api/sports/:id/establishments                          | GET         |  Público     |
+| api/sports/:id                                         | PUT         |  Propietario | 
+| api/sports/:id                                         | DELETE      |  Admin       | 
+| api/establishments/new                                 | POST        |  Propietario | 
+| api/establishments/                                    | GET         |  Público     | 
+| api/establishments/:id                                 | GET         |  Público     | 
+| api/establishments/:id/sports                          | GET         |  Público     | 
+| api/establishment/sports/:id/location/:location        | GET         |  Público     | 
+| api/establishments/:id                                 | PUT         |  Propietario | 
+| api/establishments/:id                                 | DELETE      |  Propietario |
+| api/courses/new                                        | POST        |  Propietario | 
+| api/courses/:id                                        | GET         |  Público     | 
+| api/courses/:id                                        | PUT         |  Propietario | 
+| api/courses/:id                                        | DELETE      |  Propietario |
+
 ######Usuarios
 
 **_api/users/new (POST)_:** Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
@@ -61,7 +84,7 @@ de poder crear un Cliente.
 
 **_api/clients/new (POST)_:** Permite crear un nuevo cliente.
 
-**_api/users/:id_user (GET)_:** Recopila la información de todos los clientes en posesión del usuario especificado.
+**_api/clients/:id_user (GET)_:** Recopila la información de todos los clientes en posesión del usuario especificado.
 
 
 ######Deportes
@@ -110,8 +133,6 @@ y del establecimiento en el que se da dicho curso.
 **_api/courses/:id (PUT)_:** Actualiza la información de un curso especificado mediante su id.
 
 **_api/courses/:id (Delete)_:** Permite la eliminación de un curso especificado mediante su id.
-
-</body>
 
 
 
