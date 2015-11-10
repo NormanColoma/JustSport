@@ -12,7 +12,7 @@ modificaciones.
 
 ##API
 
-####Paginación 
+###Paginación 
 
 Todos los endpoints que apunten a la recopilación de colecciones, hacen uso de paginación mediante cursores. Por defecto, la paginación está limitada a 5 elementos, pero 
 se puede establecer el número que se crea conveniente:  
@@ -25,7 +25,7 @@ El uso de los cursores será de la siguiente forma:
 
 **_api/sports?before=Mg==&limit=2:_** Mediante el parámetro before, se especifica, que la información de la colección, comenzará tras el elemento "before".
 
-####Autenticación 
+###Autenticación 
 
 Muchas de las rutas están protegidas. La autenticación de la aplicación se maneja mediante OAuth2. Es las próximas versiones se especificará como hacer 
 uso de la autenticación en más detalle. 
@@ -37,12 +37,12 @@ Por el momento, y tras estar registrado, basta con hacer una petición al siguien
 El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
 La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
 
-####Hipermedia 
+###Hipermedia 
 
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
-####Endpoints 
+###Endpoints 
 
 | Ruta          	                                     | Método      |      Rol     |
 | -------------------------------------------------------|:-----------:|:------------:|
@@ -68,9 +68,9 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 | api/courses/:id                                        | PUT         |  Propietario | 
 | api/courses/:id                                        | DELETE      |  Propietario |
 
-#####Usuarios
+####Usuarios
 
-######POST api/users/new
+#####POST api/users/new
 
 Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario". Pero este valor se puede establecer también a
 "owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". Devuelve el usuario 
@@ -80,7 +80,7 @@ creado si ha la operación ha tenido éxito.
 
 **_api/users/:id (DELETE)_:** Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuestión.
 
-######Clientes
+####Clientes
 
 Los clientes son necesarios para poder hacer uso de la API desde una aplicación externa a la oficial. Necesitarás estar registrado en la misma, antes
 de poder crear un Cliente.
@@ -90,7 +90,7 @@ de poder crear un Cliente.
 **_api/clients/:id_user (GET)_:** Recopila la información de todos los clientes en posesión del usuario especificado.
 
 
-######Deportes
+####Deportes
 
 **_api/sports/new (POST)_:** Permite al usuario registrar un nuevo deporte. Este no va vinculado de forma directa a ningún establecimiento, ya que los deportes 
 poseen muchos establecimientos y viceversa. Se establece una relación N:M entre ellos. Se requiere una cuenta con un nivel de propietario.
@@ -105,7 +105,7 @@ poseen muchos establecimientos y viceversa. Se establece una relación N:M entre 
 
 **_api/sports/:id (Delete)_:** Permite la eliminación del deporte especificado mediante su id. Se requiere una cuenta con un nivel de propietario.
 
-######Establecimientos
+####Establecimientos
 
 **_api/establishments/new (POST)_:** Permite al usuario registrar un nuevo establecimeinto. Un establecimiento posee muchos deportes, pero recordamos que la relación
 entre ambos es N:M, de forma que un establecimiento contendrá muchos deportes, pero un deporte pertenecerá a más de un establecimiento. Con esto se pretende conseguir
@@ -125,7 +125,7 @@ que se desee buscar.
 
 **_api/sports/:id (Delete)_:** Permite la eliminación del establecimiento especificado mediante su id. Se requiere una cuenta con un nivel de propietario.
 
-######Cursos
+####Cursos
 
 **_api/courses/new (POST)_:** Permite al usuario establecer un curso. Un curso está directamente relacionado con un establecimiento y un deporte. Por lo tanto
 es obligatorio establecer la id del establecimiento en el cual se quiere impartir dicho curso, y el deporte del cual será el curso. 
