@@ -76,6 +76,8 @@ Permite al usuario registrarse. Por defecto los usuarios serán del tipo "usuario
 "owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". Devuelve el usuario 
 creado si ha la operación ha tenido éxito. 
 
+**Ruta Recurso**
+
 **_api/users/:id (GET)_:** Recopila la información del usuario mediante su id (excepto la contraseña, la cual se mantiene en secreto por razones de seguridad).
 
 **_api/users/:id (DELETE)_:** Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuestión.
