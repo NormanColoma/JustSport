@@ -1,7 +1,7 @@
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
-<body style="font-family: 'Open Sans', sans-serif">
-#JustSport 
+
+<h1 style="font-family: 'Open Sans', sans-serif">JustSport</h1> 
 
 JustSport es un aplicaicón diseñada para facilitar la difusión de los gimnasios, centros deportivos, y cualquier centro de dicho de ámbito.
 Con ella podrás anunciarte y facilitar a los usuarios, toda la información relativa a las clases y actividades deportivas que ofertas. La 
