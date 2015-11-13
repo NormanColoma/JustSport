@@ -26,7 +26,7 @@ var umzug = new Umzug({
     storageOptions: {
         sequelize: sequelize
     },
-    logging: console.log
+    logging: false
 });
 
 var seeder = new Umzug({
