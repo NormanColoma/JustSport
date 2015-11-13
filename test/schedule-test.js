@@ -245,7 +245,47 @@ describe('Schedule', function() {
                 assert.equal(res.body.message, "You are not authorized to perform this action");
             }).end(done);
     })
-    
+
+    it('Deleting a schedule that does not exist. Should return status 404', function(done){
+        var deleted = {courseId: '1'};
+        supertest(app)
+            .delete('/api/schedules/2').send()
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, "The schedule was not found");
+            }).end(done);
+    })
+
+    it('Deleting a schedule that exists but course not exists. Should return status 404', function(done){
+        var deleted = {courseId: '15'};
+        supertest(app)
+            .delete('/api/schedules/1').send()
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, "The course was not found");
+            }).end(done);
+    })
+
+    it('Deleting a schedule without be the owner of th establishment. Should return status 403', function(done){
+        var deleted = {courseId: '15'};
+        supertest(app)
+            .delete('/api/schedules/1').send()
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403).expect(function(res){
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            }).end(done);
+    })
+
+    it('Deleting a schedule that exist. Should return status 204', function(done){
+        var deleted = {courseId: '1'};
+        supertest(app)
+            .delete('/api/schedules/2').send()
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                assert.equal(res.body.message, "The schedule was not found");
+            }).end(done);
+    })
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151108194604-course-test-seeder','20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
