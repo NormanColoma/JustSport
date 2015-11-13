@@ -183,38 +183,37 @@ describe('Schedule', function() {
     })
 
     it('Updating a schedule that exists. Should return status 204', function(done){
-        var update = {startTime: "12:00", endTime: "13:00"};
+        var update = {startTime: "12:00", endTime: "13:00", courseId: 1};
         supertest(app)
-            .post('/api/schedules/1').send(update)
+            .put('/api/schedules/1').send(update)
             .set('Authorization', 'Bearer '+owner_token)
-            .expect(204)
-            .end(done);
+            .expect(204).end(done);
     })
 
     it('Checking schedule after updated it', function(done){
         models.schedule.findById(1).then(function(sched){
             assert.equal(sched.startTime, "12:00");
             assert.equal(sched.endTime, "13:00");
+            done();
         })
     })
 
     it('Updating a schedule that does not exist. Should return status 404', function(done){
         var update = {startTime: "12:00", endTime: "13:00"};
         supertest(app)
-            .post('/api/schedules/6').send(update)
+            .put('/api/schedules/6').send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(404).expect(function(res){
                 assert.equal(res.body.message, "The course was not found");
             }).end(done);
     })
 
-    it('Updating a schedule to a course that does not exists. Should return status 500', function(done){
-        var update = {startTime: "12:00", endTime: "13:00"};
+    it('Updating a schedule to a course that does not exists. Should return status 404', function(done){
+        var update = {startTime: "12:00", endTime: "13:00", courseId: '15'};
         supertest(app)
-            .post('/api/schedules/6').send(update)
+            .put('/api/schedules/1').send(update)
             .set('Authorization', 'Bearer '+owner_token)
-            .expect(500).expect(function(res){
-                console.log(res)
+            .expect(404).expect(function(res){
                 assert.equal(res.body.message, "The course was not found");
             }).end(done);
     })
@@ -222,42 +221,31 @@ describe('Schedule', function() {
     it('Updating a schedule without access token. Should return status 401', function(done){
         var update = {startTime: "12:00", endTime: "13:00"};
         supertest(app)
-            .post('/api/schedules/6').send(update)
-            .set('Authorization', 'Bearer '+user_token)
+            .put('/api/schedules/6').send(update)
             .expect(401)
             .end(done);
     })
 
-    it('Updating a schedule without be owner. Should return status 500', function(done){
-        var update = {startTime: "12:00", endTime: "13:00"};
+    it('Updating a schedule without be owner. Should return status 403', function(done){
+        var update = {startTime: "12:00", endTime: "13:00", courseId: '1'};
         supertest(app)
-            .post('/api/schedules/6').send(update)
+            .put('/api/schedules/1').send(update)
             .set('Authorization', 'Bearer '+user_token)
             .expect(403).expect(function(res){
                 assert.equal(res.body.message, "You are not authorized to perform this action");
             }).end(done);
     })
 
-    it('Updating a schedule without be a owner of the establishment. Should return status 500', function(done){
-        var update = {startTime: "12:00", endTime: "13:00"};
+    it('Updating a schedule without be a owner of the establishment. Should return status 403', function(done){
+        var update = {startTime: "12:00", endTime: "13:00", courseId: '1'};
         supertest(app)
-            .post('/api/schedules/6').send(update)
+            .put('/api/schedules/1').send(update)
             .set('Authorization', 'Bearer '+another_owner_token)
             .expect(403).expect(function(res){
                 assert.equal(res.body.message, "You are not authorized to perform this action");
             }).end(done);
     })
-
-    it('Updating a schedule passing malformed JSON. Should return status 500', function(done){
-        var malformed = {desc: "13:00"};
-        supertest(app)
-            .post('/api/schedules/6').send(malformed)
-            .set('Authorization', 'Bearer '+owner_token)
-            .expect(400).expect(function(res){
-                assert.equal(res.body.message, "You are not authorized to perform this action");
-            }).end(done);
-    })
-
+    
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151108194604-course-test-seeder','20151109102627-sportestablishment-test-seeder2','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',

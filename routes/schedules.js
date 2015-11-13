@@ -11,7 +11,7 @@ var authController = require('../routes/auth');
 var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
 
-router.post('/new', authController.isBearerAuthenticated, user.isOwner, user.isEstabOwner2, function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, function(req, res) {
     if (req.body.day && req.body.startTime && req.body.endTime && req.body.courseId) {
         models.schedule.create(req.body).then(function (schedule) {
             var url = req.protocol + "://" + req.hostname + ":" + global.port + "/api/schedules/" + schedule.id;
@@ -45,11 +45,11 @@ router.post('/new', authController.isBearerAuthenticated, user.isOwner, user.isE
 
 });
 
-router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdSchedule, user.isOwner, user.isEstabOwner2, function(req, res) {
+router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdSchedule, user.isEstabOwner2, function(req, res) {
     if(req.body.courseId) {
         var values = req.body;
         var where = {where: {id: req.params.id, courseId: req.body.courseId}};
-        models.schedules.update(values, where).then(function (updated) {
+        models.schedule.update(values, where).then(function (updated) {
             if (updated > 0)
                 res.status(204).send();
             else
