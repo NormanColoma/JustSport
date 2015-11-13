@@ -2,7 +2,8 @@
 module.exports = function(sequelize, DataTypes) {
   var schedule = sequelize.define('schedule', {
     day: DataTypes.STRING,
-    time: DataTypes.STRING,
+    startTime: DataTypes.STRING,
+    endTime: DataTypes.STRING,
     courseId: DataTypes.INTEGER
   }, {
     classMethods: {

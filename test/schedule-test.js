@@ -41,7 +41,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Schedule', function() {
+describe('Schedule', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -54,7 +54,7 @@ xdescribe('Schedule', function() {
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
     var sport = {id: 1,name: 'Spinning'};
-    var schedule = [{day: 'Thursday', time: '10:00-11:00', courseId: 1},{day: 'Monday', time: '09:00-10:00', courseId: 1},
+    var schedule = [{day: 'Thursday', startTime: '10:00', endTime:"11:00", courseId: 1},{day: 'Monday', time: '09:00-10:00', courseId: 1},
         {day: 'Friday', time: '17:00-18:00', courseId: 1}];
     before('Setting database in a known state: Deleting', function (done) {
         umzug.execute({
@@ -69,13 +69,11 @@ xdescribe('Schedule', function() {
     before('Setting database in a known state: Creating', function (done) {
         umzug.execute({
             migrations: ['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
-                '20151106004323-create-establishmentsport'],
+                '20151106004323-create-establishmentsport','20151108193656-create-course'],
             method: 'up'
         }).then(function (migrations) {
-            umzug.up(['20151108193656-create-course','20151113141451-create-schedule']).then(function (migrations) {
-                done();
-            });
-
+            umzug.up({ migrations: ['20151113141451-create-schedule'] });
+            done();
         })
     });
 
@@ -133,7 +131,8 @@ xdescribe('Schedule', function() {
             .set('Authorization', 'Bearer '+owner_token)
             .expect(201).expect(function(res){
                 assert.equal(res.body.day, schedule[0].day);
-                assert.equal(res.body.time, schedule[0].time);
+                assert.equal(res.body.startTime, schedule[0].startTime);
+                assert.equal(res.body.endTime, schedule[0].endTime);
                 assert.equal(res.body.courseId, schedule[0].courseId);
                 assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/schedules/'+res.body.courseId);
             }).end(done);
@@ -151,14 +150,13 @@ xdescribe('Schedule', function() {
     it('Adding new schedule without access token. Should return status 401', function(done){
         supertest(app)
             .post('/api/schedules/new').send(schedule)
-            .set('Authorization', 'Bearer '+user_token)
             .expect(401)
             .end(done);
     })
 
     it('Adding new schedule without owner token. Should return status 403', function(done){
         supertest(app)
-            .post('/api/schedules/new').send(schedule)
+            .post('/api/schedules/new').send(schedule[0])
             .set('Authorization', 'Bearer '+user_token)
             .expect(403).expect(function(res){
                 assert.equal(res.body.message, "You are not authorized to perform this action");
@@ -167,7 +165,7 @@ xdescribe('Schedule', function() {
 
     it('Adding new schedule without be the owner of the establishment. Should return status 403', function(done){
         supertest(app)
-            .post('/api/schedules/new').send(schedule)
+            .post('/api/schedules/new').send(schedule[0])
             .set('Authorization', 'Bearer '+user_token)
             .expect(403).expect(function(res){
                 assert.equal(res.body.message, "You are not authorized to perform this action");
@@ -176,11 +174,11 @@ xdescribe('Schedule', function() {
 
     it('Adding new schedule passing malformed JSON. Should return status 400', function(done){
         supertest(app)
-            .post('/api/schedules/new').send(schedule)
-            .set('Authorization', 'Bearer '+user_token)
-            .expect(403).expect(function(res){
+            .post('/api/schedules/new').send(schedule[1])
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400).expect(function(res){
                 assert.equal(res.body.message, "Json is malformed, it must include the following fields: day," +
-                    "time, course_id");
+                    "startTime, endTime, courseId");
             }).end(done);
     })
 

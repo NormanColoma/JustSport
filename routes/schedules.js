@@ -12,7 +12,7 @@ var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
 
 router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, function(req, res) {
-    if (req.body.day && req.body.time && req.body.courseId) {
+    if (req.body.day && req.body.startTime && req.body.endTime && req.body.courseId) {
         models.schedule.create(req.body).then(function (schedule) {
             var url = req.protocol + "://" + req.hostname + ":" + global.port + "/api/schedules/" + schedule.id;
             res.setHeader("Location", url);
@@ -31,7 +31,8 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, fu
             };
             links.push([link1, link2, link3]);
             res.status(201).send({
-                id: schedule.id, day: schedule.day, time: schedule.time, courseId: schedule.courseId, links: links
+                id: schedule.id, day: schedule.day, startTime: schedule.startTime, endTime: schedule.endTime,
+                courseId: schedule.courseId, links: links
             });
         }).catch(function (err) {
             console.log(err);
@@ -40,7 +41,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, fu
 
     }
     else
-        res.status(400).send({message: "Json is malformed, it must include the following fields: day,time, courseId"});
+        res.status(400).send({message: "Json is malformed, it must include the following fields: day,startTime, endTime, courseId"});
 
 });
 
