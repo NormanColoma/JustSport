@@ -59,7 +59,22 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdS
         })
     }
     else
-        res.status(400).send({message: "Json is malformed: courseId field is required for updatings"});
+        res.status(400).send({message: "Json is malformed: courseId field is required for updates"});
+});
+
+router.delete('/:id', authController.isBearerAuthenticated, middleware.numericalIdSchedule, user.isEstabOwner2, function(req, res) {
+    if(req.body.courseId) {
+        models.schedule.destroy({where:{id: req.params.id}}).then(function (deleted) {
+            if (deleted > 0)
+                res.status(204).send();
+            else
+                res.status(404).send({message: "The schedule was not found"});
+        }).catch(function (err) {
+            res.status(500).send(err);
+        })
+    }
+    else
+        res.status(400).send({message: "Json is malformed: courseId field is required for deletions"});
 });
 
 module.exports = router;
