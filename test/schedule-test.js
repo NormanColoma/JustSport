@@ -174,7 +174,7 @@ describe('Schedule', function() {
 
     it('Adding new schedule passing malformed JSON. Should return status 400', function(done){
         supertest(app)
-            .post('/api/schedules/1').send(schedule[1])
+            .post('/api/schedules/new').send(schedule[1])
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
                 assert.equal(res.body.message, "Json is malformed, it must include the following fields: day," +
@@ -185,7 +185,7 @@ describe('Schedule', function() {
     it('Updating a schedule that exists. Should return status 204', function(done){
         var update = {startTime: "12:00", endTime: "13:00"};
         supertest(app)
-            .post('/api/schedules/new').send(update)
+            .post('/api/schedules/1').send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(204)
             .end(done);
