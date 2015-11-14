@@ -64,7 +64,7 @@ router.get('/:id',function(req, res) {
                             href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+req.params.id+"/schedule"};
                         links.push([link1,link2]);
                         var cour = {id: course.id, Sport: sport, Establishment: est, instructor: course.instructor,
-                        price: course.price, info: course.info, links: links};
+                            price: course.price, info: course.info, links: links};
                         res.status(200).send(cour);
                     })
                 })
@@ -72,6 +72,68 @@ router.get('/:id',function(req, res) {
         })
     }
 });
+
+router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination, function(req,res){
+    var where = "";
+    var limit = 5;
+    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
+        + req.params.id + "/schedule";
+    var before = 0;
+    var prev = 'none';
+    var after = 0;
+    var next = 'none';
+    if(req.query.after){
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
+            + req.params.id + "/schedule?after="+req.query.after+"?limit"+limit;
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$gt: after},courseId: req.params.id}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
+            + req.params.id + "/schedule?before="+req.query.before+"?limit"+limit;
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$lt: before},courseId: req.params.id}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
+                + req.params.id + "/schedule?limit="+limit;
+        }
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{courseId: req.params.id}};
+    }
+    before = 0;
+    after = 0;
+    models.course.findById(req.params.id).then(function(course){
+        if(course){
+            models.schedule.findAndCountAll(where).then(function(schedule){
+                course.getSchedule().then(function(total){
+                    //Check if there are after cursors
+                    if(schedule.rows.length < schedule.count || schedule.rows[schedule.rows.length -1].id < total[total.length-1].id){
+                        after = new Buffer(schedule.rows[schedule.rows.length - 1].id.toString()).toString('base64');
+                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id + "/schedule"+
+                            "?after=" + after + '&limit=' + limit;
+                    }
+                    models.schedule.min('id').then(function(min){
+                        //Check if there are before cursors
+                        if (schedule.rows[0].id > min) {
+                            before = new Buffer(schedule.rows[0].id.toString()).toString('base64');
+                            prev = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id +
+                                "/schedule?before=" + before + '&limit=' + limit;
+                        }
+                        var curs = {before: before, after: after};
+                        var pag = {cursors: curs, previous: prev, next: next};
+                        res.status(200).send({
+                            Schedule: schedule, paging: pag, links: {rel: 'self', href: url}
+                        });
+                    })
+                })
+            });
+        }
+        else
+            res.status(404).send({message: "The course was not found"});
+    })
+})
 
 router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdCourse, user.isOwner,
     user.isEstabOwner2, function(req, res) {

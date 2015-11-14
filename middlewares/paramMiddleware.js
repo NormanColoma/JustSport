@@ -45,6 +45,14 @@ exports.pagination = function(req,res,next){
         else
             res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
     }
-    else
-        next();
+    else {
+        if(req.query.limit){
+            if(req.query.limit <= 0)
+                res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+            else
+                next();
+        }else{
+            next();
+        }
+    }
 }
