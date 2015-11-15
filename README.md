@@ -44,9 +44,9 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 ###Endpoints 
 
-| Ruta          	                                     | Método      |      Rol     |
-| -------------------------------------------------------|:-----------:|:------------:|
-| api/users/new                                          | POST        |  Propietario |
+| Ruta          	                                                                                               | Método      |      Rol     |
+| -----------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
+| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                         | POST        |  Propietario |
 | api/users/:id                                          | GET         |  Público     |
 | api/users/:id                                          | DELETE      |  Usuario     |
 | api/clients/new                                        | POST        |  Propietario | 
