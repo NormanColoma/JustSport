@@ -44,33 +44,34 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 ###Endpoints 
 
-| Ruta          	                                                                                               | Método      |      Rol     |
-| -----------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
-| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                         | POST        |  Propietario |
-| api/users/:id                                          | GET         |  Público     |
-| api/users/:id                                          | DELETE      |  Usuario     |
-| api/clients/new                                        | POST        |  Propietario | 
-| api/clients/:id_user                                   | GET         |  Propietario | 
-| api/sports/new                                         | POST        |  Propietario | 
-| api/sports/                                            | GET         |  Público     | 
-| api/sports/:id/establishments                          | GET         |  Público     |
-| api/sports/:id                                         | PUT         |  Propietario | 
-| api/sports/:id                                         | DELETE      |  Admin       | 
-| api/establishments/new                                 | POST        |  Propietario | 
-| api/establishments/                                    | GET         |  Público     | 
-| api/establishments/:id                                 | GET         |  Público     | 
-| api/establishments/:id/sports                          | GET         |  Público     | 
-| api/establishment/sports/:id/location/:location        | GET         |  Público     | 
-| api/establishments/:id                                 | PUT         |  Propietario | 
-| api/establishments/:id                                 | DELETE      |  Propietario |
-| api/courses/new                                        | POST        |  Propietario | 
-| api/courses/:id                                        | GET         |  Público     | 
-| api/courses/:id                                        | PUT         |  Propietario | 
-| api/courses/:id                                        | DELETE      |  Propietario |
-| api/courses/:id/schedule								 | GET         |  Público     | 
-| api/schedules/new                                      | POST        |  Propietario | 
-| api/schedules/:id                                      | PUT         |  Propietario | 
-| api/schedules/:id                                      | DELETE      |  Propietario | 
+| Ruta          	                                                                                                                                           | Método      |      Rol     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
+| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                                                                     | POST        |  Propietario |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiusersid)                                                                       | GET         |  Público     |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiusersid)                                                                    | DELETE      |  Usuario     |
+| [api/clients/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiclientsnew)                                                                 | POST        |  Propietario | 
+| [api/clients/:id_user] (https://github.com/NormanColoma/JustSport/tree/develop#get-apiclientsuser_id)                                                        | GET         |  Propietario | 
+| [api/sports/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apisportsnew)                                                                   | POST        |  Propietario | 
+| [api/sports/](https://github.com/NormanColoma/JustSport/tree/develop#get-apisports)                                                                          | GET         |  Público     | 
+| [api/sports/:id/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsidestablishment)                                         | GET         |  Público     |
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsid)                                                                     | GET         |  Público     | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apisportsid)                                                                     | PUT         |  Propietario | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apisportsid)                                                                  | DELETE      |  Admin       | 
+| [api/establishments/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiestablishmentsnew)                                                   | POST        |  Propietario | 
+| [api/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishments)                                                           | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsid)                                                     | GET         |  Público     | 
+| [api/establishments/:id/sports](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsidsports)                                        | GET         |  Público     | 
+| [api/establishment/sports/:id/location/:location](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentssportsidlocationlocation)      | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apiestablishmentsid)                                                     | PUT         |  Propietario | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiestablishmentsid)                                                  | DELETE      |  Propietario |
+| [api/courses/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apicoursesnew)                                                                 | POST        |  Propietario | 
+| [api/courses/:id/schedule](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesidschedule)								                   | GET         |  Público     |
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesid)                                                                   | GET         |  Público     | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apicoursesid)                                                                   | PUT         |  Propietario | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apicoursesid)                                                                | DELETE      |  Propietario | 
+| [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apischedulesnew)                                                             | POST        |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apischedulesid)                                                               | PUT         |  Propietario | 
+| [api/schedules/:id]((https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
 
 ###Usuarios
 
@@ -1478,7 +1479,7 @@ Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va
 ```
 
 
-####PUT api/courses/:id
+####PUT api/schedules/:id
 
 Modifica el horario especificado mediante su id. Devolverá el estado 204 en caso de éxito. El usuario autenticado debe ser el propietario del 
 establecimento en el cual se da el curso del que se quiere modificar el horario.
