@@ -1517,7 +1517,7 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 
 Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va a actualizar el horario.
 
-####DELETE api/courses/:id
+####DELETE api/schedules/:id
 
 Elimina el horario especificado mediante su id. Devuelve el estado 204 en caso de éxito de la operación. Se debe ser el propietario 
 del establecimiento en el cual se imparte el curso del que se quiere eliminar el horario.
