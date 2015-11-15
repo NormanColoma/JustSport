@@ -1548,7 +1548,7 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 
 ```javascript
 {
-    "startTime": "19:30", "endTime":"20:30", "courseId": 1
+    "courseId": 1
 }
 ```
 
