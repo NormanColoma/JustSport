@@ -46,32 +46,32 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 | Ruta          	                                                                                                                                           | Método      |      Rol     |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
-| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                                                                     | POST        |  Propietario |
-| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiusersid)                                                                       | GET         |  Público     |
-| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiusersid)                                                                    | DELETE      |  Usuario     |
-| [api/clients/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiclientsnew)                                                                 | POST        |  Propietario | 
-| [api/clients/:id_user] (https://github.com/NormanColoma/JustSport/tree/develop#get-apiclientsuser_id)                                                        | GET         |  Propietario | 
-| [api/sports/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apisportsnew)                                                                   | POST        |  Propietario | 
-| [api/sports/](https://github.com/NormanColoma/JustSport/tree/develop#get-apisports)                                                                          | GET         |  Público     | 
-| [api/sports/:id/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsidestablishment)                                         | GET         |  Público     |
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsid)                                                                     | GET         |  Público     | 
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apisportsid)                                                                     | PUT         |  Propietario | 
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apisportsid)                                                                  | DELETE      |  Admin       | 
-| [api/establishments/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiestablishmentsnew)                                                   | POST        |  Propietario | 
-| [api/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishments)                                                           | GET         |  Público     | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsid)                                                     | GET         |  Público     | 
-| [api/establishments/:id/sports](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsidsports)                                        | GET         |  Público     | 
-| [api/establishment/sports/:id/location/:location](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentssportsidlocationlocation)      | GET         |  Público     | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apiestablishmentsid)                                                     | PUT         |  Propietario | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiestablishmentsid)                                                  | DELETE      |  Propietario |
-| [api/courses/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apicoursesnew)                                                                 | POST        |  Propietario | 
-| [api/courses/:id/schedule](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesidschedule)								                   | GET         |  Público     |
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesid)                                                                   | GET         |  Público     | 
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apicoursesid)                                                                   | PUT         |  Propietario | 
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apicoursesid)                                                                | DELETE      |  Propietario | 
-| [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apischedulesnew)                                                             | POST        |  Propietario | 
-| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apischedulesid)                                                               | PUT         |  Propietario | 
-| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
+| [api/users/new](https://github.com/NormanColoma/JustSport/tree/master#post-apiusersnew)                                                                      | POST        |  Propietario |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/master#get-apiusersid)                                                                        | GET         |  Público     |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/master#delete-apiusersid)                                                                     | DELETE      |  Usuario     |
+| [api/clients/new](https://github.com/NormanColoma/JustSport/tree/master#post-apiclientsnew)                                                                  | POST        |  Propietario | 
+| [api/clients/:id_user] (https://github.com/NormanColoma/JustSport/tree/master#get-apiclientsuser_id)                                                         | GET         |  Propietario | 
+| [api/sports/new](https://github.com/NormanColoma/JustSport/tree/master#post-apisportsnew)                                                                    | POST        |  Propietario | 
+| [api/sports/](https://github.com/NormanColoma/JustSport/tree/master#get-apisports)                                                                           | GET         |  Público     | 
+| [api/sports/:id/establishments](https://github.com/NormanColoma/JustSport/tree/master#get-apisportsidestablishment)                                          | GET         |  Público     |
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/master#get-apisportsid)                                                                      | GET         |  Público     | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/master#put-apisportsid)                                                                      | PUT         |  Propietario | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/master#delete-apisportsid)                                                                   | DELETE      |  Admin       | 
+| [api/establishments/new](https://github.com/NormanColoma/JustSport/tree/master#post-apiestablishmentsnew)                                                    | POST        |  Propietario | 
+| [api/establishments](https://github.com/NormanColoma/JustSport/tree/master#get-apiestablishments)                                                            | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/master#get-apiestablishmentsid)                                                      | GET         |  Público     | 
+| [api/establishments/:id/sports](https://github.com/NormanColoma/JustSport/tree/master#get-apiestablishmentsidsports)                                         | GET         |  Público     | 
+| [api/establishment/sports/:id/location/:location](https://github.com/NormanColoma/JustSport/tree/master#get-apiestablishmentssportsidlocationlocation)       | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/master#put-apiestablishmentsid)                                                      | PUT         |  Propietario | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/master#delete-apiestablishmentsid)                                                   | DELETE      |  Propietario |
+| [api/courses/new](https://github.com/NormanColoma/JustSport/tree/master#post-apicoursesnew)                                                                  | POST        |  Propietario | 
+| [api/courses/:id/schedule](https://github.com/NormanColoma/JustSport/tree/master#get-apicoursesidschedule)								                   | GET         |  Público     |
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/master#get-apicoursesid)                                                                    | GET         |  Público     | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/master#put-apicoursesid)                                                                    | PUT         |  Propietario | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/master#delete-apicoursesid)                                                                 | DELETE      |  Propietario | 
+| [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/master#post-apischedulesnew)                                                              | POST        |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/master#put-apischedulesid)                                                                | PUT         |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/master#delete-apischedulesid)                                                             | DELETE      |  Propietario | 
 
 ###Usuarios
 
