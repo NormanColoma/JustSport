@@ -44,29 +44,34 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 ###Endpoints 
 
-| Ruta          	                                     | Método      |      Rol     |
-| -------------------------------------------------------|:-----------:|:------------:|
-| api/users/new                                          | POST        |  Propietario |
-| api/users/:id                                          | GET         |  Público     |
-| api/users/:id                                          | DELETE      |  Usuario     |
-| api/clients/new                                        | POST        |  Propietario | 
-| api/clients/:id_user                                   | GET         |  Propietario | 
-| api/sports/new                                         | POST        |  Propietario | 
-| api/sports/                                            | GET         |  Público     | 
-| api/sports/:id/establishments                          | GET         |  Público     |
-| api/sports/:id                                         | PUT         |  Propietario | 
-| api/sports/:id                                         | DELETE      |  Admin       | 
-| api/establishments/new                                 | POST        |  Propietario | 
-| api/establishments/                                    | GET         |  Público     | 
-| api/establishments/:id                                 | GET         |  Público     | 
-| api/establishments/:id/sports                          | GET         |  Público     | 
-| api/establishment/sports/:id/location/:location        | GET         |  Público     | 
-| api/establishments/:id                                 | PUT         |  Propietario | 
-| api/establishments/:id                                 | DELETE      |  Propietario |
-| api/courses/new                                        | POST        |  Propietario | 
-| api/courses/:id                                        | GET         |  Público     | 
-| api/courses/:id                                        | PUT         |  Propietario | 
-| api/courses/:id                                        | DELETE      |  Propietario |
+| Ruta          	                                                                                                                                           | Método      |      Rol     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
+| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                                                                     | POST        |  Propietario |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiusersid)                                                                       | GET         |  Público     |
+| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiusersid)                                                                    | DELETE      |  Usuario     |
+| [api/clients/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiclientsnew)                                                                 | POST        |  Propietario | 
+| [api/clients/:id_user] (https://github.com/NormanColoma/JustSport/tree/develop#get-apiclientsuser_id)                                                        | GET         |  Propietario | 
+| [api/sports/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apisportsnew)                                                                   | POST        |  Propietario | 
+| [api/sports/](https://github.com/NormanColoma/JustSport/tree/develop#get-apisports)                                                                          | GET         |  Público     | 
+| [api/sports/:id/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsidestablishment)                                         | GET         |  Público     |
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsid)                                                                     | GET         |  Público     | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apisportsid)                                                                     | PUT         |  Propietario | 
+| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apisportsid)                                                                  | DELETE      |  Admin       | 
+| [api/establishments/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiestablishmentsnew)                                                   | POST        |  Propietario | 
+| [api/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishments)                                                           | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsid)                                                     | GET         |  Público     | 
+| [api/establishments/:id/sports](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsidsports)                                        | GET         |  Público     | 
+| [api/establishment/sports/:id/location/:location](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentssportsidlocationlocation)      | GET         |  Público     | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apiestablishmentsid)                                                     | PUT         |  Propietario | 
+| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiestablishmentsid)                                                  | DELETE      |  Propietario |
+| [api/courses/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apicoursesnew)                                                                 | POST        |  Propietario | 
+| [api/courses/:id/schedule](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesidschedule)								                   | GET         |  Público     |
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesid)                                                                   | GET         |  Público     | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apicoursesid)                                                                   | PUT         |  Propietario | 
+| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apicoursesid)                                                                | DELETE      |  Propietario | 
+| [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apischedulesnew)                                                             | POST        |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apischedulesid)                                                               | PUT         |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
 
 ###Usuarios
 
@@ -1129,8 +1134,6 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 
 ###Cursos
 
-**_api/courses/new (POST)_:** 
-
 ####POST api/courses/new
 
 Permite al usuario establecer un curso. Un curso está directamente relacionado con un establecimiento y un deporte. Por lo tanto
@@ -1250,11 +1253,99 @@ GET
         "href": "https://localhost:3000/api/courses/2"
       },
       {
-        "rel": "sports",
+        "rel": "schedule",
         "href": "https://localhost:3000/api/courses/2/schedule"
       }
     ]
   ]
+}
+```
+
+####GET api/courses/:id/schedule
+
+Obtine el horario del curso especificado.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/courses/:id*
+
+#####Parámetros 
+
+**id:**      La id del curso el cual queremos obtener el horario.
+*obligatorio* 
+
+**limit:**      El número de horarios que se quiere incluir en la colección (por defecto 5)
+*opcional*
+
+**after:**      El horario tras el cual se quiere empezar a devolver la colección. La colección empezará después del horario especificado(hacia delante).
+*opcional*
+
+**before:**     El horario tras el cual se quiere empezar a devolver la colección. La colección empezará después del horario  especificado (hacia atrás).
+*opcional*
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | No            | Público       |
+
+#####Ejemplo de Petición 
+
+GET
+*https://localhost:3000/api/courses/1/schedule* 
+
+
+#####Ejemplo del Resultado
+
+```javascript
+{
+  "Schedule": {
+    "count": 6,
+    "rows": [
+      {
+        "id": 1,
+        "day": "Martes",
+        "startTime": "10:00",
+        "endTime": "11:00"
+      },
+      {
+        "id": 2,
+        "day": "Lunes",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "id": 3,
+        "day": "Miércoles",
+        "startTime": "17:00",
+        "endTime": "18:00"
+      },
+      {
+        "id": 4,
+        "day": "Jueves",
+        "startTime": "12:00",
+        "endTime": "13:00"
+      },
+      {
+        "id": 5,
+        "day": "Jueves",
+        "startTime": "20:00",
+        "endTime": "21:00"
+      }
+    ]
+  },
+  "paging": {
+    "cursors": {
+      "before": 0,
+      "after": "NQ=="
+    },
+    "previous": "none",
+    "next": "https://localhost:3000/api/courses/1/schedule?after=NQ==&limit=5"
+  },
+  "links": {
+    "rel": "self",
+    "href": "https://localhost:3000/api/courses/1/schedule"
+  }
 }
 ```
 
@@ -1323,6 +1414,147 @@ DELETE
 
 *Authorization* 
 Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
+
+###Horario
+
+####POST api/schedules/new
+
+Permite al usuario establecer un horario a un curso. Un horario está directamente relacionado con un curso. Devolverá el recurso creado.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/schedules/new*
+
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | Sí            | Propietario   |
+
+#####Ejemplo de Petición 
+
+POST
+*https://localhost:3000/api/schedules/new* 
+
+**Headers** 
+
+*Authorization* 
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
+
+```javascript
+{
+    "day": "Martes", "startTime": "19:00", "endTime":"20:00", "courseId": 1
+}
+```
+
+Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va a establecer el horario.
+
+#####Ejemplo del Resultado
+
+```javascript
+{
+  "id": 7,
+  "day": "Martes",
+  "startTime": "19:00",
+  "endTime": "20:00",
+  "courseId": 1,
+  "links": [
+    [
+      {
+        "rel": "self",
+        "href": "https://localhost:3000/api/schedules/new"
+      },
+      {
+        "rel": "update",
+        "href": "https://localhost:3000/api/schedules/7"
+      },
+      {
+        "rel": "delete",
+        "href": "https://localhost:3000/api/schedules/7"
+      }
+    ]
+  ]
+}
+```
+
+
+####PUT api/schedules/:id
+
+Modifica el horario especificado mediante su id. Devolverá el estado 204 en caso de éxito. El usuario autenticado debe ser el propietario del 
+establecimento en el cual se da el curso del que se quiere modificar el horario.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/schedules/:id*
+
+#####Parámetros 
+
+**id:**      La id del horario el cual queremos modificar.
+*obligatorio*  
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | Sí            | Propietario   |
+
+#####Ejemplo de Petición 
+
+UPDATE
+*https://localhost:3000/api/schedules/1*
+
+**Headers** 
+
+*Authorization* 
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
+
+```javascript
+{
+    "startTime": "19:30", "endTime":"20:30", "courseId": 1
+}
+```
+
+Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va a actualizar el horario.
+
+####DELETE api/schedules/:id
+
+Elimina el horario especificado mediante su id. Devuelve el estado 204 en caso de éxito de la operación. Se debe ser el propietario 
+del establecimiento en el cual se imparte el curso del que se quiere eliminar el horario.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/schedules/:id*
+
+#####Parámetros 
+
+**id:**      La id del horario el cual queremos eliminar.
+*obligatorio*  
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | Sí            | Propietario   |
+
+#####Ejemplo de Petición 
+
+DELETE
+*https://localhost:3000/api/schedules/9*
+
+**Headers** 
+
+*Authorization* 
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
+
+```javascript
+{
+    "courseId": 1
+}
+```
+
+Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va a eliminar el horario.
+
 
 
 

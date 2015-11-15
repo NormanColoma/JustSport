@@ -19,7 +19,11 @@ exports.isEstabOwner = function(req,res,next){
 //For delete or update a course
 exports.isEstabOwner2 = function(req,res,next){
     var owner = jwt.decode(req.get('Authorization').slice('7'), global.secret).sub;
-    models.course.findById(req.params.id).then(function(course){
+    var id = req.params.id || req.body.courseId;
+    if(req.params.id && req.body.courseId) {
+        id = req.body.courseId;
+    }
+    models.course.findById(id).then(function(course){
         if(course){
             models.establishment.findOne({where:{id:course.establishmentId, owner: owner}}).then(function(found){
                 if(found)
