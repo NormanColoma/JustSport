@@ -71,7 +71,7 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 | [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apicoursesid)                                                                | DELETE      |  Propietario | 
 | [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apischedulesnew)                                                             | POST        |  Propietario | 
 | [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apischedulesid)                                                               | PUT         |  Propietario | 
-| [api/schedules/:id]((https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
+| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
 
 ###Usuarios
 
