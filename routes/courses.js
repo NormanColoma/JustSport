@@ -60,7 +60,7 @@ router.get('/:id',function(req, res) {
                     course.getSport({attributes: ['id', 'name']}).then(function(sport){
                         var links = new Array();
                         var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+req.params.id};
-                        var link2 = {rel: 'sports',
+                        var link2 = {rel: 'schedule',
                             href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+req.params.id+"/schedule"};
                         links.push([link1,link2]);
                         var cour = {id: course.id, Sport: sport, Establishment: est, instructor: course.instructor,
