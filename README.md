@@ -23,7 +23,7 @@ modificaciones.
 8. [Deportes](#deportes) 
 9. [Establecimientos](#establecimientos) 
 10. [Cursos](#cursos) 
-11. [Horarios](#horarios)
+11. [Horario](#horario)
 
 
 ###Esquema 
@@ -67,6 +67,83 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
+
+###Errores
+
+Nos podemos encontrar ante los siguientes errores:
+
+####Enviar un JSON inválido. Devolverá una respuesta con código *400 Bad Request* 
+
+Si enviamos un JSON inválido, obtendremos el siguiente error, ajustado al tipo de recurso que hayamos intentado consumir:
+
+```json
+{
+  "message": "Json is malformed, it must include the following fields: name, desc, city, province, addr, owner, phone, website(optional), main_img(optional)"
+}
+```
+
+####Acceder a un recurso proporcionando una id no númerica. Devolverá una respuesta con código *400 Bad Request* 
+
+Para los recursos, en los cuales se deba proporcionar la id, y esta no sea numérica, devolverá la siguiente respuesta: 
+
+```json
+{
+  "message": "The supplied id that specifies the course is not a numercial id"
+}
+```
+
+####Establecer el límite de la paginación a 0. Devolverá una respuesta con código *400 Bad Request* 
+
+Al intentar acceder a una colección, podemos establecer el límite de la misma, si dicho límite es establecido a 0, devolverá la siguiente respuesta: 
+
+```json
+{
+  "message": "The limit for pagination, must be greater than 0"
+}
+```
+
+####Usar paginación con cursores sin establecer un límite para los mismos. Devolverá una respuesta con código *400 Bad Request* 
+
+Al intentar acceder a una colección especificando los cursores, es obligatorio además, especificar el límite para los mismos. En caso de no hacerlo: 
+
+```json
+{
+  "message": "Wrong parameters, limit parameter must be set for paging"
+}
+```
+
+####Enviar una petición con autorización, sin tener permisos para dicho recurso. Devolverá una respuesta con código *403 Forbidden*
+
+Ciertos recursos, solo pueden ser creados, modificados, o eliminados, por cuentas con privilegios elevados (propietarios), o por los propios creadores del recurso.
+
+```json
+{
+  "message": "You are not authorized to perform this action"
+}
+```
+
+####Errores relativos a operaciones no permitidas. Devolverá una respuesta con código *500 Internal Server Error*
+
+En ocasiones podemos intentar realizar operaciones que no son posibles, como la creación de un recurso único (como podría ser un email). Lo que ocasionará un
+error. Por el momento el tipo de respuesta es el siguiente (aunque en siguientes versiones se tiene previsto customizar los errores de este tipo): 
+
+```json
+{
+  "name": "SequelizeUniqueConstraintError",
+  "message": "Validation error",
+  "errors": [
+    {
+      "message": "email must be unique",
+      "type": "unique violation",
+      "path": "email",
+      "value": "pepe@gmail.com"
+    }
+  ],
+  "fields": {
+    "email": "pepe@gmail.com"
+  }
+}
+```
 
 ###Usuarios
 
