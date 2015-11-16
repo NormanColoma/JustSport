@@ -55,7 +55,7 @@ Por el momento, y tras estar registrado, basta con hacer una petición al siguien
 El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
 La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
 
-##Headers 
+###Headers 
 
 Puesto que la API requiere autenticación, como ya se ha comentado, se necesitará enviar en cada petición el header *Authorization*
 
