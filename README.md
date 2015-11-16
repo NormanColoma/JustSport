@@ -46,7 +46,7 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
 
 | Ruta          	                                                                                                                                           | Método      |      Rol     |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
-| [api/users/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiusersnew)                                                                     | POST        |  Propietario |
+| [api/users/new](#post-apiusersnew)                                                                     | POST        |  Propietario |
 | [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiusersid)                                                                       | GET         |  Público     |
 | [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiusersid)                                                                    | DELETE      |  Usuario     |
 | [api/clients/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiclientsnew)                                                                 | POST        |  Propietario | 
