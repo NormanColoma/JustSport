@@ -21,7 +21,7 @@ modificaciones.
 6. [Usuarios](#usuarios) 
 7. [Clientes](#clientes)
 8. [Deportes](#deportes) 
-9. [Establecimientos](#estabelcimientos) 
+9. [Establecimientos](#establecimientos) 
 10. [Cursos](#cursos) 
 11. [Horarios](#horarios)
 
@@ -95,7 +95,7 @@ creado si ha la operación ha tenido éxito.
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "uuid": "26b408e3-b1bc-4afb-b85a-211269eb7815",
   "name": "Luis",
@@ -133,7 +133,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "uuid": "26b408e3-b1bc-4afb-b85a-211269eb7815",
   "name": "Luis",
@@ -205,7 +205,7 @@ POST
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "clientId": "53eda9ab-b726-403d-af56-1accde2df8df",
   "clientSecret": "18e1b644-b7ec-4287-8886-23dbd0fe67e0",
@@ -244,7 +244,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 2,
   "name": "Second Life",
@@ -277,7 +277,7 @@ poseen muchos establecimientos y viceversa. Se establece una relación N:M entre 
 POST
 *https://localhost:3000/api/sports/new* 
 
-```javascript
+```json
 {
     "name":"Pilates"
 }
@@ -285,7 +285,7 @@ POST
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 6,
   "name": "Pilates",
@@ -341,7 +341,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "sports": [
     {
@@ -416,7 +416,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 2,
   "name": "GAP",
@@ -472,7 +472,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "Establishments": [
     {
@@ -570,7 +570,7 @@ estado 204 en caso de éxito de la operación.
 PUT
 *https://localhost:3000/api/sports/3*
 
-```javascript
+```json
 {
   "name": "Body Jump",
 }
@@ -628,7 +628,7 @@ una mayor coperación por parte de los clientes que hagan uso de la API. Devolver
 POST
 *https://localhost:3000/api/establishemnts/new* 
 
-```javascript
+```json
 {
     "name":"Total Sport", "desc":"Total Sport es un gimnasio que ofrece las mejores condiciones para ponerte en forma",
     "city":"Alicante", "province":"Alicante", "addr":"Calle Alfonso el Sabio", "phone" :"965663030", 
@@ -638,7 +638,7 @@ POST
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 9,
   "name": "Total Sport",
@@ -711,7 +711,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "establishments": [
     {
@@ -827,7 +827,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 2,
   "name": "Gym Noray",
@@ -900,7 +900,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "Establishments": {
     "count": 3,
@@ -1008,7 +1008,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "sports": [
     {
@@ -1064,7 +1064,7 @@ establecimiento a modificar en cuestión.
 UPDATE
 *https://localhost:3000/api/establishments/1*
 
-```javascript
+```json
 {
     "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735", "desc" : "La descripción a cambiado"
 }
@@ -1121,7 +1121,7 @@ Devolverá el recurso creado.
 POST
 *https://localhost:3000/api/courses/new* 
 
-```javascript
+```json
 {
     "sportId" : 1, "establishmentId" : 1, "instrucotor" : "Juan Domínguez", 
     "price" : "20", "info" : "Un curso muy completo"
@@ -1130,7 +1130,7 @@ POST
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 6,
   "sportId": 1,
@@ -1184,7 +1184,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 2,
   "Sport": {
@@ -1257,7 +1257,7 @@ GET
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "Schedule": {
     "count": 6,
@@ -1334,7 +1334,7 @@ establecimento en el cual se da el curso a modificar en cuestión.
 UPDATE
 *https://localhost:3000/api/courses/1*
 
-```javascript
+```json
 {
     "info" : "El curso tiene mucho nivel"
 }
@@ -1388,7 +1388,7 @@ Permite al usuario establecer un horario a un curso. Un horario está directament
 POST
 *https://localhost:3000/api/schedules/new* 
 
-```javascript
+```json
 {
     "day": "Martes", "startTime": "19:00", "endTime":"20:00", "courseId": 1
 }
@@ -1398,7 +1398,7 @@ Es obligatorio enviar en el cuerpo de la petición, la id del curso al cual se va
 
 #####Ejemplo del Resultado
 
-```javascript
+```json
 {
   "id": 7,
   "day": "Martes",
@@ -1450,7 +1450,7 @@ establecimento en el cual se da el curso del que se quiere modificar el horario.
 UPDATE
 *https://localhost:3000/api/schedules/1*
 
-```javascript
+```json
 {
     "startTime": "19:30", "endTime":"20:30", "courseId": 1
 }
@@ -1483,7 +1483,7 @@ del establecimiento en el cual se imparte el curso del que se quiere eliminar el
 DELETE
 *https://localhost:3000/api/schedules/9*
 
-```javascript
+```json
 {
     "courseId": 1
 }
