@@ -77,7 +77,7 @@ passport.use(new BearerStrategy(
         if(decodedToken.exp <= moment().valueOf()) {
             return done(null, false);
         }
-        models.user.findOne({ where: {uuid: decodedToken.sub} }).then(function(user){
+        models.user.findOne({ where: {uuid: decodedToken.sub},  attributes: ['uuid', 'name', 'lname', 'email', 'gender']}).then(function(user){
             if(!user)
                 return done(null,false);
             done(null,user,{scope: '*'})
