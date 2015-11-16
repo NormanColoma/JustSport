@@ -16,7 +16,7 @@ modificaciones.
 2. [Paginación](#paginación)
 3. [Autenticación](#autenticación) 
 4. [Headers](#headers)
-4. [Hypermedia](#hypermedia) 
+4. [Hipermedia](#hipermedia) 
 5. [Errores](#errores) 
 6. [Usuarios](#usuarios) 
 7. [Clientes](#clientes)
