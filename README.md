@@ -12,6 +12,24 @@ modificaciones.
 
 ##API
 
+1. [Esquema](#esquema) 
+2. [Paginación](#paginación)
+3. [Autenticación](#autenticación) 
+4. [Headers](#headers)
+4. [Hypermedia](#hypermedia) 
+5. [Errores](#errores) 
+6. [Usuarios](#usuarios) 
+7. [Clientes](#clientes)
+8. [Deportes](#deportes) 
+9. [Establecimientos](#estabelcimientos) 
+10. [Cursos](#cursos) 
+11. [Horarios](#horarios)
+
+
+###Esquema 
+
+Todo el acceso a la API se hace bajo HTTPS. Todos los datos son enviados y recibidos en formato JSON.
+
 ###Paginación 
 
 Todos los endpoints que apunten a la recopilación de colecciones, hacen uso de paginación mediante cursores. Por defecto, la paginación está limitada a 5 elementos, pero 
@@ -37,43 +55,26 @@ Por el momento, y tras estar registrado, basta con hacer una petición al siguien
 El parámetro "client_id" no es un parámetro obligatorio, pero por defecto, en caso de usarlo, se usará el del cliente oficial (el cual está indicado en el ejemplo).
 La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicación oficial.
 
+##Headers 
+
+Puesto que la API requiere autenticación, como ya se ha comentado, se necesitará enviar en cada petición el header *Authorization*
+
+*Authorization* 
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
+
+
 ###Hipermedia 
 
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
-###Endpoints 
-
-| Ruta          	                                                                                                                                           | Método      |      Rol     |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:------------:|
-| [api/users/new](#post-apiusersnew)                                                                     | POST        |  Propietario |
-| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiusersid)                                                                       | GET         |  Público     |
-| [api/users/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiusersid)                                                                    | DELETE      |  Usuario     |
-| [api/clients/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiclientsnew)                                                                 | POST        |  Propietario | 
-| [api/clients/:id_user] (https://github.com/NormanColoma/JustSport/tree/develop#get-apiclientsuser_id)                                                        | GET         |  Propietario | 
-| [api/sports/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apisportsnew)                                                                   | POST        |  Propietario | 
-| [api/sports/](https://github.com/NormanColoma/JustSport/tree/develop#get-apisports)                                                                          | GET         |  Público     | 
-| [api/sports/:id/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsidestablishment)                                         | GET         |  Público     |
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apisportsid)                                                                     | GET         |  Público     | 
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apisportsid)                                                                     | PUT         |  Propietario | 
-| [api/sports/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apisportsid)                                                                  | DELETE      |  Admin       | 
-| [api/establishments/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apiestablishmentsnew)                                                   | POST        |  Propietario | 
-| [api/establishments](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishments)                                                           | GET         |  Público     | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsid)                                                     | GET         |  Público     | 
-| [api/establishments/:id/sports](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentsidsports)                                        | GET         |  Público     | 
-| [api/establishment/sports/:id/location/:location](https://github.com/NormanColoma/JustSport/tree/develop#get-apiestablishmentssportsidlocationlocation)      | GET         |  Público     | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apiestablishmentsid)                                                     | PUT         |  Propietario | 
-| [api/establishments/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apiestablishmentsid)                                                  | DELETE      |  Propietario |
-| [api/courses/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apicoursesnew)                                                                 | POST        |  Propietario | 
-| [api/courses/:id/schedule](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesidschedule)								                   | GET         |  Público     |
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#get-apicoursesid)                                                                   | GET         |  Público     | 
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apicoursesid)                                                                   | PUT         |  Propietario | 
-| [api/courses/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apicoursesid)                                                                | DELETE      |  Propietario | 
-| [api/schedules/new](https://github.com/NormanColoma/JustSport/tree/develop#post-apischedulesnew)                                                             | POST        |  Propietario | 
-| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#put-apischedulesid)                                                               | PUT         |  Propietario | 
-| [api/schedules/:id](https://github.com/NormanColoma/JustSport/tree/develop#delete-apischedulesid)                                                           | DELETE      |  Propietario | 
-
 ###Usuarios
+
+Las cuentas de usuario pemitirán tener un nivel de privilegios distintos en función del grado de la cuenta, estas pueden ser: 
+
+1. Usuario 
+2. Propietario
+3. Admin (No podrá ser creada)
 
 ####POST api/users/new
 
@@ -196,12 +197,7 @@ Crea un nuevo cliente asociado a un usuario. Este cliente es único. Devolverá la
 POST
 *https://localhost:3000/api/users/new* 
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
-
-```javascript
+```json
 {
     "name" : "Second Client", "userId" : "26b408e3-b1bc-4afb-b85a-211269eb7815"
 }
@@ -245,10 +241,6 @@ Devuelve una colección de los clientes que pertenecen al usuario
 GET
 *https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815* 
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 #####Ejemplo del Resultado
 
@@ -284,11 +276,6 @@ poseen muchos establecimientos y viceversa. Se establece una relación N:M entre 
 
 POST
 *https://localhost:3000/api/sports/new* 
-
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ```javascript
 {
@@ -589,10 +576,6 @@ PUT
 }
 ```
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ####DELETE api/sports/:id
 
@@ -620,10 +603,6 @@ solo está permitida a usuarios con privilegios de administrador Devuelve el esta
 DELETE
 *https://localhost:3000/api/sports/3*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ###Establecimientos
 
@@ -648,11 +627,6 @@ una mayor coperación por parte de los clientes que hagan uso de la API. Devolver
 
 POST
 *https://localhost:3000/api/establishemnts/new* 
-
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ```javascript
 {
@@ -1090,11 +1064,6 @@ establecimiento a modificar en cuestión.
 UPDATE
 *https://localhost:3000/api/establishments/1*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
-
 ```javascript
 {
     "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735", "desc" : "La descripción a cambiado"
@@ -1127,10 +1096,6 @@ del establecimiento a eliminar en cuestión.
 DELETE
 *https://localhost:3000/api/establishments/9*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ###Cursos
 
@@ -1155,11 +1120,6 @@ Devolverá el recurso creado.
 
 POST
 *https://localhost:3000/api/courses/new* 
-
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ```javascript
 {
@@ -1374,11 +1334,6 @@ establecimento en el cual se da el curso a modificar en cuestión.
 UPDATE
 *https://localhost:3000/api/courses/1*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
-
 ```javascript
 {
     "info" : "El curso tiene mucho nivel"
@@ -1410,10 +1365,6 @@ del establecimiento en el cual se imparte el curso a eliminar en cuestión.
 DELETE
 *https://localhost:3000/api/courses/9*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ###Horario
 
@@ -1436,11 +1387,6 @@ Permite al usuario establecer un horario a un curso. Un horario está directament
 
 POST
 *https://localhost:3000/api/schedules/new* 
-
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ```javascript
 {
@@ -1504,11 +1450,6 @@ establecimento en el cual se da el curso del que se quiere modificar el horario.
 UPDATE
 *https://localhost:3000/api/schedules/1*
 
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
-
 ```javascript
 {
     "startTime": "19:30", "endTime":"20:30", "courseId": 1
@@ -1541,11 +1482,6 @@ del establecimiento en el cual se imparte el curso del que se quiere eliminar el
 
 DELETE
 *https://localhost:3000/api/schedules/9*
-
-**Headers** 
-
-*Authorization* 
-Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
 
 ```javascript
 {
