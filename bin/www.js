@@ -27,12 +27,15 @@ var options = {
 /**
  * Create HTTPs server.
  */
-var server = https.createServer(options, app);
+/*var server = https.createServer(options, app);
+var listener = server.listen(3000, function(){
+    console.log('Listening on port ' + listener.address().port);
+});*/
+
+var server = http.createServer(app).listen(3000)
 var listener = server.listen(3000, function(){
     console.log('Listening on port ' + listener.address().port);
 });
-//http.createServer(app).listen(8080)
-
 
 /**
  * Listen on provided port, on all network interfaces.
