@@ -9,12 +9,13 @@ var config    = require('../config/config.json')[env];
 var db        = {};
 
 if(process.env.DATABASE_URL){
-  var sequelize = new Sequelize(process.env.DATABASE_URL,{
+  /*var sequelize = new Sequelize(process.env.DATABASE_URL,{
     dialect: 'mysql',
     port: '3306',
     host: 'us-cdbr-iron-east-03.cleardb.net',
     logging: false
-  });
+  });*/
+  var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
 else if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable],{logging: false});
