@@ -20,8 +20,8 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var options = {
-    key: fs.readFileSync('./fixtures/keys/server.key'),
-    cert: fs.readFileSync('./fixtures/keys/server.crt')
+    key: fs.readFileSync('../fixtures/keys/server.key'),
+    cert: fs.readFileSync('../fixtures/keys/server.crt')
 };
 
 /**
