@@ -17,7 +17,7 @@
     "username": "befae0126276df",
     "password": "b750d713",
     "database": "heroku_b6e22957fb663c5",
-    "host": "us-cdbr-iron-east-03.cleardb.net",
+    "host": "128.5.23",
     "dialect": "mysql"
   }
 }
