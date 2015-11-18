@@ -47,7 +47,6 @@ router.get('', function(req, res) {
             res.status(200).send({sports:sports,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
           })
         }).catch(function(err){
-          console.log(req)
           res.status(500).send(err);
         })
       }
