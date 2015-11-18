@@ -19,10 +19,10 @@ var models = require("../models");
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-var options = {
+/*var options = {
     key: fs.readFileSync('../fixtures/keys/server.key'),
     cert: fs.readFileSync('../fixtures/keys/server.crt')
-};
+};*/
 
 /**
  * Create HTTPs server.
