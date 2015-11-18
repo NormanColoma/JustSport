@@ -18,7 +18,7 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var server = http.createServer(app).listen(3000)
-var listener = server.listen(3000, function(){
+var listener = server.listen(port, function(){
     console.log('Listening on port ' + listener.address().port);
 });
 
