@@ -13,6 +13,7 @@ if (config.use_env_variable) {
 } else {
   var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
+ var sequelize = new Sequelize('heroku_b6e22957fb663c5', 'befae0126276df', 'b750d713', {loggin: false});
 
 fs
   .readdirSync(__dirname)
