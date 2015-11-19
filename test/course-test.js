@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Course', function() {
+describe('Course', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -128,6 +128,33 @@ xdescribe('Course', function() {
                 assert.equal(res.body.price, course1.price);
                 assert.equal(res.body.info, course1.info);
                 assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/courses/'+res.body.id);
+            }).end(done);
+    })
+
+    it('Adding new course passing invalid formats.Should return status 500',function(done){
+        var course = {sportId:'a', establishmentId:'1',instructor: 'Juan Domínguez12',price:'ab',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 3);
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+                assert.equal(res.body.errors[1].message, "instructor must only contain letters");
+                assert.equal(res.body.errors[2].message, "price must be float");
+            }).end(done);
+    })
+
+    it('Adding new course passing empty fields.Should return status 500',function(done){
+        var course = {sportId:' ', establishmentId:'1',instructor: 'Juan Domínguez',price:' ',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 4);
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+                assert.equal(res.body.errors[1].message, "sportId is required");
+                assert.equal(res.body.errors[2].message, "price must be float");
+                assert.equal(res.body.errors[3].message, "price is required");
             }).end(done);
     })
 
