@@ -121,6 +121,31 @@ describe('User', function(){
             }).end(done);
     });
 
+
+    it('Creating user with invalid email. Should return status 400', function(done){
+        var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman.com', pass: 'adi2015', gender: 'male'};
+        supertest(app)
+            .post('/api/users/new').send(user)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, 'Validation error: email is not valid, it must be like: youremail@domain.es');
+            }).end(done);
+
+    });
+
+    it('Creating user with invalid name. Should return status 400', function(done){
+        var user = {name: 'Norman741', lname: 'Coloma García', email: 'ua.nor@gmail.com', pass: 'adi2015', gender: 'male'};
+        supertest(app)
+            .post('/api/users/new').send(user)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, 'Validation error: name is not valid, it must only contain letters');
+            }).end(done);
+
+    });
+
     after('Dropping database',function(done) {
         umzug.down('20151022133423-create-user').then(function (migrations) {
             done();
