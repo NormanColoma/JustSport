@@ -24,6 +24,10 @@ exports.customServerError= function(err){
         var error = {type: "Inexistent reference", field: err.index, message: "The reference you are trying to set, " +
             "does not exist in our database"};
         errors.push(error);
+    }else if(err.name = 'SequelizeConnectionRefusedError'){
+        var errors = new Array();
+        var error = {type: "Database down", message: "Databse is not running right now. Please try it back in few moments"};
+        errors.push(error);
     }
     return errors;
 }
