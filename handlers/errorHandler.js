@@ -12,7 +12,6 @@ exports.customServerError= function(err){
             }
             errors.push(error);
         }
-        return errors;
     }else if(err.name == 'SequelizeUniqueConstraintError'){
         var errors = new Array();
         for(var i=0;i<err.errors.length;i++){
@@ -20,6 +19,11 @@ exports.customServerError= function(err){
                 "' is already taken"};
         }
         errors.push(error);
-        return errors;
+    }else if(err.name == 'SequelizeForeignKeyConstraintError'){
+        var errors = new Array();
+        var error = {type: "Inexistent reference", field: err.index, message: "The reference you are trying to set, " +
+            "does not exist in our database"};
+        errors.push(error);
     }
+    return errors;
 }
