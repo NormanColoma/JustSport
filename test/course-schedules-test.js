@@ -44,7 +44,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Schedule of a course', function() {
+describe('Schedule of a course', function() {
     var credentials = {
         "grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };

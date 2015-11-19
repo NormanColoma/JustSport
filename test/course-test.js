@@ -184,12 +184,13 @@ describe('Course', function() {
     })
 
     it('Adding new course with a nonexistent sport.Should return status 500',function(done){
-        var nonexistent_sp = {id: 1,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+        var nonexistent_sp = {id: 35,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
         supertest(app)
             .post('/api/courses/new').send(nonexistent_sp)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+                assert.equal(res.body.errors[0].message, "The reference you are trying to set, " +
+                    "does not exist in our database");
             }).end(done);
     })
 

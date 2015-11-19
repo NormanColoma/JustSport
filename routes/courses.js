@@ -7,6 +7,7 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
+var handler = require('../handlers/errorHandler');
 
 router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
@@ -33,7 +34,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, fun
                     , instructor: course.instructor, price: course.price, info: course.info, links: links
                 });
             }).catch(function (err) {
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
 
         }
@@ -146,7 +147,7 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdC
         else
             res.status(404).send({message: "The course was not found"});
     }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(500).send({errors: handler.customServerError(err)});
     })
 });
 
@@ -158,7 +159,7 @@ router.delete('/:id', authController.isBearerAuthenticated, middleware.numerical
             else
                 res.status(404).send({message: "The course was not found"});
         }).catch(function (err) {
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
 });
 module.exports = router;
