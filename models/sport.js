@@ -6,8 +6,19 @@
 
 module.exports = function(sequelize, Sequelize) {
     var sport = sequelize.define('sport',{
-        name: Sequelize.STRING,
-
+        name: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+                is:{
+                    args: /^([ \u00c0-\u01ffa-zA-Z'\-])+$/i,
+                    msg: "name must only contain letters"
+                },
+                notEmpty:{
+                    msg: "name is required"
+                }
+            }
+        }
     },{
         classMethods: {
             associate: function (models) {

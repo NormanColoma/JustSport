@@ -7,6 +7,7 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
+var handler = require('../handlers/errorHandler');
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -27,7 +28,7 @@ router.get('', function(req, res) {
                     res.status(200).send({establishments:establishments,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
                 })
             }).catch(function(err){
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else
@@ -51,8 +52,7 @@ router.get('', function(req, res) {
                     res.status(200).send({establishments:establishments,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
                 })
             }).catch(function(err){
-                console.log(err)
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else
@@ -77,7 +77,7 @@ router.get('', function(req, res) {
                 res.status(200).send({establishments: establishments, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
             })
         }).catch(function (err) {
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
     }
 });
@@ -102,8 +102,7 @@ router.get('/:id', function(req, res) {
                 })
             }
         }).catch(function(err){
-            console.log(err)
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         });
     }
 });
@@ -266,7 +265,7 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
                     });
                 })
             }).catch(function(err){
-                console.log(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else if(req.query.before){
@@ -297,7 +296,7 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
                     });
                 })
             }).catch(function(err){
-                console.log(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else {
@@ -330,7 +329,7 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
                     });
                 })
             }).catch(function(err){
-                console.log(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
 })
@@ -357,7 +356,7 @@ router.post('/new', authController.isBearerAuthenticated, function(req, res) {
                     province: est.province, addr: est.addr, phone: est.phone, website: est.website,
                     main_img: est.main_img, owner: est.owner,links: links});
             }).catch(function (err) {
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else
@@ -386,7 +385,7 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
                 else
                     res.status(404).send({message: "The establishment was not found"});
             }).catch(function (err) {
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
         }
         else
@@ -410,7 +409,7 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
                     else
                         res.status(404).send({message: "The establishment was not found"});
                 }).catch(function (err) {
-                    res.status(500).send(err);
+                    res.status(500).send({errors: handler.customServerError(err)});
                 })
             }
             else

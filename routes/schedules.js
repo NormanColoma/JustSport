@@ -10,6 +10,7 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
+var handler = require('../handlers/errorHandler');
 
 router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, function(req, res) {
     if (req.body.day && req.body.startTime && req.body.endTime && req.body.courseId) {
@@ -35,8 +36,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, fu
                 courseId: schedule.courseId, links: links
             });
         }).catch(function (err) {
-            console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
 
     }
@@ -55,7 +55,7 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdS
             else
                 res.status(404).send({message: "The schedule was not found"});
         }).catch(function (err) {
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
     }
     else
@@ -70,7 +70,7 @@ router.delete('/:id', authController.isBearerAuthenticated, middleware.numerical
             else
                 res.status(404).send({message: "The schedule was not found"});
         }).catch(function (err) {
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
     }
     else

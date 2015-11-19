@@ -2,7 +2,7 @@ var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
 var authController = require('../routes/auth');
-
+var handler = require('../handlers/errorHandler');
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -23,7 +23,7 @@ router.get('', function(req, res) {
             res.status(200).send({sports:sports,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
           })
         }).catch(function(err){
-          res.status(500).send(err);
+          res.status(500).send({errors: handler.customServerError(err)});
         })
       }
       else
@@ -47,8 +47,7 @@ router.get('', function(req, res) {
             res.status(200).send({sports:sports,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
           })
         }).catch(function(err){
-          console.log(err)
-          res.status(500).send(err);
+          res.status(500).send({errors: handler.customServerError(err)});
         })
       }
       else
@@ -73,7 +72,7 @@ router.get('', function(req, res) {
           res.status(200).send({sports: sports, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
         })
       }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(500).send({errors: handler.customServerError(err)});
       })
     }
 });
@@ -96,8 +95,7 @@ router.get('/:id', function(req, res) {
         res.status(200).send({id: sport.id, name: sport.name,links:links});
       }
     }).catch(function(err){
-      console.log(err)
-      res.status(500).send(err);
+      res.status(500).send({errors: handler.customServerError(err)});
     });
   }
 });
@@ -264,9 +262,7 @@ router.get('/:id/establishments', function(req, res) {
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
   if(models.user.isOwner(req.get('Authorization').slice('7'))){
     if (req.body.name) {
-      models.sport.create({
-        name: req.body.name
-      }).then(function (sport) {
+      models.sport.create(req.body).then(function (sport) {
         var url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/" + sport.id;
         res.setHeader("Location", url);
         var links = new Array();
@@ -279,11 +275,11 @@ router.post('/new', authController.isBearerAuthenticated, function(req, res) {
         links.push([link1,link2,link3]);
         res.status(201).send({id: sport.id, name: sport.name, links: links});
       }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(500).send({errors: handler.customServerError(err)});
       })
     }
     else
-      res.status(400).send({message: "Json is malformed"});
+      res.status(400).send({message: "Json is malformed, it must include the following fields: name"});
   }
   else
     res.status(403).send({message: "You are not authorized to perform this action"});
@@ -310,7 +306,7 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
           else
             res.status(404).send({message: "The sport was not found"});
         }).catch(function (err) {
-          res.status(500).send(err);
+          res.status(500).send({errors: handler.customServerError(err)});
         })
       }
       else
@@ -337,7 +333,7 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
         else
           res.status(404).send({message: "The sport was not found"});
       }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(500).send({errors: handler.customServerError(err)});
       })
     }
     else
