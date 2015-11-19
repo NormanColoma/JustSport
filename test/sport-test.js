@@ -26,10 +26,19 @@ var umzug = new Umzug({
     logging: false
 });
 
-xdescribe('Sports', function(){
-    var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
-    var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
-    var admin = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'admin2015', gender: 'male', role: "admin"}
+var seeder = new Umzug({
+    migrations: {
+        params: [ sequelize.getQueryInterface(), Sequelize ],
+        path: "seeders/test"
+    },
+    storage: "sequelize",
+    storageOptions: {
+        sequelize: sequelize
+    },
+    logging: false
+});
+
+describe('Sports', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -44,12 +53,8 @@ xdescribe('Sports', function(){
             method: 'down'
         }).then(function (migrations) {
             umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
-                models.user.create(owner).then(function(){
-                    models.user.create(user).then(function(){
-                        models.user.create(admin).then(function(){
-                            done();
-                        })
-                    })
+                seeder.up(['20151119155422-user-sport-seeder']).then(function(){
+                    done();
                 })
             })
         });
@@ -115,8 +120,46 @@ xdescribe('Sports', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
-                assert.equal(res.body.errors[0].message, 'name must be unique');
+                assert.equal(res.body.errors[0].message, "The value: 'Zumba' is already taken");
+            }).end(done);
+
+    });
+
+    it('Creating sport without pass its name. Should return status 400', function(done){
+        var sport = {};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(400)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, "Json is malformed, it must include the following fields: name");
+            }).end(done);
+
+    });
+
+    it('Creating sport without valid name format. Should return status 500', function(done){
+        var sport = {name: "Zumba 14"};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "name must only contain letters");
+            }).end(done);
+
+    });
+
+    it('Creating sport without passing empty name. Should return status 500', function(done){
+        var sport = {name: " "};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "name is required");
             }).end(done);
 
     });
@@ -370,8 +413,10 @@ xdescribe('Sports', function(){
     })
 
     after('Dropping database',function(done) {
-        umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
-            done();
-        });
+        seeder.down(['20151119155422-user-sport-seeder']).then(function(){
+            umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
+                done();
+            });
+        })
     });
 });
