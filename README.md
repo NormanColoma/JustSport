@@ -141,7 +141,7 @@ que la base de datos esté caída por cualquier problema en el servidor. Ante este
 ```
 
 | Error                               | Descripción del error                                                                                                                         |
-| ------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------:|
+| :-----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|
 | Missing field                       | Significa que uno de los campos obligatorios, no está siendo enviado                                                                          |
 | Validation failed                   | Significa que alguna validación para algún campo, no está pasando, puesto que no se está cumpliendo                                           |
 | Duplicated entry                    | Significa que algún recurso existente, ya tiene establecido el valor único, que estamos intentado establecer a otro recurso                   |
