@@ -68,6 +68,25 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
+```json
+"links": [
+    [
+      {
+        "rel": "self",
+        "href": "https://localhost:3000/api/establishments/1"
+      },
+      {
+        "rel": "sports",
+        "href": "https://localhost:3000/api/establishments/1/sports"
+      }
+    ]
+  ]
+ ```
+ 
+ En las respuestas a nuestros recursos, encontraremos las URL con los recursos relacionados y las posibles operaciones relacionados, con el 
+ recurso actual. 
+ 
+ 
 ###Errores
 
 Nos podemos encontrar ante los siguientes errores:
