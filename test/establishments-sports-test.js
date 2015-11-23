@@ -378,18 +378,14 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     });
 
-    it('Associating new sport to establishment. Should return status 200', function(done){
+    it('Associating new sport to establishment. Should return status 204', function(done){
         var sport = {name: 'GBody'};
         models.sport.create(sport).then(function(sp){
             var sport = {id: sp.id};
             supertest(app)
                 .put('/api/establishments/1/sports/new').send(sport)
                 .set('Authorization', 'Bearer '+owner_token)
-                .expect(500)
-                .expect(function (res) {
-                    console.log(res.body)
-                    assert.equal(res.body.message, 'Sport was correctly associated to the specified establishment');
-                })
+                .expect(204)
                 .end(done);
         })
 
@@ -402,7 +398,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500)
             .expect(function (res) {
-                assert.equal(res.body.message, "The reference you are trying to set, " + "does not exist in our database");
+                assert.equal(res.body.errors[0].message, "The reference you are trying to set, " + "does not exist in our database");
             })
             .end(done);
 
@@ -411,7 +407,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
         var sport = {id: 125};
         supertest(app)
-            .put('/api/establishments/1/sports/new').send(sport)
+            .put('/api/establishments/25/sports/new').send(sport)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(404)
             .expect(function (res) {

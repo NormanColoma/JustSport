@@ -10,6 +10,19 @@ var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
 var Sequelize = require('sequelize');
+var env       = process.env.NODE_ENV  || 'test';
+var config    = require('../config/config.json')[env];
+if(process.env.DATABASE_URL){
+    var sequelize = new Sequelize(process.env.DATABASE_URL,{
+        dialect: 'mysql',
+        port: '3306',
+        host: 'us-cdbr-iron-east-03.cleardb.net',
+        logging: false
+    });
+}
+else {
+    var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
+}
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -376,20 +389,7 @@ router.put('/:id/sports/new', authController.isBearerAuthenticated, middleware.n
     if (req.body.id) {
         sequelize.query("INSERT INTO establishmentsports (sportId,establishmentId) VALUES ("+req.body.id+","+req.params.id+")",
             { type: sequelize.QueryTypes.INSERT}).then(function (est) {
-                var links = new Array();
-                var link1 = {rel: 'self',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
-                var link2 = {rel: 'update',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
-                var link3 = {rel: 'delete',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
-                var link4 = {rel: 'clean',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id+"/sports"};
-                var link5 = {rel: 'impart',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id+"/sports/{id}"};
-                links.push([link1,link2,link3,link4,link5]);
-                res.status(200).send({message: 'Sport was correctly associated to the specified establishment'
-                    ,links: links});
+                res.status(204).send();
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
         })
