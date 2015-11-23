@@ -43,9 +43,7 @@ describe('EstablishmentsSports', function(){
     };
     var owner_token = "";
     var user_token = "";
-    var owner_id = '8b75a3aa-767e-46f1-ba86-a56a0f107738';
-    var id_gym_to_remove = "";
-    var id_gym_to_update = "";
+    var another_owner_token = "";
     var owner = {
         uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738',
         name: 'Norman',
@@ -338,6 +336,163 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'Wrong parameters, limit parameter must be set for paging');
+            })
+            .end(done);
+    })
+
+    it('Getting access token', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send(credentials)
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                owner_token = res.body.access_token;
+            }).end(done);
+
+    });
+
+    it('Getting access token for user', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "pepe@mail.com",
+                "password" : "pepito15"
+            })
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                user_token = res.body.access_token;
+            }).end(done);
+
+    });
+
+    it('Getting access token for another owner that will not be the owner of establishments', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "pepito@mail.com",
+                "password" : "pepin15"
+            })
+            .expect(200).expect(function(res){
+                assert(res.body.access_token);
+                another_owner_token = res.body.access_token;
+            }).end(done);
+
+    });
+
+    it('Associating new sport to establishment. Should return status 200', function(done){
+        var sport = {name: 'GBody'};
+        models.sport.create(sport).then(function(sp){
+            var sport = {id: sp.id};
+            supertest(app)
+                .post('/api/establishments/1/sports/new').send(sport)
+                .set('Authorization', 'Bearer '+owner_token)
+                .expect(200)
+                .expect(function (res) {
+                    assert.equal(res.body.message, 'Sport was correctly associated to the specified establishment');
+                })
+                .end(done);
+        })
+
+    })
+
+    it('Associating new sport (that does not exist) to establishment. Should return status 500', function(done){
+        var sport = {id: 125};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500)
+            .expect(function (res) {
+                assert.equal(res.body.message, "The reference you are trying to set, " + "does not exist in our database");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
+        var sport = {id: 125};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, "The establishment was not found");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment without owner token. Should return status 403', function(done){
+        var sport = {id: 125};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment without be the owner of it. Should return status 403', function(done){
+        var sport = {id: 125};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.message, "You are not authorized to perform this action");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment passing string as id of it. Should return status 400', function(done){
+        var sport = {id: 125};
+        supertest(app)
+            .post('/api/establishments/gymatope/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numercial id");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment, passign sport id as string. Should return status 500', function(done){
+        var sport = {id: 'GBody'};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+            })
+            .end(done);
+
+    })
+
+    it('Associating new sport to establishment, passing empty sport. Should return status 500', function(done){
+        var sport = {id: ' '};
+        supertest(app)
+            .post('/api/establishments/1/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(403)
+            .expect(function (res) {
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+                assert.equal(res.body.errors[0].message, "sportId is required");
+            })
+            .end(done);
+    })
+
+    it('Associating new sport to establishment, without pass the sport. Should return status 400', function(done){
+        var sport = {id: ' '};
+        supertest(app)
+            .post('/api/establishments/1/sports/new')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.message, "Json is malformed: id of sport must be included for perform this action");
             })
             .end(done);
     })
