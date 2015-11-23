@@ -383,10 +383,11 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
         models.sport.create(sport).then(function(sp){
             var sport = {id: sp.id};
             supertest(app)
-                .post('/api/establishments/1/sports/new').send(sport)
+                .put('/api/establishments/1/sports/new').send(sport)
                 .set('Authorization', 'Bearer '+owner_token)
-                .expect(200)
+                .expect(500)
                 .expect(function (res) {
+                    console.log(res.body)
                     assert.equal(res.body.message, 'Sport was correctly associated to the specified establishment');
                 })
                 .end(done);
@@ -397,7 +398,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport (that does not exist) to establishment. Should return status 500', function(done){
         var sport = {id: 125};
         supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
+            .put('/api/establishments/1/sports/new').send(sport)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500)
             .expect(function (res) {
@@ -410,7 +411,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
         var sport = {id: 125};
         supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
+            .put('/api/establishments/1/sports/new').send(sport)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(404)
             .expect(function (res) {
@@ -423,7 +424,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport to establishment without owner token. Should return status 403', function(done){
         var sport = {id: 125};
         supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
+            .put('/api/establishments/1/sports/new').send(sport)
             .set('Authorization', 'Bearer '+user_token)
             .expect(403)
             .expect(function (res) {
@@ -436,7 +437,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport to establishment without be the owner of it. Should return status 403', function(done){
         var sport = {id: 125};
         supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
+            .put('/api/establishments/1/sports/new').send(sport)
             .set('Authorization', 'Bearer '+another_owner_token)
             .expect(403)
             .expect(function (res) {
@@ -449,9 +450,9 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     it('Associating new sport to establishment passing string as id of it. Should return status 400', function(done){
         var sport = {id: 125};
         supertest(app)
-            .post('/api/establishments/gymatope/sports/new').send(sport)
+            .put('/api/establishments/gymatope/sports/new').send(sport)
             .set('Authorization', 'Bearer '+owner_token)
-            .expect(404)
+            .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numercial id");
             })
@@ -459,36 +460,11 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    it('Associating new sport to establishment, passign sport id as string. Should return status 500', function(done){
-        var sport = {id: 'GBody'};
-        supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
-            .set('Authorization', 'Bearer '+owner_token)
-            .expect(403)
-            .expect(function (res) {
-                assert.equal(res.body.errors[0].message, "sportId must be integer");
-            })
-            .end(done);
-
-    })
-
-    it('Associating new sport to establishment, passing empty sport. Should return status 500', function(done){
-        var sport = {id: ' '};
-        supertest(app)
-            .post('/api/establishments/1/sports/new').send(sport)
-            .set('Authorization', 'Bearer '+owner_token)
-            .expect(403)
-            .expect(function (res) {
-                assert.equal(res.body.errors[0].message, "sportId must be integer");
-                assert.equal(res.body.errors[0].message, "sportId is required");
-            })
-            .end(done);
-    })
 
     it('Associating new sport to establishment, without pass the sport. Should return status 400', function(done){
         var sport = {id: ' '};
         supertest(app)
-            .post('/api/establishments/1/sports/new')
+            .put('/api/establishments/1/sports/new')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400)
             .expect(function (res) {

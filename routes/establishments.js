@@ -8,6 +8,8 @@ var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
+var user = require('../middlewares/checkUser');
+var Sequelize = require('sequelize');
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -365,6 +367,35 @@ router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     }
     else
         res.status(403).send({message: "You are not authorized to perform this action"});
+
+});
+
+
+router.put('/:id/sports/new', authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isOwner,
+    user.isEstabOwner, function(req, res) {
+    if (req.body.id) {
+        sequelize.query("INSERT INTO establishmentsports (sportId,establishmentId) VALUES ("+req.body.id+","+req.params.id+")",
+            { type: sequelize.QueryTypes.INSERT}).then(function (est) {
+                var links = new Array();
+                var link1 = {rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
+                var link2 = {rel: 'update',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
+                var link3 = {rel: 'delete',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id};
+                var link4 = {rel: 'clean',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id+"/sports"};
+                var link5 = {rel: 'impart',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+est.id+"/sports/{id}"};
+                links.push([link1,link2,link3,link4,link5]);
+                res.status(200).send({message: 'Sport was correctly associated to the specified establishment'
+                    ,links: links});
+        }).catch(function (err) {
+            res.status(500).send({errors: handler.customServerError(err)});
+        })
+    }
+    else
+        res.status(400).send({message: "Json is malformed: id of sport must be included for perform this action"});
 
 });
 
