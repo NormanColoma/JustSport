@@ -25,6 +25,13 @@ exports.numericalIdSchedule= function(req,res,next){
     else
         next();
 }
+exports.numericalIdEstab= function(req,res,next){
+    if (req.params.id != parseInt(req.params.id, 10)){
+        res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
+    }
+    else
+        next();
+}
 
 exports.stringLocation = function(req,res,next){
     if (req.params.location == parseInt(req.params.location, 10)){
