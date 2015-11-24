@@ -3,12 +3,15 @@
  */
 var models  = require('../models');
 var express = require('express');
+var multer = require('multer');
 var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
+
+//Set this to use raw queries
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'test';
 var config    = require('../config/config.json')[env];
@@ -23,6 +26,16 @@ if(process.env.DATABASE_URL){
 else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
+
+//Set options for Multer.js
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../public/images/ests')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
 
 router.get('', function(req, res) {
     if(req.query.after){
@@ -349,7 +362,8 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
         }
 })
 
-router.post('/new', authController.isBearerAuthenticated, function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, multer({ storage: storage}).single('est_profile'),
+    function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
             models.establishment.create(req.body).then(function (est) {
