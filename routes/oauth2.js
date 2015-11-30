@@ -92,7 +92,7 @@ server.exchange(oauth2orize.exchange.password(function(clientId,username, passwo
             exp: expires,
             role: role
         }, global.secret);
-        done(null,token);
+        done(null,token,{expires: expires, role: role, username: user.name});
     });
 }));
 
