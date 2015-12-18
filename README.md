@@ -960,6 +960,83 @@ GET
 }
 ```
 
+####GET api/establishments
+
+Devuelve la colección de todos los establecimientos, registrados por el usuario (el propio que hace la petición) en la  API.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/establishemnts/me/all*
+
+#####Parámetros 
+
+**limit:**      El número de establecimientos que se quiere incluir en la colección (por defecto 5)
+*opcional*
+
+**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colección. La colección empezará después del deporte establecimeiento  (hacia delante).
+*opcional*
+
+**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colección. La colección empezará después del establecimeiento  especificado (hacia atrás).
+*opcional*
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | Sí            | Público       |
+
+#####Ejemplo de Petición 
+
+GET
+*https://localhost:3000/api/establishments/me/all* 
+
+#####Ejemplo del Resultado
+```json
+{
+  "Establishments": {
+    "count": 3,
+    "rows": [
+      {
+        "id": 1,
+        "name": "Gym A Tope",
+        "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
+        "city": "San Vicente del Raspeig",
+        "province": "Alicante",
+        "addr": "Calle San Franciso nº15"
+      },
+      {
+        "id": 26,
+        "name": "prueba",
+        "desc": "prueba con imágenes",
+        "city": "Alicante",
+        "province": "Alicante",
+        "addr": "Prueba"
+      },
+      {
+        "id": 28,
+        "name": "prueba",
+        "desc": "prueba con imágenes",
+        "city": "Alicante",
+        "province": "Alicante",
+        "addr": "Prueba"
+      }
+    ]
+  },
+  "paging": {
+    "cursors": {
+      "before": 0,
+      "after": 0
+    },
+    "previous": "none",
+    "next": "none"
+  },
+  "links": {
+    "rel": "self",
+    "href": "https://localhost:3000/api/establishments/me/all"
+  }
+}
+```
+
 ####GET api/establishments/sports/:id/location/:location
 
 Devuelve la colección de todos los establecimientos registrados en la API, filtrados por el deporte especificado, y la localización especificada.
