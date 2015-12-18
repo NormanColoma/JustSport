@@ -960,7 +960,7 @@ GET
 }
 ```
 
-####GET api/establishments
+####GET api/establishments/me/all
 
 Devuelve la colección de todos los establecimientos, registrados por el usuario (el propio que hace la petición) en la  API.
 
