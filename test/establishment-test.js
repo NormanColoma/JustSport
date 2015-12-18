@@ -203,7 +203,7 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Deleting establishment that exists. Should return status 204', function(done){
+    it('Deleting establishment that does not exist. Should return status 204', function(done){
         var est = {name: 'Gym Borrar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
             phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
@@ -478,6 +478,17 @@ describe('Establishments', function(){
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishment from specific owner. Should return status 200', function(done){
+        supertest(app)
+            .get('/api/establishments/me/all')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.Establishments.count, 7);
             })
             .end(done);
     })

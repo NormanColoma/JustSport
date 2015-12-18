@@ -366,7 +366,54 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
             })
         }
 })
-
+router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, function(req,res){
+    var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all",
+    before = 0, prev = 'none', after = 0, next = 'none', owner_id = models.user.getAdminId(req.get('Authorization').slice('7'));
+    if(req.query.after){
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all"
+        + "?after="+req.query.after+"?limit"+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" + "?before="+req.query.before+"?limit"+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" + "?limit="+limit;
+        }
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+    }
+    before = 0;
+    after = 0;
+    models.establishment.findAndCountAll(where).then(function(ests){
+        models.establishment.findAndCountAll({ where: {owner: owner_id}}).then(function(total){
+            //Check if there are after cursors
+            if(ests.rows.length < ests.count || ests.rows[ests.rows.length -1].id < total.rows[total.count-1].id){
+                after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
+                    "?after=" + after + '&limit=' + limit;
+            }
+            models.establishment.min('id', { where: {owner: owner_id}}).then(function(min){
+                //Check if there are before cursors
+                if (ests.rows[0].id > min) {
+                    before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
+                        "?before=" + before + '&limit=' + limit;
+                }
+                var curs = {before: before, after: after};
+                var pag = {cursors: curs, previous: prev, next: next};
+                ests.count = total.count;
+                res.status(200).send({
+                    Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                });
+            })
+        })
+    });
+})
 router.post('/new', authController.isBearerAuthenticated, multer({ storage: storage}).single('est_profile'),
     function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
