@@ -484,10 +484,11 @@ describe('Establishments', function(){
 
     it('Getting all establishment from specific owner. Should return status 200', function(done){
         supertest(app)
-            .get('/api/me/establishments/')
+            .get('/api/establishments/me/all')
+            .set('Authorization', 'Bearer '+owner_token)
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.count, 6);
+                assert.equal(res.body.Establishments.count, 7);
             })
             .end(done);
     })
