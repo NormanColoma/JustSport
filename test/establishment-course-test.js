@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Establishments filtered by city and location', function() {
+describe('Establishments filtered by city and location', function() {
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
@@ -229,6 +229,17 @@ xdescribe('Establishments filtered by city and location', function() {
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
+            })
+            .end(done);
+    })
+
+
+    it('Getting all establishments filtered by sport and location but retrieving 0.Should return status 404', function(done){
+        supertest(app)
+            .get('/api/establishments/sport/5/location/Alicante')
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.body.message, 'There are no establishments that match the current filter');
             })
             .end(done);
     })
