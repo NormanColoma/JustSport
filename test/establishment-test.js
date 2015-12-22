@@ -492,6 +492,16 @@ describe('Establishments', function(){
             })
             .end(done);
     })
+
+    it('Getting all establishments filtered by sport and location but retrieving 0.Should return status 404', function(done){
+        supertest(app)
+            .get('/api/establishments/sport/5/location/Alicante')
+            .expect(404)
+            .expect(function (res) {
+                assert.equal(res.message, 'There are no establishments that match the current filter');
+            })
+            .end(done);
+    })
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
