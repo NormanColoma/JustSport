@@ -249,7 +249,13 @@ xdescribe('Schedule of a course', function() {
             }).end(done);
 
     })
-
+    it('Getting schedule that is not established yet from a course that exists. Should return status 404', function(done){
+        supertest(app)
+            .get('/api/courses/3/schedule')
+            .expect(404).expect(function (res) {
+                assert(res.body.message, 'The are no schedules for this course');
+            }).end(done);
+    })
 
     after('Dropping database',function(done) {
         seeder.execute({
