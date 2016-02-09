@@ -73,14 +73,36 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
+<<<<<<< HEAD
 
+=======
+```json
+"links": [
+    [
+      {
+        "rel": "self",
+        "href": "https://localhost:3000/api/establishments/1"
+      },
+      {
+        "rel": "sports",
+        "href": "https://localhost:3000/api/establishments/1/sports"
+      }
+    ]
+  ]
+ ```
+ 
+ En las respuestas a nuestros recursos, encontraremos las URL con los recursos relacionados y las posibles operaciones relacionados, con el 
+ recurso actual. 
+ 
+ 
+>>>>>>> dc4293104e53a8d19d48d4c1d1a39f95bc631ee1
 ###Errores
 
 Nos podemos encontrar ante los siguientes errores:
 
-####Enviar un JSON inválido. Devolverá una respuesta con código *400 Bad Request* 
+####Enviar un JSON con falta de campos. Devolverá una respuesta con código *400 Bad Request* 
 
-Si enviamos un JSON inválido, obtendremos el siguiente error, ajustado al tipo de recurso que hayamos intentado consumir:
+Si enviamos un JSON con falta de campos, obtendremos el siguiente error, ajustado al tipo de recurso que hayamos intentado consumir:
 
 ```json
 {
@@ -130,27 +152,33 @@ Ciertos recursos, solo pueden ser creados, modificados, o eliminados, por cuenta
 
 ####Errores relativos a operaciones no permitidas. Devolverá una respuesta con código *500 Internal Server Error*
 
-En ocasiones podemos intentar realizar operaciones que no son posibles, como la creación de un recurso único (como podría ser un email). Lo que ocasionará un
-error. Por el momento el tipo de respuesta es el siguiente (aunque en siguientes versiones se tiene previsto customizar los errores de este tipo): 
+En ocasiones podemos intentar realizar operaciones que no son posibles, como la creación de un recurso único (como podría ser un email). El envío de valores
+no permitidos para un cierto campo (como podría ser enviar un literal en un campo de tipo integer). Intentar relacionar a un recurso, a otro que no existe. O
+que la base de datos esté caída por cualquier problema en el servidor. Ante este tipo de errores, nos encontraremos con la siguiente respuesta: 
 
 ```json
 {
-  "name": "SequelizeUniqueConstraintError",
-  "message": "Validation error",
   "errors": [
     {
-      "message": "email must be unique",
-      "type": "unique violation",
-      "path": "email",
-      "value": "pepe@gmail.com"
+      "type": "Validation failed",
+      "field": "name",
+      "message": "name must only contain letters"
     }
-  ],
-  "fields": {
-    "email": "pepe@gmail.com"
-  }
+  ]
 }
 ```
 
+<<<<<<< HEAD
+=======
+| Error                               | Descripción del error                                                                                                                         |
+| :-----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|
+| Missing field                       | Significa que uno de los campos obligatorios, no está siendo enviado                                                                          |
+| Validation failed                   | Significa que alguna validación para algún campo, no está pasando, puesto que no se está cumpliendo                                           |
+| Duplicated entry                    | Significa que algún recurso existente, ya tiene establecido el valor único, que estamos intentado establecer a otro recurso                   |
+| Inexistent reference                | Signfica que la referencia que estamos intentando establecer a un recurso a fallado, puesto que dicho recurso al que se referencia, no existe |
+| Database down                       | Significa que la base de datos está caída temporalmente. Esto se debe a problemas internos con el servidor.
+
+>>>>>>> dc4293104e53a8d19d48d4c1d1a39f95bc631ee1
 
 ###Usuarios
 
@@ -941,6 +969,83 @@ GET
       }
     ]
   ]
+}
+```
+
+####GET api/establishments/me/all
+
+Devuelve la colección de todos los establecimientos, registrados por el usuario (el propio que hace la petición) en la  API.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/establishemnts/me/all*
+
+#####Parámetros 
+
+**limit:**      El número de establecimientos que se quiere incluir en la colección (por defecto 5)
+*opcional*
+
+**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colección. La colección empezará después del deporte establecimeiento  (hacia delante).
+*opcional*
+
+**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colección. La colección empezará después del establecimeiento  especificado (hacia atrás).
+*opcional*
+
+#####Información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | Sí            | Público       |
+
+#####Ejemplo de Petición 
+
+GET
+*https://localhost:3000/api/establishments/me/all* 
+
+#####Ejemplo del Resultado
+```json
+{
+  "Establishments": {
+    "count": 3,
+    "rows": [
+      {
+        "id": 1,
+        "name": "Gym A Tope",
+        "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
+        "city": "San Vicente del Raspeig",
+        "province": "Alicante",
+        "addr": "Calle San Franciso nº15"
+      },
+      {
+        "id": 26,
+        "name": "prueba",
+        "desc": "prueba con imágenes",
+        "city": "Alicante",
+        "province": "Alicante",
+        "addr": "Prueba"
+      },
+      {
+        "id": 28,
+        "name": "prueba",
+        "desc": "prueba con imágenes",
+        "city": "Alicante",
+        "province": "Alicante",
+        "addr": "Prueba"
+      }
+    ]
+  },
+  "paging": {
+    "cursors": {
+      "before": 0,
+      "after": 0
+    },
+    "previous": "none",
+    "next": "none"
+  },
+  "links": {
+    "rel": "self",
+    "href": "https://localhost:3000/api/establishments/me/all"
+  }
 }
 ```
 

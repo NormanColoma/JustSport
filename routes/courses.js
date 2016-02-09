@@ -7,6 +7,7 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
+var handler = require('../handlers/errorHandler');
 
 router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
@@ -33,7 +34,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, fun
                     , instructor: course.instructor, price: course.price, info: course.info, links: links
                 });
             }).catch(function (err) {
-                res.status(500).send(err);
+                res.status(500).send({errors: handler.customServerError(err)});
             })
 
         }
@@ -107,27 +108,31 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
     models.course.findById(req.params.id).then(function(course){
         if(course){
             models.schedule.findAndCountAll(where).then(function(schedule){
-                course.getSchedule().then(function(total){
-                    //Check if there are after cursors
-                    if(schedule.rows.length < schedule.count || schedule.rows[schedule.rows.length -1].id < total[total.length-1].id){
-                        after = new Buffer(schedule.rows[schedule.rows.length - 1].id.toString()).toString('base64');
-                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id + "/schedule"+
-                            "?after=" + after + '&limit=' + limit;
-                    }
-                    models.schedule.min('id').then(function(min){
-                        //Check if there are before cursors
-                        if (schedule.rows[0].id > min) {
-                            before = new Buffer(schedule.rows[0].id.toString()).toString('base64');
-                            prev = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id +
-                                "/schedule?before=" + before + '&limit=' + limit;
+                if(schedule.count > 0) {
+                    course.getSchedule().then(function (total) {
+                        //Check if there are after cursors
+                        if (schedule.rows.length < schedule.count || schedule.rows[schedule.rows.length - 1].id < total[total.length - 1].id) {
+                            after = new Buffer(schedule.rows[schedule.rows.length - 1].id.toString()).toString('base64');
+                            next = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id + "/schedule" +
+                                "?after=" + after + '&limit=' + limit;
                         }
-                        var curs = {before: before, after: after};
-                        var pag = {cursors: curs, previous: prev, next: next};
-                        res.status(200).send({
-                            Schedule: schedule, paging: pag, links: {rel: 'self', href: url}
-                        });
+                        models.schedule.min('id').then(function (min) {
+                            //Check if there are before cursors
+                            if (schedule.rows[0].id > min) {
+                                before = new Buffer(schedule.rows[0].id.toString()).toString('base64');
+                                prev = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id +
+                                    "/schedule?before=" + before + '&limit=' + limit;
+                            }
+                            var curs = {before: before, after: after};
+                            var pag = {cursors: curs, previous: prev, next: next};
+                            res.status(200).send({
+                                Schedule: schedule, paging: pag, links: {rel: 'self', href: url}
+                            });
+                        })
                     })
-                })
+                }else{
+                    res.status(404).send({message: "There are no schedules for this course"});
+                }
             });
         }
         else
@@ -146,7 +151,7 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdC
         else
             res.status(404).send({message: "The course was not found"});
     }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(500).send({errors: handler.customServerError(err)});
     })
 });
 
@@ -158,7 +163,7 @@ router.delete('/:id', authController.isBearerAuthenticated, middleware.numerical
             else
                 res.status(404).send({message: "The course was not found"});
         }).catch(function (err) {
-            res.status(500).send(err);
+            res.status(500).send({errors: handler.customServerError(err)});
         })
 });
 module.exports = router;

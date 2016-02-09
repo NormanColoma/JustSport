@@ -41,7 +41,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Schedule', function() {
+xdescribe('Schedule', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -179,6 +179,35 @@ describe('Schedule', function() {
             .expect(400).expect(function(res){
                 assert.equal(res.body.message, "Json is malformed, it must include the following fields: day," +
                     "startTime, endTime, courseId");
+            }).end(done);
+    })
+
+    it('Adding new schedule passing invalid format. Should return status 500', function(done){
+        var schedule= {day: 'Pepe', startTime: 'xx', endTime:"xx", courseId: 1};
+        supertest(app)
+            .post('/api/schedules/new').send(schedule)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 3);
+                assert.equal(res.body.errors[0].message, "day must match a valid day of week (it supports english and spanish days)");
+                assert.equal(res.body.errors[1].message, "startTime must match valid time: 12:00");
+                assert.equal(res.body.errors[2].message, "endTime must match valid time: 12:00");
+            }).end(done);
+    })
+
+    it('Adding new schedule passing empty values. Should return status 500', function(done){
+        var schedule= {day: ' ', startTime: ' ', endTime:' ', courseId: 1};
+        supertest(app)
+            .post('/api/schedules/new').send(schedule)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 6);
+                assert.equal(res.body.errors[0].message, "day must match a valid day of week (it supports english and spanish days)");
+                assert.equal(res.body.errors[1].message, "day is required");
+                assert.equal(res.body.errors[2].message, "startTime must match valid time: 12:00");
+                assert.equal(res.body.errors[3].message, "startTime is required");
+                assert.equal(res.body.errors[4].message, "endTime must match valid time: 12:00");
+                assert.equal(res.body.errors[5].message, "endTime is required");
             }).end(done);
     })
 

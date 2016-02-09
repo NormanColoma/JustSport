@@ -23,7 +23,7 @@ var umzug = new Umzug({
     logging: false
 });
 
-describe('User', function(){
+xdescribe('User', function(){
     var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
     var credentials = {
         "grant_type" : "password",
@@ -42,7 +42,7 @@ describe('User', function(){
             })
         });
     });
-    it('Creating user that does not exist alrady. Should return the posted user', function(done){
+    it('Creating user that does not exist already. Should return the posted user', function(done){
 
         supertest(app)
             .post('/api/users/new').send(user)
@@ -65,7 +65,10 @@ describe('User', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+                assert.equal(res.body.errors.length, 1);
+                assert.equal(res.body.errors[0].type, "Duplicated entry");
+                assert.equal(res.body.errors[0].field, "email");
+                assert.equal(res.body.errors[0].message, "The value: 'ua.norman@mail.com' is already taken");
             }).end(done);
     });
     it('Getting access token and user id', function(done){
@@ -119,6 +122,53 @@ describe('User', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'User was not found');
             }).end(done);
+    });
+
+
+    it('Creating user with invalid required fields. Should return status 500', function(done){
+        var user = {name: 'Norman12', lname: 'Coloma García12', email: 'ua.norman.com', pass: 'adi20'};
+        supertest(app)
+            .post('/api/users/new').send(user)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors.length, 4)
+                assert.equal(res.body.errors[0].message, 'name must only contain letters');
+                assert.equal(res.body.errors[1].message, 'lname must only contain letters');
+                assert.equal(res.body.errors[2].message, 'email is not valid, it must be like: youremail@domain.es');
+                assert.equal(res.body.errors[3].message, 'pass is not valid. It must be at least 6 characters, no more ' +
+                    'than 15, and must include at least one lower case letter, and one numeric digit');
+            }).end(done);
+
+    });
+
+    it('Creating user with null fields. Should return status 500', function(done){
+        var user = {name: 'Norman', pass: 'adi2015', gender: 'male'}; //email and lname are required
+        supertest(app)
+            .post('/api/users/new').send(user)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors.length, 2)
+                assert.equal(res.body.errors[0].message, 'lname cannot be null');
+                assert.equal(res.body.errors[1].message, 'email cannot be null');
+            }).end(done);
+
+    });
+
+    it('Creating user with optional fields, but not the corrects. Should return status 500', function(done){
+        var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'adi2015', gender: 'not correct_gender',
+        role: 'admin'};
+        supertest(app)
+            .post('/api/users/new').send(user)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors.length, 2)
+                assert.equal(res.body.errors[0].message, "gender must match 'male' or 'female' values");
+                assert.equal(res.body.errors[1].message, "role must match 'user' or 'owner' values");
+            }).end(done);
+
     });
 
     after('Dropping database',function(done) {
