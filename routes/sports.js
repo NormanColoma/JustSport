@@ -4,77 +4,61 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var handler = require('../handlers/errorHandler');
 
+/**
+ * Primero miramos si hay, after o before, para hacer las cláusulas where y los cambios de url,
+ * si no hay, es una consulta normal. Después tendremos que comprobar el mínimo y máximo, para saber
+ * si hay siguiente o anterior. Es diferente el total de la consulta, con el total de la colección,
+ * por ello tenemos que consultar ambas para verificar el anterior y siguiente.
+ */
 router.get('', function(req, res) {
-    if(req.query.after){
-      if(req.query.limit){
-        var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
-        models.sport.findAll({where:{id:{$gt:after}},limit:req.query.limit}).then(function (sports) {
-          var before = new Buffer(sports[0].id.toString()).toString('base64');
-          models.sport.max('id').then(function(max){
-            var after = 0;
-            var next = 'none';
-            if(sports[sports.length-1].id < max) {
-              after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-              next = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?after="+after+'&limit='+req.query.limit;
-            }
-            var curs = {before: before, after: after};
-            var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?before="+before+'&limit='+req.query.limit;
-            var pag = {cursors: curs,previous:prev,next:next};
-            res.status(200).send({sports:sports,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
-          })
-        }).catch(function(err){
-          res.status(500).send({errors: handler.customServerError(err)});
-        })
-      }
-      else
-        res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+  var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports",
+      before = 0, prev = 'none', after = 0, next = 'none';
+  if(req.query.after){
+    after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+    limit = req.query.limit;
+    url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports" + "?after="+req.query.after+"?limit"+limit;
+    where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$gt: after}}};
+  }else if(req.query.before){
+    before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+    limit = req.query.limit;
+    url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports" + "?before="+req.query.before+"?limit"+limit;
+    where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$lt: before}}};
+  }else{
+    if(req.query.limit) {
+      limit = req.query.limit;
+      url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports" + "?limit="+limit;
     }
-    else if(req.query.before){
-      if(req.query.limit){
-        var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
-        models.sport.findAll({where:{id:{$lt:before}},limit:req.query.limit}).then(function (sports) {
-          models.sport.min('id').then(function(min){
-            var after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-            var next = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?after="+after+'&limit='+req.query.limit;
-            var before= 0;
-            var prev = 'none';
-            if(sports[0].id > min) {
-              before = new Buffer(sports[0].id.toString()).toString('base64');
-              prev = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?before="+before+'&limit='+req.query.limit;
-            }
-            var curs = {before: before, after: after};
-            var pag = {cursors: curs,previous:prev,next:next};
-            res.status(200).send({sports:sports,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
-          })
-        }).catch(function(err){
-          res.status(500).send({errors: handler.customServerError(err)});
-        })
-      }
-      else
-        res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
-    }
-    else {
-      var limit = 5;
-      if(req.query.limit)
-        limit=req.query.limit;
-      models.sport.findAll({limit: limit}).then(function (sports) {
-        var before = 0;
-        models.sport.max('id').then(function (max) {
-          var after = 0;
-          var next = 'none';
-          if(sports[sports.length-1].id < max) {
-            after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-            next = req.protocol + "://" + req.hostname + ":3000" + "/api/sports?after="+after+'&limit='+limit;
+    where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$gt: after}}};
+  }
+  before = 0;
+  after = 0;
+  models.sport.findAndCountAll(where).then(function(sports){
+    models.sport.findAndCountAll().then(function(total){
+      if(sports.count > 0) {
+        //Check if there are after cursors
+        if (sports.rows.length < sports.count || sports.rows[sports.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+          after = new Buffer(sports.rows[sports.rows.length - 1].id.toString()).toString('base64');
+          next = req.protocol + "://" + req.hostname + ":3000" + "/api/sports" +
+              "?after=" + after + '&limit=' + limit;
+        }
+        models.sport.min('id').then(function (min) {
+          //Check if there are before cursors
+          if (sports.rows[0].id > min) {
+            before = new Buffer(sports.rows[0].id.toString()).toString('base64');
+            prev = req.protocol + "://" + req.hostname + ":3000" + "/api/sports" +
+                "?before=" + before + '&limit=' + limit;
           }
           var curs = {before: before, after: after};
-          var prev = 'none';
           var pag = {cursors: curs, previous: prev, next: next};
-          res.status(200).send({sports: sports, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/sports"}});
+          sports.count = total.count;
+          res.status(200).send({
+            Sports: sports, paging: pag, links: {rel: 'self', href: url}
+          });
         })
-      }).catch(function (err) {
-        res.status(500).send({errors: handler.customServerError(err)});
-      })
-    }
+      }else
+        res.status(404).send({message: "The are no sports added yet"});
+    });
+  });
 });
 
 
