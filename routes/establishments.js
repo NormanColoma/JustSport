@@ -38,76 +38,54 @@ var storage = multer.diskStorage({
 })
 
 router.get('', function(req, res) {
+    var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments",
+        before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
-        if(req.query.limit){
-            var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
-            models.establishment.findAll({where:{id:{$gt:after}},limit:req.query.limit}).then(function (establishments) {
-                var before = new Buffer(establishments[0].id.toString()).toString('base64');
-                models.establishment.max('id').then(function(max){
-                    var after = 0;
-                    var next = 'none';
-                    if(establishments[establishments.length-1].id < max) {
-                        after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
-                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+req.query.limit;
-                    }
-                    var curs = {before: before, after: after};
-                    var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?before="+before+'&limit='+req.query.limit;
-                    var pag = {cursors: curs,previous:prev,next:next};
-                    res.status(200).send({establishments:establishments,paging:pag, links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
-                })
-            }).catch(function(err){
-                res.status(500).send({errors: handler.customServerError(err)});
-            })
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?after="+req.query.after+"?limit="+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$gt: after}}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?before="+req.query.before+"?limit="+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$lt: before}}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?limit="+limit;
         }
-        else
-            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$gt: after}}};
     }
-    else if(req.query.before){
-        if(req.query.limit){
-            var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
-            models.establishment.findAll({where:{id:{$lt:before}},limit:req.query.limit}).then(function (establishments) {
-                models.establishment.min('id').then(function(min){
-                    var after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
-                    var next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+req.query.limit;
-                    var before= 0;
-                    var prev = 'none';
-                    if(establishments[0].id > min) {
-                        before = new Buffer(establishments[0].id.toString()).toString('base64');
-                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?before="+before+'&limit='+req.query.limit;
-                    }
-                    var curs = {before: before, after: after};
-                    var pag = {cursors: curs,previous:prev,next:next};
-                    res.status(200).send({establishments:establishments,paging:pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
-                })
-            }).catch(function(err){
-                res.status(500).send({errors: handler.customServerError(err)});
-            })
-        }
-        else
-            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
-    }
-    else {
-        var limit = 5;
-        if(req.query.limit)
-            limit=req.query.limit;
-        models.establishment.findAll({limit: limit}).then(function (establishments) {
-            var before = 0;
-            models.establishment.max('id').then(function (max) {
-                var after = 0;
-                var next = 'none';
-                if(establishments[establishments.length-1].id < max) {
-                    after = new Buffer(establishments[establishments.length - 1].id.toString()).toString('base64');
-                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments?after="+after+'&limit='+limit;
+    before = 0;
+    after = 0;
+    models.establishment.findAndCountAll(where).then(function(ests){
+        models.establishment.findAndCountAll().then(function(total){
+            if(ests.count > 0) {
+                //Check if there are after cursors
+                if (ests.rows.length < ests.count || ests.rows[ests.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+                    after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" +
+                        "?after=" + after + '&limit=' + limit;
                 }
-                var curs = {before: before, after: after};
-                var prev = 'none';
-                var pag = {cursors: curs, previous: prev, next: next};
-                res.status(200).send({establishments: establishments, paging: pag,links: {rel:'self',href:req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"}});
-            })
-        }).catch(function (err) {
-            res.status(500).send({errors: handler.customServerError(err)});
-        })
-    }
+                models.establishment.min('id').then(function (min) {
+                    //Check if there are before cursors
+                    if (ests.rows[0].id > min) {
+                        before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" +
+                            "?before=" + before + '&limit=' + limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    ests.count = total.count;
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                    });
+                })
+            }else
+                res.status(404).send({message: "The are no establishments added yet"});
+        });
+    });
 });
 router.get('/:id', function(req, res) {
     if (req.params.id != parseInt(req.params.id, 10)){
@@ -139,138 +117,136 @@ router.get('/:id', function(req, res) {
         });
     }
 });
-router.get('/:id/sports', function(req, res) {
+router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, function(req, res) {
+    var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports",
+        before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
-        if(req.query.limit){
-            models.establishment.findOne({where:{id:req.params.id}}).then(function(est){
-                if (est == undefined)
-                    res.status(404).send({message: "The establishment was not found"});
-                else{
-                    if(req.query.limit == 0)
-                        res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
-                    else {
-                        var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
-                        est.getSports({
-                            attributes: ['id', 'name'], joinTableAttributes: [], limit: req.query.limit,
-                            where: {id: {$gt: after}}
-                        }).then(function (sports) {
-                            var before = new Buffer(sports[0].id.toString()).toString('base64');
-                            est.getSports().then(function (count) {
-                                var after = 0;
-                                var next = 'none';
-                                if (sports[sports.length - 1].id < count[count.length - 1].id && count.length > req.query.limit) {
-                                    after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-                                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + req.query.limit;
-                                }
-                                var curs = {before: before, after: after};
-                                var prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?before=" + before + '&limit=' + req.query.limit;
-                                var pag = {cursors: curs, previous: prev, next: next};
-                                res.status(200).send({
-                                    sports: sports, paging: pag, links: {
-                                        rel: 'self', href: req.protocol + "://" + req.hostname + ":3000" +
-                                        "/api/establishments" + req.params.id + "/sports"
-                                    }
-                                });
-                            })
-                        })
-                    }
-                }
-            })
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"+
+            req.params.id+"/sports" + "?after="+req.query.after+"?limit"+limit;
+        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports"
+            + "?before="+req.query.before+"?limit"+limit;
+        where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$lt: before}}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports" + "?limit="+limit;
         }
-        else
-            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}};
     }
-    else if(req.query.before){
-        if(req.query.limit){
-            models.establishment.findOne({where:{id:req.params.id}}).then(function(est) {
-                if (est == undefined)
-                    res.status(404).send({message: "The establishment was not found"});
-                else {
-                    if(req.query.limit == 0)
-                        res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
-                    else {
-                        var before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
-                        est.getSports({
-                            attributes: ['id', 'name'], joinTableAttributes: [], limit: req.query.limit,
-                            where: {id: {$lt: before}}
-                        }).then(function (sports) {
-                            est.getSports().then(function (count) {
-                                var after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-                                var next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + req.query.limit;
-                                var before = 0;
-                                var prev = 'none';
-                                //In this case, there is no need to lookup the total value of the sports
-                                if (sports[0].id > count[0].id) {
-                                    before = new Buffer(sports[0].id.toString()).toString('base64');
-                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?before=" + before + '&limit=' + req.query.limit;
-                                }
-                                var curs = {before: before, after: after};
-                                var pag = {cursors: curs, previous: prev, next: next};
-                                res.status(200).send({
-                                    sports: sports, paging: pag, links: {
-                                        rel: 'self',
-                                        href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports"
-                                    }
-                                });
-                            })
-                        })
-                    }
-                }
-            })
-        }
-        else
-            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
-    }
-    else {
-        var limit = 5;
-        if(req.query.limit)
-            limit=req.query.limit;
-        //Checking that establishment exists
-        models.establishment.findOne({where:{id:req.params.id}}).then(function(est) {
-            if (est == undefined)
-                res.status(404).send({message: "The establishment was not found"});
-            else {
-                //If establishment exists, we retrieve the sports
-                if(limit == 0)
-                    res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
-                else {
-                    est.getSports({attributes: ['id', 'name'], joinTableAttributes: [], limit: limit}).then(function (sports) {
-                        var before = 0;
-                        var after = 0;
-                        var next = 'none';
-                        if(sports.length == 0)
-                            res.status(200).send(sports);
-                        else {
-                            //We get the total number of the sports
-                            est.getSports().then(function (count) {
-                                //If last item retrieved is lower than max id and the number of total sports is greater than the limit
-                                //Then we'll have after cursors
-                                if (sports[sports.length - 1].id < count[count.length - 1].id && count.length > limit) {
-                                    after = new Buffer(sports[sports.length - 1].id.toString()).toString('base64');
-                                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports?after=" + after + '&limit=' + limit;
-                                }
-                                var curs = {before: before, after: after};
-                                var prev = 'none';
-                                var pag = {cursors: curs, previous: prev, next: next};
-                                res.status(200).send({
-                                    sports: sports,
-                                    paging: pag,
-                                    links: {
-                                        rel: 'self',
-                                        href: req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id + "/sports"
-                                    }
-                                });
-                            })
+    before = 0;
+    after = 0;
+    models.establishment.findOne({where: {id: req.params.id}}).then(function (est) {
+        if (est == undefined)
+            res.status(404).send({message: "The establishment was not found"});
+        else {
+            est.getSports(where).then(function(sprts) {
+                est.getSports().then(function (total) {
+                    if (sprts.length > 0) {
+                        //Check if there are after cursors
+                        var sports = {rows: sprts, count: total.length};
+                        if (sports.rows[sports.rows.length - 1].id < total[total.length - 1].id) {
+                            after = new Buffer(sports.rows[sports.rows.length - 1].id.toString()).toString('base64');
+                            next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id+"/sports" +
+                                "?after=" + after + '&limit=' + limit;
                         }
-                    })
-                }
-            }
-        })
-    }
+
+                        var min = Math.min.apply(Math,total.map(function(o){return o.id;}))
+                        //Check if there are before cursors
+                        if (sports.rows[0].id > min) {
+                            before = new Buffer(sports.rows[0].id.toString()).toString('base64');
+                            prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + req.params.id+"/sports" +
+                                "?before=" + before + '&limit=' + limit;
+                        }
+                        var curs = {before: before, after: after};
+                        var pag = {cursors: curs, previous: prev, next: next};
+                        res.status(200).send({
+                            Sports: sports, paging: pag, links: {rel: 'self', href: url}
+                        });
+                    } else
+                        res.status(404).send({message: "The are no sports added yet"});
+                });
+            });
+        }
+    });
 });
 router.get('/sport/:id/location/:location', middleware.numericalIdSport, middleware.stringLocation, middleware.pagination,
     function(req,res){
+        var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000"+
+        "/api/establishments/sport/" + req.params.id + "/location/" + req.params.location,
+            before = 0, prev = 'none', after = 0, next = 'none';
         if(req.query.after){
+            after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+            + req.params.location + "?after="+req.query.after+"?limit="+limit;
+            where = {where: {id: {$gt: after},$or: {province: {$like:'%'+req.params.location+'%'},
+                city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+                limit: parseInt(limit)}
+        }else if(req.query.before){
+            before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/" +
+            req.params.location + "?before="+req.query.before+"?limit="+limit;
+            where = {where: {id: {$lt: before},$or: {province: {$like:'%'+req.params.location+'%'},
+                city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+                limit: parseInt(limit)};
+        }else{
+            if(req.query.limit) {
+                limit = req.query.limit;
+                url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/" +
+                req.params.location + "?limit="+limit;
+            }
+            where = {where: {id: {$gt: after},$or: {province: {$like:'%'+req.params.location+'%'},
+                city:{$like: '%'+req.params.location+'%'}}},
+                attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'],
+                include: [{model: models.course, as:'Courses', attributes: ['id'], where: {sportId: req.params.id}}],
+                limit: parseInt(limit)}
+        }
+        before = 0;
+        after = 0;
+        models.establishment.findAndCountAll(where).then(function(ests){
+            models.establishment.findAndCountAll({where: {id: {$gt: after},$or: {province: {$like:'%'+req.params.location+'%'},
+                city:{$like: '%'+req.params.location+'%'}}}}).then(function(total){
+                if(ests.count > 0) {
+                    //Check if there are after cursors
+                    if (ests.rows.length < ests.count || ests.rows[ests.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+                        after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                        next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                            + req.params.location+"?after=" + after + '&limit=' + limit;
+                    }
+                    models.establishment.min('id').then(function (min) {
+                        //Check if there are before cursors
+                        if (ests.rows[0].id > min) {
+                            before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                            prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/sport/" + req.params.id + "/location/"
+                                + req.params.location+"?before=" + before + '&limit=' + limit;
+                        }
+                        var curs = {before: before, after: after};
+                        var pag = {cursors: curs, previous: prev, next: next};
+                        ests.count = total.count;
+                        res.status(200).send({
+                            Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                        });
+                    })
+                }else
+                    res.status(404).send({message: "There are no establishments that match the current filter"});
+            });
+        }).catch(function(err){
+            console.log(err);
+            res.status(500).send({errors: handler.customServerError(err)});
+        });
+
+        /*if(req.query.after){
             var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
             models.establishment.findAndCountAll({where:
             {id: {$gt: after},$or: {province: {$like:'%'+req.params.location+'%'}, city:{$like: '%'+req.params.location+'%'}}},
@@ -380,7 +356,7 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
                 console.log(err);
                 res.status(500).send(err);
             })
-        }
+        }*/
 })
 router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, function(req,res){
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all",
@@ -390,18 +366,18 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all"
         + "?after="+req.query.after+"?limit"+limit;
-        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: parseInt(limit), where:{id: {$gt: after},owner: owner_id}};
     }else if(req.query.before){
         before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" + "?before="+req.query.before+"?limit"+limit;
-        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: parseInt(limit), where:{id: {$lt: after},owner: owner_id}};
     }else{
         if(req.query.limit) {
             limit = req.query.limit;
             url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" + "?limit="+limit;
         }
-        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: limit, where:{id: {$gt: after},owner: owner_id}};
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr'], limit: parseInt(limit), where:{id: {$gt: after},owner: owner_id}};
     }
     before = 0;
     after = 0;

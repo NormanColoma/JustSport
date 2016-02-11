@@ -73,7 +73,7 @@ xdescribe('EstablishmentsSports', function(){
         })
     })
 
-    it('Getting all establishments where the sport is imparted.Should return status 200', function(done){
+    xit('Getting all establishments where the sport is imparted.Should return status 200', function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'};
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
@@ -86,9 +86,9 @@ xdescribe('EstablishmentsSports', function(){
         .get('/api/sports/1/establishments')
         .expect(200)
         .expect(function (res) {
-            assert.equal(res.body.Establishments.length, 2);
-            assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
-            assert.equal(JSON.stringify(res.body.Establishments[1]), JSON.stringify(est2));
+            assert.equal(res.body.Establishments.rows.length, 2);
+            assert.equal(JSON.stringify(res.body.Establishments.rows[0]), JSON.stringify(est1));
+            assert.equal(JSON.stringify(res.body.Establishments.rows[1]), JSON.stringify(est2));
             assert.equal(res.body.paging.cursors.before, 0);
             assert.equal(res.body.paging.cursors.after, 0);
             assert.equal(res.body.paging.previous, 'none');
@@ -97,7 +97,7 @@ xdescribe('EstablishmentsSports', function(){
         .end(done);
 })
 
-it('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
+xit('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
     supertest(app)
         .get('/api/sports/15/establishments')
         .expect(404)
@@ -106,7 +106,7 @@ it('Getting all establishments where the sport is imparted, which does not exist
         })
         .end(done);
 })
-it('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
+xit('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
     supertest(app)
         .get('/api/sports/Zumba/establishments')
         .expect(400)
@@ -116,7 +116,7 @@ it('Getting all establishments where the sport is imparted, by passing the id as
         .end(done);
 })
 
-it('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
+xit('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -130,9 +130,9 @@ it('Getting all establishments where the sport is imparted without specify curso
             .get('/api/sports/1/establishments?limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 2);
-                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
-                assert.equal(JSON.stringify(res.body.Establishments[1]), JSON.stringify(est2));
+                assert.equal(res.body.Establishments.rows.length, 2);
+                assert.equal(JSON.stringify(res.body.Establishments.rows[0]), JSON.stringify(est1));
+                assert.equal(JSON.stringify(res.body.Establishments.rows[1]), JSON.stringify(est2));
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'none');
@@ -141,7 +141,7 @@ it('Getting all establishments where the sport is imparted without specify curso
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
+xit('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -154,18 +154,18 @@ it('Getting all establishments where the sport is imparted specifying after curs
             .get('/api/sports/1/establishments?after='+after+'&limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 1);
-                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est2));
-                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.Establishments.rows.length, 1);
+                assert.equal(JSON.stringify(res.body.Establishments.rows[0]), JSON.stringify(est2));
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports/1/establishments?before='+
-                    new Buffer(res.body.Establishments[0].id.toString()).toString('base64')+'&limit=1');
+                    new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=1');
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
+xit('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -178,18 +178,18 @@ it('Getting all establishments where the sport is imparted specifying before cur
             .get('/api/sports/1/establishments?before='+before+'&limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.Establishments.length, 1);
-                assert.equal(JSON.stringify(res.body.Establishments[0]), JSON.stringify(est1));
+                assert.equal(res.body.Establishments.rows.length, 1);
+                assert.equal(JSON.stringify(res.body.Establishments.rows[0]), JSON.stringify(est1));
                 assert.equal(res.body.paging.cursors.before, 0);
-                assert.equal(res.body.paging.cursors.after, new Buffer(res.body.Establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.paging.cursors.after, new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/sports/1/establishments?after='+
-                    new Buffer(res.body.Establishments[0].id.toString()).toString('base64')+'&limit=1');
+                    new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
+xit('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -201,7 +201,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, bu
             })
             .end(done);
     })
-it('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
+xit('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -213,15 +213,15 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             })
             .end(done);
     })
-    it('Getting all establishments where the sport, but got 0 recors.Should return status 200',
+    xit('Getting all establishments where the sport, but got 0 recors.Should return status 404',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/sports/5/establishments?before='+before+'&limit=1')
-            .expect(200)
+            .expect(404)
             .expect(function (res) {
-                assert.equal(res.body.length, 0);
+                assert.equal(res.body.message, "The are no sports added yet");
             })
             .end(done);
     })
@@ -231,10 +231,10 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .get('/api/establishments/1/sports')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 3);
-                assert.equal(res.body.sports[0].name, 'Spinning');
-                assert.equal(res.body.sports[1].name, 'GAP');
-                assert.equal(res.body.sports[2].name, 'Body Jump');
+                assert.equal(res.body.Sports.rows.length, 3);
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows[1].name, 'GAP');
+                assert.equal(res.body.Sports.rows[2].name, 'Body Jump');
             })
             .end(done);
     })
@@ -249,12 +249,12 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .end(done);
     })
 
-    it('Getting all sports imparted from establishment that is empty yet.Should return status 200', function(done){
+    it('Getting all sports imparted from establishment that is empty yet.Should return status 404', function(done){
         supertest(app)
             .get('/api/establishments/5/sports')
-            .expect(200)
+            .expect(404)
             .expect(function (res) {
-                assert.equal(res.body.length, 0);
+                assert.equal(res.body.message, 'The are no sports added yet');
             })
             .end(done);
     })
@@ -264,19 +264,18 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .get('/api/establishments/1/sports?limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 1);
-                assert.equal(res.body.sports[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows.length, 1);
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments/1/sports?after='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=1');
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
     })
-
     it('Getting all sports without specify cursor but limit (0). Should return status 400', function(done){
         supertest(app)
             .get('/api/establishments/1/sports?limit=0')
@@ -294,14 +293,14 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .get('/api/establishments/1/sports?after='+after+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 2);
-                assert.equal(res.body.sports[0].name, 'GAP');
-                assert.equal(res.body.sports[1].name, 'Body Jump');
+                assert.equal(res.body.Sports.rows.length, 2);
+                assert.equal(res.body.Sports.rows[0].name, 'GAP');
+                assert.equal(res.body.Sports.rows[1].name, 'Body Jump');
                 assert.equal(res.body.paging.cursors.before,
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments/1/sports?before='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=2');
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
@@ -314,15 +313,15 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .get('/api/establishments/1/sports?before='+before+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 2);
-                assert.equal(res.body.sports[0].name, 'Spinning');
-                assert.equal(res.body.sports[1].name, 'GAP');
+                assert.equal(res.body.Sports.rows.length, 2);
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows[1].name, 'GAP');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[1].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[1].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/establishments/1/sports?after='+
-                    new Buffer(res.body.sports[1].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Sports.rows[1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
     })

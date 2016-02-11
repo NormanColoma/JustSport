@@ -26,7 +26,7 @@ exports.customServerError= function(err){
         errors.push(error);
     }else if(err.name = 'SequelizeConnectionRefusedError'){
         var errors = new Array();
-        var error = {type: "Database down", message: "Databse is not running right now. Please try it back in few moments"};
+        var error = {type: "Database down", message: "Database is not running right now. Please try it back in few moments"};
         errors.push(error);
     }
     return errors;

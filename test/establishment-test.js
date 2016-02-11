@@ -355,19 +355,19 @@ xdescribe('Establishments', function(){
             .get('/api/establishments')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 5);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
-                assert.equal(res.body.establishments[3].name, 'Montemar');
-                assert.equal(res.body.establishments[4].name, 'Gimnasio 13');
+                assert.equal(res.body.Establishments.rows.length, 5);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows[3].name, 'Montemar');
+                assert.equal(res.body.Establishments.rows[4].name, 'Gimnasio 13');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[4].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[4].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[4].id.toString()).toString('base64')+'&limit=5');
+                    new Buffer(res.body.Establishments.rows[4].id.toString()).toString('base64')+'&limit=5');
             })
             .end(done);
     })
@@ -377,17 +377,17 @@ xdescribe('Establishments', function(){
             .get('/api/establishments?limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -399,18 +399,18 @@ xdescribe('Establishments', function(){
             .get('/api/establishments?after='+after+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Montemar');
-                assert.equal(res.body.establishments[1].name, 'Gimnasio 13');
-                assert.equal(res.body.establishments[2].name, 'Just Sport');
-                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Montemar');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gimnasio 13');
+                assert.equal(res.body.Establishments.rows[2].name, 'Just Sport');
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments?before='+
-                    new Buffer(res.body.establishments[0].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=3');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -422,17 +422,17 @@ xdescribe('Establishments', function(){
             .get('/api/establishments?before='+before+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
