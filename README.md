@@ -73,9 +73,6 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 Se ha provisto a la API de hipermedia, por lo que en el mayoría de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
 La hipermedia aún está por especificar completamente, y sufrirá fuertes modificaciones. 
 
-<<<<<<< HEAD
-
-=======
 ```json
 "links": [
     [
@@ -91,11 +88,10 @@ La hipermedia aún está por especificar completamente, y sufrirá fuertes modifica
   ]
  ```
  
- En las respuestas a nuestros recursos, encontraremos las URL con los recursos relacionados y las posibles operaciones relacionados, con el 
- recurso actual. 
+En las respuestas a nuestros recursos, encontraremos las URL con los recursos relacionados y las posibles operaciones relacionados, con el 
+recurso actual. 
  
  
->>>>>>> dc4293104e53a8d19d48d4c1d1a39f95bc631ee1
 ###Errores
 
 Nos podemos encontrar ante los siguientes errores:
@@ -168,8 +164,6 @@ que la base de datos esté caída por cualquier problema en el servidor. Ante este
 }
 ```
 
-<<<<<<< HEAD
-=======
 | Error                               | Descripción del error                                                                                                                         |
 | :-----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|
 | Missing field                       | Significa que uno de los campos obligatorios, no está siendo enviado                                                                          |
@@ -178,7 +172,7 @@ que la base de datos esté caída por cualquier problema en el servidor. Ante este
 | Inexistent reference                | Signfica que la referencia que estamos intentando establecer a un recurso a fallado, puesto que dicho recurso al que se referencia, no existe |
 | Database down                       | Significa que la base de datos está caída temporalmente. Esto se debe a problemas internos con el servidor.
 
->>>>>>> dc4293104e53a8d19d48d4c1d1a39f95bc631ee1
+
 
 ###Usuarios
 
@@ -455,45 +449,30 @@ GET
 
 ```json
 {
-  "sports": [
-    {
-      "id": 1,
-      "name": "Spinning",
-      "createdAt": "2015-11-09T12:45:23.000Z",
-      "updatedAt": "2015-11-09T12:45:23.000Z"
-    },
-    {
-      "id": 2,
-      "name": "GAP",
-      "createdAt": "2015-11-09T12:45:23.000Z",
-      "updatedAt": "2015-11-09T12:45:23.000Z"
-    },
-    {
-      "id": 3,
-      "name": "Body Jump",
-      "createdAt": "2015-11-09T12:45:23.000Z",
-      "updatedAt": "2015-11-09T12:45:23.000Z"
-    },
-    {
-      "id": 4,
-      "name": "Zumba",
-      "createdAt": "2015-11-09T12:45:23.000Z",
-      "updatedAt": "2015-11-09T12:45:23.000Z"
-    },
-    {
-      "id": 5,
-      "name": "Crossfit",
-      "createdAt": "2015-11-09T12:45:23.000Z",
-      "updatedAt": "2015-11-09T12:45:23.000Z"
-    }
-  ],
+  "Sports": {
+    "count": 3,
+    "rows": [
+      {
+        "id": 2,
+        "name": "GAP"
+      },
+      {
+        "id": 4,
+        "name": "Zumba"
+      },
+      {
+        "id": 5,
+        "name": "Crossfit"
+      }
+    ]
+  },
   "paging": {
     "cursors": {
       "before": 0,
-      "after": "NQ=="
+      "after": 0
     },
     "previous": "none",
-    "next": "https://localhost:3000/api/sports?after=NQ==&limit=5"
+    "next": "none"
   },
   "links": {
     "rel": "self",
@@ -586,62 +565,47 @@ GET
 
 ```json
 {
-  "Establishments": [
-    {
-      "id": 1,
-      "name": "Gym A Tope",
-      "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
-      "city": "San Vicente del Raspeig",
-      "province": "Alicante",
-      "addr": "Calle San Franciso nº15",
-      "phone": "965660327",
-      "website": "http://wwww.gymatope.es",
-      "main_img": "atope.jpeg",
-      "Owner": {
-        "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-        "name": "Norman",
-        "lname": "Coloma García",
-        "email": "ua.norman@gmail.com",
-        "gender": "male"
+  "Establishments": {
+    "rows": [
+      {
+        "id": 1,
+        "name": "Gym A Tope",
+        "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
+        "city": "San Vicente del Raspeig",
+        "province": "Alicante",
+        "addr": "Calle San Franciso nº15",
+        "phone": "965660327",
+        "website": "http://wwww.gymatope.es",
+        "main_img": "atope.jpeg",
+        "Owner": {
+          "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
+          "name": "Norman",
+          "lname": "Coloma García",
+          "email": "ua.norman@gmail.com",
+          "gender": "male"
+        }
+      },
+      {
+        "id": 2,
+        "name": "Gym Noray",
+        "desc": "Gimnasio muy acondicionado y en perfecto estado.",
+        "city": "Santa Pola",
+        "province": "Alicante",
+        "addr": "Calle Falsa nº34",
+        "phone": "965662347",
+        "website": "http://wwww.noraygym.com",
+        "main_img": "noray.jpeg",
+        "Owner": {
+          "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
+          "name": "Norman",
+          "lname": "Coloma García",
+          "email": "ua.norman@gmail.com",
+          "gender": "male"
+        }
       }
-    },
-    {
-      "id": 2,
-      "name": "Gym Noray",
-      "desc": "Gimnasio muy acondicionado y en perfecto estado.",
-      "city": "Santa Pola",
-      "province": "Alicante",
-      "addr": "Calle Falsa nº34",
-      "phone": "965662347",
-      "website": "http://wwww.noraygym.com",
-      "main_img": "noray.jpeg",
-      "Owner": {
-        "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-        "name": "Norman",
-        "lname": "Coloma García",
-        "email": "ua.norman@gmail.com",
-        "gender": "male"
-      }
-    },
-    {
-      "id": 4,
-      "name": "Montemar",
-      "desc": "Especializados en cursos y clases de ténis.",
-      "city": "Alicante",
-      "province": "Alicante",
-      "addr": "Avenida Novelda Km 14",
-      "phone": "965662268",
-      "website": "http://wwww.montemar.es",
-      "main_img": "montemar.jpeg",
-      "Owner": {
-        "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-        "name": "Norman",
-        "lname": "Coloma García",
-        "email": "ua.norman@gmail.com",
-        "gender": "male"
-      }
-    }
-  ],
+    ],
+    "count": 2
+  },
   "paging": {
     "cursors": {
       "before": 0,
@@ -652,7 +616,7 @@ GET
   },
   "links": {
     "rel": "self",
-    "href": "https://localhost:3000/api/sports/1/establishments"
+    "href": "https://localhost:3000/api/sports/2/establishments"
   }
 }
 ```
@@ -824,92 +788,78 @@ GET
 #####Ejemplo del Resultado
 
 ```json
-{
-  "establishments": [
-    {
-      "id": 1,
-      "name": "Gym A Tope",
-      "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
-      "city": "San Vicente del Raspeig",
-      "province": "Alicante",
-      "addr": "Calle San Franciso nº15",
-      "phone": "965660327",
-      "website": "http://wwww.gymatope.es",
-      "main_img": "atope.jpeg",
-      "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-      "createdAt": "2015-11-09T12:45:25.000Z",
-      "updatedAt": "2015-11-09T12:45:25.000Z"
-    },
-    {
-      "id": 2,
-      "name": "Gym Noray",
-      "desc": "Gimnasio muy acondicionado y en perfecto estado.",
-      "city": "Santa Pola",
-      "province": "Alicante",
-      "addr": "Calle Falsa nº34",
-      "phone": "965662347",
-      "website": "http://wwww.noraygym.com",
-      "main_img": "noray.jpeg",
-      "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-      "createdAt": "2015-11-09T12:45:25.000Z",
-      "updatedAt": "2015-11-09T12:45:25.000Z"
-    },
-    {
-      "id": 3,
-      "name": "Más Sport",
-      "desc": "Asociación deportiva con unas instalaciones increíbles.",
-      "city": "Valencia",
-      "province": "Valencia",
-      "addr": "Calle Arco nº32",
-      "phone": "965663057",
-      "website": "http://wwww.masport.es",
-      "main_img": "mas.jpeg",
-      "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-      "createdAt": "2015-11-09T12:45:25.000Z",
-      "updatedAt": "2015-11-09T12:45:25.000Z"
-    },
-    {
-      "id": 4,
-      "name": "Montemar",
-      "desc": "Especializados en cursos y clases de ténis.",
-      "city": "Alicante",
-      "province": "Alicante",
-      "addr": "Avenida Novelda Km 14",
-      "phone": "965662268",
-      "website": "http://wwww.montemar.es",
-      "main_img": "montemar.jpeg",
-      "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-      "createdAt": "2015-11-09T12:45:25.000Z",
-      "updatedAt": "2015-11-09T12:45:25.000Z"
-    },
-    {
-      "id": 5,
-      "name": "Gimnasio 13",
-      "desc": "El mejor lugar para ponerte en forma.",
-      "city": "Barcelona",
-      "province": "Barcelona",
-      "addr": "Gran Vía nº15",
-      "phone": "965662257",
-      "website": "http://wwww.13gym.es",
-      "main_img": "13gym.jpeg",
-      "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
-      "createdAt": "2015-11-09T12:45:25.000Z",
-      "updatedAt": "2015-11-09T12:45:25.000Z"
-    }
-  ],
+"Establishments": {
+    "count": 5,
+    "rows": [
+      {
+        "id": 1,
+        "name": "Gym A Tope",
+        "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
+        "city": "San Vicente del Raspeig",
+        "province": "Alicante",
+        "addr": "Calle San Franciso nº15",
+        "phone": "965660327",
+        "website": "http://wwww.gymatope.es",
+        "main_img": "atope.jpeg"
+      },
+      {
+        "id": 2,
+        "name": "Gym Noray",
+        "desc": "Gimnasio muy acondicionado y en perfecto estado.",
+        "city": "Santa Pola",
+        "province": "Alicante",
+        "addr": "Calle Falsa nº34",
+        "phone": "965662347",
+        "website": "http://wwww.noraygym.com",
+        "main_img": "noray.jpeg"
+      },
+      {
+        "id": 3,
+        "name": "Más Sport",
+        "desc": "Asociación deportiva con unas instalaciones increíbles.",
+        "city": "Valencia",
+        "province": "Valencia",
+        "addr": "Calle Arco nº32",
+        "phone": "965663057",
+        "website": "http://wwww.masport.es",
+        "main_img": "mas.jpeg"
+      },
+      {
+        "id": 4,
+        "name": "Montemar",
+        "desc": "Especializados en cursos y clases de ténis.",
+        "city": "Alicante",
+        "province": "Alicante",
+        "addr": "Avenida Novelda Km 14",
+        "phone": "965662268",
+        "website": "http://wwww.montemar.es",
+        "main_img": "montemar.jpeg"
+      },
+      {
+        "id": 5,
+        "name": "Gimnasio 13",
+        "desc": "El mejor lugar para ponerte en forma.",
+        "city": "Barcelona",
+        "province": "Barcelona",
+        "addr": "Gran Vía nº15",
+        "phone": "965662257",
+        "website": "http://wwww.13gym.es",
+        "main_img": "13gym.jpeg"
+      }
+    ]
+  },
   "paging": {
     "cursors": {
       "before": 0,
-      "after": "NQ=="
+      "after": 0
     },
     "previous": "none",
-    "next": "https://localhost:3000/api/establishments?after=NQ==&limit=5"
+    "next": "none"
   },
   "links": {
     "rel": "self",
     "href": "https://localhost:3000/api/establishments"
   }
-}
 ```
 
 ####GET api/establishments/:id
@@ -1199,20 +1149,21 @@ GET
 
 ```json
 {
-  "sports": [
-    {
-      "id": 1,
-      "name": "Spinning"
-    },
-    {
-      "id": 2,
-      "name": "GAP"
-    },
-    {
-      "id": 3,
-      "name": "Body Jump"
-    }
-  ],
+  "Sports": {
+    "rows": [
+      {
+        "id": 2,
+        "name": "GAP",
+        "establishmentsports": {
+          "createdAt": "2016-02-09T11:37:29.000Z",
+          "updatedAt": "2016-02-09T11:37:29.000Z",
+          "sportId": 2,
+          "establishmentId": 1
+        }
+      }
+    ],
+    "count": 1
+  },
   "paging": {
     "cursors": {
       "before": 0,
