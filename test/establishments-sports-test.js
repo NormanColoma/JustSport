@@ -35,7 +35,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('EstablishmentsSports', function(){
+describe('EstablishmentsSports', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -73,7 +73,7 @@ xdescribe('EstablishmentsSports', function(){
         })
     })
 
-    it('Getting all establishments where the sport is imparted.Should return status 200', function(done){
+    xit('Getting all establishments where the sport is imparted.Should return status 200', function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'};
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
@@ -97,7 +97,7 @@ xdescribe('EstablishmentsSports', function(){
         .end(done);
 })
 
-it('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
+xit('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
     supertest(app)
         .get('/api/sports/15/establishments')
         .expect(404)
@@ -106,7 +106,7 @@ it('Getting all establishments where the sport is imparted, which does not exist
         })
         .end(done);
 })
-it('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
+xit('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
     supertest(app)
         .get('/api/sports/Zumba/establishments')
         .expect(400)
@@ -116,7 +116,7 @@ it('Getting all establishments where the sport is imparted, by passing the id as
         .end(done);
 })
 
-it('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
+xit('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -141,7 +141,7 @@ it('Getting all establishments where the sport is imparted without specify curso
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
+xit('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -165,7 +165,7 @@ it('Getting all establishments where the sport is imparted specifying after curs
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
+xit('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'}
@@ -189,7 +189,7 @@ it('Getting all establishments where the sport is imparted specifying before cur
             .end(done);
     })
 
-it('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
+xit('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -201,7 +201,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, bu
             })
             .end(done);
     })
-it('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
+xit('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -213,7 +213,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             })
             .end(done);
     })
-    it('Getting all establishments where the sport, but got 0 recors.Should return status 404',
+    xit('Getting all establishments where the sport, but got 0 recors.Should return status 404',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -226,20 +226,20 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .end(done);
     })
 
-    xit('Getting all sports imparted in the establishment.Should return status 200', function(done){
+    it('Getting all sports imparted in the establishment.Should return status 200', function(done){
         supertest(app)
             .get('/api/establishments/1/sports')
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.Sports.rows.length, 3);
-                assert.equal(res.body.sports[0].name, 'Spinning');
-                assert.equal(res.body.sports[1].name, 'GAP');
-                assert.equal(res.body.sports[2].name, 'Body Jump');
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows[1].name, 'GAP');
+                assert.equal(res.body.Sports.rows[2].name, 'Body Jump');
             })
             .end(done);
     })
 
-    xit('Getting all sports imparted in establishment that does not exist.Should return status 404', function(done){
+    it('Getting all sports imparted in establishment that does not exist.Should return status 404', function(done){
         supertest(app)
             .get('/api/establishments/15/sports')
             .expect(404)
@@ -249,35 +249,34 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .end(done);
     })
 
-    xit('Getting all sports imparted from establishment that is empty yet.Should return status 200', function(done){
+    it('Getting all sports imparted from establishment that is empty yet.Should return status 404', function(done){
         supertest(app)
             .get('/api/establishments/5/sports')
-            .expect(200)
+            .expect(404)
             .expect(function (res) {
-                assert.equal(res.body.length, 0);
+                assert.equal(res.body.message, 'The are no sports added yet');
             })
             .end(done);
     })
 
-    xit('Getting all sports without specify cursor but limit. Should return status 200 and the first n sports set by the limit', function(done){
+    it('Getting all sports without specify cursor but limit. Should return status 200 and the first n sports set by the limit', function(done){
         supertest(app)
             .get('/api/establishments/1/sports?limit=1')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 1);
-                assert.equal(res.body.sports[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows.length, 1);
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments/1/sports?after='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=1');
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
     })
-
-    xit('Getting all sports without specify cursor but limit (0). Should return status 400', function(done){
+    it('Getting all sports without specify cursor but limit (0). Should return status 400', function(done){
         supertest(app)
             .get('/api/establishments/1/sports?limit=0')
             .expect(400)
@@ -287,48 +286,48 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .end(done);
     })
 
-    xit('Getting all sports specifying after cursor. Should return status 200 and the first n sports', function(done){
+    it('Getting all sports specifying after cursor. Should return status 200 and the first n sports', function(done){
         var id = 1;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/establishments/1/sports?after='+after+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 2);
-                assert.equal(res.body.sports[0].name, 'GAP');
-                assert.equal(res.body.sports[1].name, 'Body Jump');
+                assert.equal(res.body.Sports.rows.length, 2);
+                assert.equal(res.body.Sports.rows[0].name, 'GAP');
+                assert.equal(res.body.Sports.rows[1].name, 'Body Jump');
                 assert.equal(res.body.paging.cursors.before,
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after, 0);
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments/1/sports?before='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=2');
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
     })
 
-    xit('Getting all sports specifying before cursor. Should return status 200 and the first n sports', function(done){
+    it('Getting all sports specifying before cursor. Should return status 200 and the first n sports', function(done){
         var id = 3;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/establishments/1/sports?before='+before+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 2);
-                assert.equal(res.body.sports[0].name, 'Spinning');
-                assert.equal(res.body.sports[1].name, 'GAP');
+                assert.equal(res.body.Sports.rows.length, 2);
+                assert.equal(res.body.Sports.rows[0].name, 'Spinning');
+                assert.equal(res.body.Sports.rows[1].name, 'GAP');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[1].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[1].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/establishments/1/sports?after='+
-                    new Buffer(res.body.sports[1].id.toString()).toString('base64')+'&limit=2');
+                    new Buffer(res.body.Sports.rows[1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
     })
 
 
-    xit('Getting all sports specifying after cursor but not limit. Should return status 400', function(done){
+    it('Getting all sports specifying after cursor but not limit. Should return status 400', function(done){
         var id = 1;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
@@ -340,7 +339,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .end(done);
     })
 
-    xit('Getting access token', function(done){
+    it('Getting access token', function(done){
         supertest(app)
             .post('/api/oauth2/token').send(credentials)
             .expect(200).expect(function(res){
@@ -350,7 +349,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     });
 
-    xit('Getting access token for user', function(done){
+    it('Getting access token for user', function(done){
         supertest(app)
             .post('/api/oauth2/token').send({
                 "grant_type" : "password",
@@ -364,7 +363,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     });
 
-    xit('Getting access token for another owner that will not be the owner of establishments', function(done){
+    it('Getting access token for another owner that will not be the owner of establishments', function(done){
         supertest(app)
             .post('/api/oauth2/token').send({
                 "grant_type" : "password",
@@ -378,7 +377,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     });
 
-    xit('Associating new sport to establishment. Should return status 204', function(done){
+    it('Associating new sport to establishment. Should return status 204', function(done){
         var sport = {name: 'GBody'};
         models.sport.create(sport).then(function(sp){
             var sport = {id: sp.id};
@@ -391,7 +390,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    xit('Associating new sport (that does not exist) to establishment. Should return status 500', function(done){
+    it('Associating new sport (that does not exist) to establishment. Should return status 500', function(done){
         var sport = {id: 125};
         supertest(app)
             .put('/api/establishments/1/sports/new').send(sport)
@@ -404,7 +403,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    xit('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
+    it('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
         var sport = {id: 125};
         supertest(app)
             .put('/api/establishments/25/sports/new').send(sport)
@@ -417,7 +416,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    xit('Associating new sport to establishment without owner token. Should return status 403', function(done){
+    it('Associating new sport to establishment without owner token. Should return status 403', function(done){
         var sport = {id: 125};
         supertest(app)
             .put('/api/establishments/1/sports/new').send(sport)
@@ -430,7 +429,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    xit('Associating new sport to establishment without be the owner of it. Should return status 403', function(done){
+    it('Associating new sport to establishment without be the owner of it. Should return status 403', function(done){
         var sport = {id: 125};
         supertest(app)
             .put('/api/establishments/1/sports/new').send(sport)
@@ -443,7 +442,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
 
     })
 
-    xit('Associating new sport to establishment passing string as id of it. Should return status 400', function(done){
+    it('Associating new sport to establishment passing string as id of it. Should return status 400', function(done){
         var sport = {id: 125};
         supertest(app)
             .put('/api/establishments/gymatope/sports/new').send(sport)
@@ -457,7 +456,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
     })
 
 
-    xit('Associating new sport to establishment, without pass the sport. Should return status 400', function(done){
+    it('Associating new sport to establishment, without pass the sport. Should return status 400', function(done){
         var sport = {id: ' '};
         supertest(app)
             .put('/api/establishments/1/sports/new')
