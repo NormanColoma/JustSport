@@ -38,7 +38,55 @@ var storage = multer.diskStorage({
 })
 
 router.get('', function(req, res) {
+    var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments",
+        before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?after="+req.query.after+"?limit="+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$gt: after}}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?before="+req.query.before+"?limit="+limit;
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$lt: before}}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" + "?limit="+limit;
+        }
+        where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone', 'website', 'main_img'], limit: parseInt(limit), where:{id: {$gt: after}}};
+    }
+    before = 0;
+    after = 0;
+    models.establishment.findAndCountAll(where).then(function(ests){
+        models.establishment.findAndCountAll().then(function(total){
+            if(ests.count > 0) {
+                //Check if there are after cursors
+                if (ests.rows.length < ests.count || ests.rows[ests.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+                    after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" +
+                        "?after=" + after + '&limit=' + limit;
+                }
+                models.establishment.min('id').then(function (min) {
+                    //Check if there are before cursors
+                    if (ests.rows[0].id > min) {
+                        before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments" +
+                            "?before=" + before + '&limit=' + limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    ests.count = total.count;
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                    });
+                })
+            }else
+                res.status(404).send({message: "The are no establishments added yet"});
+        });
+    });
+    /*if(req.query.after){
         if(req.query.limit){
             var after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
             models.establishment.findAll({where:{id:{$gt:after}},limit:req.query.limit}).then(function (establishments) {
@@ -107,7 +155,7 @@ router.get('', function(req, res) {
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
         })
-    }
+    }*/
 });
 router.get('/:id', function(req, res) {
     if (req.params.id != parseInt(req.params.id, 10)){
