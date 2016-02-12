@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Course', function() {
+xdescribe('Course', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -131,6 +131,33 @@ describe('Course', function() {
             }).end(done);
     })
 
+    it('Adding new course passing invalid formats.Should return status 500',function(done){
+        var course = {sportId:'a', establishmentId:'1',instructor: 'Juan Domínguez12',price:'ab',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 3);
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+                assert.equal(res.body.errors[1].message, "instructor must only contain letters");
+                assert.equal(res.body.errors[2].message, "price must be float");
+            }).end(done);
+    })
+
+    it('Adding new course passing empty fields.Should return status 500',function(done){
+        var course = {sportId:' ', establishmentId:'1',instructor: 'Juan Domínguez',price:' ',info:'Un curso muy completo'};
+        supertest(app)
+            .post('/api/courses/new').send(course)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500).expect(function(res){
+                assert.equal(res.body.errors.length, 4);
+                assert.equal(res.body.errors[0].message, "sportId must be integer");
+                assert.equal(res.body.errors[1].message, "sportId is required");
+                assert.equal(res.body.errors[2].message, "price must be float");
+                assert.equal(res.body.errors[3].message, "price is required");
+            }).end(done);
+    })
+
     it('Adding new course of sport that is imparted in the specified establishment without access token.Should return status 401',function(done){
         supertest(app)
             .post('/api/courses/new').send(course1)
@@ -157,12 +184,13 @@ describe('Course', function() {
     })
 
     it('Adding new course with a nonexistent sport.Should return status 500',function(done){
-        var nonexistent_sp = {id: 1,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
+        var nonexistent_sp = {id: 35,sportId:'150', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
         supertest(app)
             .post('/api/courses/new').send(nonexistent_sp)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
+                assert.equal(res.body.errors[0].message, "The reference you are trying to set, " +
+                    "does not exist in our database");
             }).end(done);
     })
 

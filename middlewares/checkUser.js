@@ -8,11 +8,16 @@ var jwt = require('jwt-simple');
 //For post a course
 exports.isEstabOwner = function(req,res,next){
     var owner = jwt.decode(req.get('Authorization').slice('7'), global.secret).sub;
-    models.establishment.findOne({where:{id:req.body.establishmentId, owner: owner}}).then(function(found){
-        if(found)
-            next();
+    var id = req.params.id || req.body.establishmentId;
+    models.establishment.findOne({where:{id:id}}).then(function(found){
+        if(found){
+            if(owner == found.owner)
+                next();
+            else
+                res.status(403).send({message: "You are not authorized to perform this action"});
+        }
         else
-            res.status(403).send({message: "You are not authorized to perform this action"});
+            res.status(404).send({message: "The establishment was not found"});
     })
 };
 

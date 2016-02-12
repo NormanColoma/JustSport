@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Establishments', function(){
+xdescribe('Establishments', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -135,8 +135,7 @@ describe('Establishments', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
-                assert.equal(res.body.errors[0].message, 'phone must be unique');
+                assert.equal(res.body.errors[0].message, "The value: '"+est.phone+"' is already taken");
             }).end(done);
     });
 
@@ -150,6 +149,43 @@ describe('Establishments', function(){
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
                 assert.equal(res.body.message, 'Json is malformed, it must include the following fields: name, desc, city, province, addr, owner, phone, website(optional), main_img(optional)');
+            }).end(done);
+    });
+
+    it('Registering new establishment passing required fields with wrong format. Should return status 500',function(done){
+        var est = {name: 'Just Sport+', desc: ' ',
+            city: 'Madrid1', province: 'Pepe', addr: ' ',
+            phone: '96566', website: 'http://wwww', main_img:'js.jpeg',owner: owner_id};
+        supertest(app)
+            .post('/api/establishments/new').send(est)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors.length, 7)
+                assert.equal(res.body.errors[0].message, "name must only contain letters, numbers, and blank spaces. " +
+                    "It cannot contain symbols");
+                assert.equal(res.body.errors[1].message, "desc is required");
+                assert.equal(res.body.errors[2].message, "city must only contain letters");
+                assert.equal(res.body.errors[3].message, "province must match a existent spanish province");
+                assert.equal(res.body.errors[4].message, "addr is required");
+                assert.equal(res.body.errors[5].message, "phone must be a valid spanish phone number");
+                assert.equal(res.body.errors[6].message, "website must be a valid link: http://foo.com");
+            }).end(done);
+    });
+
+
+    it('Registering new establishment without existent owner. Should return status 500',function(done){
+        var est = {name: 'Just Sport', desc: 'Las instalaciones deportivas defintivas',
+            city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
+            phone: '965661530', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: '1234-567'};
+        supertest(app)
+            .post('/api/establishments/new').send(est)
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "The reference you are trying to set, does not exist in our database");
             }).end(done);
     });
 
@@ -167,7 +203,7 @@ describe('Establishments', function(){
             }).end(done);
     });
 
-    it('Deleting establishment that exists. Should return status 204', function(done){
+    it('Deleting establishment that does not exist. Should return status 204', function(done){
         var est = {name: 'Gym Borrar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
             phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
@@ -310,8 +346,7 @@ describe('Establishments', function(){
             .set('Authorization', 'Bearer '+owner_token)
             .expect(500)
             .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
-                assert.equal(res.body.errors[0].message, 'phone must be unique');
+                assert.equal(res.body.errors[0].message, "The value: '"+update.phone+"' is already taken");
             }).end(done);
     })
 
@@ -320,19 +355,19 @@ describe('Establishments', function(){
             .get('/api/establishments')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 5);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
-                assert.equal(res.body.establishments[3].name, 'Montemar');
-                assert.equal(res.body.establishments[4].name, 'Gimnasio 13');
+                assert.equal(res.body.Establishments.rows.length, 5);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows[3].name, 'Montemar');
+                assert.equal(res.body.Establishments.rows[4].name, 'Gimnasio 13');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[4].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[4].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[4].id.toString()).toString('base64')+'&limit=5');
+                    new Buffer(res.body.Establishments.rows[4].id.toString()).toString('base64')+'&limit=5');
             })
             .end(done);
     })
@@ -342,17 +377,17 @@ describe('Establishments', function(){
             .get('/api/establishments?limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -364,18 +399,18 @@ describe('Establishments', function(){
             .get('/api/establishments?after='+after+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Montemar');
-                assert.equal(res.body.establishments[1].name, 'Gimnasio 13');
-                assert.equal(res.body.establishments[2].name, 'Just Sport');
-                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.establishments[0].id.toString()).toString('base64'));
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Montemar');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gimnasio 13');
+                assert.equal(res.body.Establishments.rows[2].name, 'Just Sport');
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/establishments?before='+
-                    new Buffer(res.body.establishments[0].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=3');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -387,17 +422,17 @@ describe('Establishments', function(){
             .get('/api/establishments?before='+before+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.establishments.length, 3);
-                assert.equal(res.body.establishments[0].name, 'Gym A Tope');
-                assert.equal(res.body.establishments[1].name, 'Gym Noray');
-                assert.equal(res.body.establishments[2].name, 'Más Sport');
+                assert.equal(res.body.Establishments.rows.length, 3);
+                assert.equal(res.body.Establishments.rows[0].name, 'Gym A Tope');
+                assert.equal(res.body.Establishments.rows[1].name, 'Gym Noray');
+                assert.equal(res.body.Establishments.rows[2].name, 'Más Sport');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/establishments?after='+
-                    new Buffer(res.body.establishments[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -443,6 +478,17 @@ describe('Establishments', function(){
             .expect(400)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+            })
+            .end(done);
+    })
+
+    it('Getting all establishment from specific owner. Should return status 200', function(done){
+        supertest(app)
+            .get('/api/establishments/me/all')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.Establishments.count, 7);
             })
             .end(done);
     })

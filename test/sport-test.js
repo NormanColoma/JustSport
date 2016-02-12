@@ -26,10 +26,19 @@ var umzug = new Umzug({
     logging: false
 });
 
-describe('Sports', function(){
-    var owner = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male', role: "owner"};
-    var user = {name: 'Pepe', lname: 'Pardo García', email: 'pepe@mail.com', pass: 'adi2015', gender: 'male'};
-    var admin = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'admin2015', gender: 'male', role: "admin"}
+var seeder = new Umzug({
+    migrations: {
+        params: [ sequelize.getQueryInterface(), Sequelize ],
+        path: "seeders/test"
+    },
+    storage: "sequelize",
+    storageOptions: {
+        sequelize: sequelize
+    },
+    logging: false
+});
+
+xdescribe('Sports', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -44,12 +53,8 @@ describe('Sports', function(){
             method: 'down'
         }).then(function (migrations) {
             umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
-                models.user.create(owner).then(function(){
-                    models.user.create(user).then(function(){
-                        models.user.create(admin).then(function(){
-                            done();
-                        })
-                    })
+                seeder.up(['20151119155422-user-sport-seeder']).then(function(){
+                    done();
                 })
             })
         });
@@ -115,8 +120,46 @@ describe('Sports', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.name, 'SequelizeUniqueConstraintError');
-                assert.equal(res.body.errors[0].message, 'name must be unique');
+                assert.equal(res.body.errors[0].message, "The value: 'Zumba' is already taken");
+            }).end(done);
+
+    });
+
+    it('Creating sport without pass its name. Should return status 400', function(done){
+        var sport = {};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(400)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, "Json is malformed, it must include the following fields: name");
+            }).end(done);
+
+    });
+
+    it('Creating sport without valid name format. Should return status 500', function(done){
+        var sport = {name: "Zumba 14"};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "name must only contain letters");
+            }).end(done);
+
+    });
+
+    it('Creating sport without passing empty name. Should return status 500', function(done){
+        var sport = {name: " "};
+        supertest(app)
+            .post('/api/sports/new').send(sport)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "name is required");
             }).end(done);
 
     });
@@ -285,19 +328,20 @@ describe('Sports', function(){
                 .get('/api/sports')
                 .expect(200)
                 .expect(function (res) {
-                    assert.equal(res.body.sports.length, 5);
-                    assert.equal(res.body.sports[0].name, 'Crossfit');
-                    assert.equal(res.body.sports[1].name, 'Zumba');
-                    assert.equal(res.body.sports[2].name, 'Fitness');
-                    assert.equal(res.body.sports[3].name, 'Aerobic');
-                    assert.equal(res.body.sports[4].name, 'Spinning');
+                    assert.equal(res.body.Sports.count, 6);
+                    assert.equal(res.body.Sports.rows.length, 5);
+                    assert.equal(res.body.Sports.rows[0].name, 'Crossfit');
+                    assert.equal(res.body.Sports.rows[1].name, 'Zumba');
+                    assert.equal(res.body.Sports.rows[2].name, 'Fitness');
+                    assert.equal(res.body.Sports.rows[3].name, 'Aerobic');
+                    assert.equal(res.body.Sports.rows[4].name, 'Spinning');
                     assert.equal(res.body.paging.cursors.before, 0);
                     assert.equal(res.body.paging.cursors.after,
-                        new Buffer(res.body.sports[4].id.toString()).toString('base64'));
+                        new Buffer(res.body.Sports.rows[4].id.toString()).toString('base64'));
                     assert.equal(res.body.paging.previous, 'none');
                     assert.equal(res.body.paging.next,
                         'http://127.0.0.1:3000/api/sports?after='+
-                        new Buffer(res.body.sports[4].id.toString()).toString('base64')+'&limit=5');
+                        new Buffer(res.body.Sports.rows[4].id.toString()).toString('base64')+'&limit=5');
                 })
                 .end(done);
         })
@@ -309,17 +353,17 @@ describe('Sports', function(){
             .get('/api/sports?limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 3);
-                assert.equal(res.body.sports[0].name, 'Crossfit');
-                assert.equal(res.body.sports[1].name, 'Zumba');
-                assert.equal(res.body.sports[2].name, 'Fitness');
+                assert.equal(res.body.Sports.rows.length, 3);
+                assert.equal(res.body.Sports.rows[0].name, 'Crossfit');
+                assert.equal(res.body.Sports.rows[1].name, 'Zumba');
+                assert.equal(res.body.Sports.rows[2].name, 'Fitness');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/sports?after='+
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -331,18 +375,18 @@ describe('Sports', function(){
             .get('/api/sports?after='+after+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 3);
-                assert.equal(res.body.sports[0].name, 'Zumba');
-                assert.equal(res.body.sports[1].name, 'Fitness');
-                assert.equal(res.body.sports[2].name, 'Aerobic');
-                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.sports[0].id.toString()).toString('base64'));
+                assert.equal(res.body.Sports.rows.length, 3);
+                assert.equal(res.body.Sports.rows[0].name, 'Zumba');
+                assert.equal(res.body.Sports.rows[1].name, 'Fitness');
+                assert.equal(res.body.Sports.rows[2].name, 'Aerobic');
+                assert.equal(res.body.paging.cursors.before, new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'http://127.0.0.1:3000/api/sports?before='+
-                    new Buffer(res.body.sports[0].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=3');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/sports?after='+
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
@@ -354,24 +398,26 @@ describe('Sports', function(){
             .get('/api/sports?before='+before+'&limit=3')
             .expect(200)
             .expect(function (res) {
-                assert.equal(res.body.sports.length, 3);
-                assert.equal(res.body.sports[0].name, 'Crossfit');
-                assert.equal(res.body.sports[1].name, 'Zumba');
-                assert.equal(res.body.sports[2].name, 'Fitness');
+                assert.equal(res.body.Sports.rows.length, 3);
+                assert.equal(res.body.Sports.rows[0].name, 'Crossfit');
+                assert.equal(res.body.Sports.rows[1].name, 'Zumba');
+                assert.equal(res.body.Sports.rows[2].name, 'Fitness');
                 assert.equal(res.body.paging.cursors.before, 0);
                 assert.equal(res.body.paging.cursors.after,
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64'));
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64'));
                 assert.equal(res.body.paging.previous, 'none');
                 assert.equal(res.body.paging.next,
                     'http://127.0.0.1:3000/api/sports?after='+
-                    new Buffer(res.body.sports[2].id.toString()).toString('base64')+'&limit=3');
+                    new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
     })
 
     after('Dropping database',function(done) {
-        umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
-            done();
-        });
+        seeder.down(['20151119155422-user-sport-seeder']).then(function(){
+            umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
+                done();
+            });
+        })
     });
 });

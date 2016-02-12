@@ -13,26 +13,24 @@ var authController = require('./routes/auth');
 var session = require('express-session');
 var oauth2Controller = require('./routes/oauth2');
 var router = express.Router();
-var forceSSL = require('express-force-ssl');
 var app = express();
+var cors = require('cors');
+
+
 global.secret = '23asdfwer5676asdfaqzxsrt56woppxcjq12341pasdfasfd547kjxhoaefr44556añksdfjlka13a2adf4134sjdfla';
 global.port = '3000';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('forceSSLOptions', {
-  enable301Redirects: true,
-  trustXFPHeader: false,
-  httpsPort: 3000,
-  sslRequiredMessage: 'SSL Required.'
-});
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(forceSSL);
+
+
 app.use(session({
   secret: 'Super Secret Session Key',
   saveUninitialized: true,
