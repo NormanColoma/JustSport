@@ -39,7 +39,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Sports', function(){
+describe('Sports', function(){
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",

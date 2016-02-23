@@ -18,7 +18,7 @@ router.post('/new', function(req, res) {
 
 router.get('/:id', function(req, res) {
   models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role']}).then(function (user) {
-      if (user === undefined)
+      if (user === null)
         res.status(404).send({message: "User was not found"});
       else {
         res.status(200).send(user);

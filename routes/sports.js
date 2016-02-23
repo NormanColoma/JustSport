@@ -69,7 +69,7 @@ router.get('/:id', function(req, res) {
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }else {
     models.sport.findById(req.params.id).then(function (sport) {
-      if (sport === undefined)
+      if (sport === null)
         res.status(404).send({message: "The sport was not found"});
       else {
         var links = [];
@@ -129,7 +129,7 @@ router.get('/:id/establishments', middleware.numericalIdSport, middleware.pagina
   before = 0;
   after = 0;
   models.sport.findOne({where: {id: req.params.id}}).then(function (sport) {
-    if (sport === undefined)
+    if (sport === null)
       res.status(404).send({message: "The sport was not found"});
     else {
       sport.getEstablishments(where).then(function(ests) {

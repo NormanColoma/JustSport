@@ -52,7 +52,7 @@ router.get('/:id',function(req, res) {
     }
     else {
         models.course.findById(req.params.id).then(function(course){
-            if(course === undefined)
+            if(course === null)
                 res.status(404).send({message: 'The course was not found'});
             else {
                 course.getEstablishment({attributes: ['id', 'name', 'desc', 'city', 'province',
@@ -86,20 +86,20 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
             req.params.id + "/schedule?after="+req.query.after+"?limit"+limit;
-        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$gt: after},courseId: req.params.id}};
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: parseInt(limit), where:{id: {$gt: after},courseId: req.params.id}};
     }else if(req.query.before){
         before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
             req.params.id + "/schedule?before="+req.query.before+"?limit"+limit;
-        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$lt: before},courseId: req.params.id}};
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: parseInt(limit), where:{id: {$lt: before},courseId: req.params.id}};
     }else{
         if(req.query.limit) {
             limit = req.query.limit;
             url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
                 req.params.id + "/schedule?limit="+limit;
         }
-        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{courseId: req.params.id}};
+        where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: parseInt(limit), where:{courseId: req.params.id}};
     }
     before = 0;
     after = 0;

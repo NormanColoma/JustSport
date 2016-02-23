@@ -44,14 +44,6 @@ module.exports = function(sequelize, DataTypes) {
     courseId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-        isInt:{
-          msg: "courseId must be integer"
-        },
-        notEmpty:{
-          msg: "courseId is required"
-        }
-      }
     },
   }, {
     classMethods: {

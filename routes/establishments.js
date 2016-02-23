@@ -92,7 +92,7 @@ router.get('/:id', function(req, res) {
         res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
     }else {
         models.establishment.findById(req.params.id).then(function (establishment) {
-            if (establishment === undefined)
+            if (establishment === null)
                 res.status(404).send({message: "The establishment was not found"});
             else {
                 establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
@@ -142,7 +142,7 @@ router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, fun
     before = 0;
     after = 0;
     models.establishment.findOne({where: {id: req.params.id}}).then(function (est) {
-        if (est === undefined)
+        if (est === null)
             res.status(404).send({message: "The establishment was not found"});
         else {
             est.getSports(where).then(function(sprts) {

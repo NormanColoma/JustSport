@@ -39,7 +39,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Course', function() {
+describe('Course', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";

@@ -42,7 +42,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Schedule', function() {
+describe('Schedule', function() {
     var credentials = {"grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
     var owner_token = "";
@@ -55,7 +55,7 @@ xdescribe('Schedule', function() {
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg',owner: owner_id};
     var sport = {id: 1,name: 'Spinning'};
-    var schedule = [{day: 'Thursday', startTime: '10:00', endTime:"11:00", courseId: 1},{day: 'Monday', time: '09:00-10:00', courseId: 1},
+    var schedule = [{day: 'Thursday', startTime: "10:00", endTime:"11:00", courseId: 1},{day: 'Monday', time: '09:00-10:00', courseId: 1},
         {day: 'Friday', time: '17:00-18:00', courseId: 1}];
     before('Setting database in a known state: Deleting', function (done) {
         umzug.execute({
