@@ -1,8 +1,9 @@
 /**
  * Created by Norman on 04/11/2015.
  */
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -55,7 +56,7 @@ xdescribe('Establishments', function(){
         lname: 'Coloma García',
         email: 'ua.norman@mail.com',
         gender: 'male'
-    }
+    };
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment','20151022133423-create-user','20151016205501-sport-migration',
@@ -64,8 +65,8 @@ xdescribe('Establishments', function(){
         }).then(function (migrations) {
             umzug.up(['20151022133423-create-user','20151106004253-create-establishment','20151016205501-sport-migration','20151106004323-create-establishmentsport']).then(function(migrations){
                 done();
-            })
-        })
+            });
+        });
     });
 
     before('Filling database', function(done){
@@ -75,8 +76,8 @@ xdescribe('Establishments', function(){
             method: 'up'
         }).then(function(mig){
             done();
-        })
-    })
+        });
+    });
 
     it('Getting access token', function(done){
         supertest(app)
@@ -162,7 +163,7 @@ xdescribe('Establishments', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.errors.length, 7)
+                assert.equal(res.body.errors.length, 7);
                 assert.equal(res.body.errors[0].message, "name must only contain letters, numbers, and blank spaces. " +
                     "It cannot contain symbols");
                 assert.equal(res.body.errors[1].message, "desc is required");
@@ -214,7 +215,7 @@ xdescribe('Establishments', function(){
                 .set('Authorization', 'Bearer '+owner_token)
                 .expect(204)
                 .end(done);
-        })
+        });
     });
 
     it('Deleting establishment that does not exits. Should return status 404', function(done){
@@ -253,7 +254,7 @@ xdescribe('Establishments', function(){
             phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Alicante', province: 'Alicante', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id}
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         models.establishment.create(est).then(function(est){
             id_gym_to_update = est.id;
             supertest(app)
@@ -261,13 +262,13 @@ xdescribe('Establishments', function(){
                 .set('Authorization', 'Bearer '+owner_token)
                 .expect(204)
                 .end(done);
-        })
-    })
+        });
+    });
 
     it('Checking out the establishment after full update.', function (done) {
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Alicante', province: 'Alicante', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id}
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg',owner: owner_id};
         models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
             assert.equal(est.name, update.name);
             assert.equal(est.desc, update.desc);
@@ -278,13 +279,13 @@ xdescribe('Establishments', function(){
             assert.equal(est.main_img, update.main_img);
             assert.equal(est.owner, owner_id);
             done();
-        })
-    })
+        });
+    });
 
     it('Updating establishment with malformed JSON. Should return status 400', function(done){
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg'}
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg'};
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
             .set('Authorization', 'Bearer '+owner_token)
@@ -292,29 +293,29 @@ xdescribe('Establishments', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'Json is malformed: owner field is required for updatings');
             }).end(done);
-    })
+    });
 
    it('Updating establishment without access token. Should return status 401', function(done){
         var update = {name: 'Gym Actualizar', desc: 'Las instalaciones deportivas defintivas',
             city: 'Madrid', province: 'Madrid', addr: 'Paseo de la Castellana nº100',
-            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'}
+            phone: '965661520', website: 'http://wwww.justsport-gym.com', main_img:'js.jpeg', owner: '1222356'};
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
             .expect(401)
             .end(done);
-    })
+    });
 
     it('Updating only certain fields. Should return status 204', function(done){
-        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id}
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id};
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(204)
             .end(done);
-    })
+    });
 
     it('Checking out the establishment after partil update.',function(done){
-        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id}
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', owner: owner_id};
         models.establishment.findOne({where:{id:id_gym_to_update}}).then(function(est){
             assert.equal(est.name, update.name);
             assert.equal(est.desc, update.desc);
@@ -325,11 +326,11 @@ xdescribe('Establishments', function(){
             assert.equal(est.main_img, 'js.jpeg');
             assert.equal(est.owner, owner_id);
             done();
-        })
-    })
+        });
+    });
 
     it('Updating establishment passing a string as id. Should return status 400', function(done){
-        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado'}
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado'};
         supertest(app)
             .put('/api/establishments/Gym').send(update)
             .set('Authorization', 'Bearer '+user_token)
@@ -337,10 +338,10 @@ xdescribe('Establishments', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
             }).end(done);
-    })
+    });
 
     it('Updating establishment with duplicated phone. Should return status 500', function(done){
-        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', phone: '965660327', owner: owner_id}
+        var update = {name: 'Gym Actualizado', desc: 'Las instalaciones deportivas están en mal estado', phone: '965660327', owner: owner_id};
         supertest(app)
             .put('/api/establishments/'+id_gym_to_update).send(update)
             .set('Authorization', 'Bearer '+owner_token)
@@ -348,7 +349,7 @@ xdescribe('Establishments', function(){
             .expect(function(res){
                 assert.equal(res.body.errors[0].message, "The value: '"+update.phone+"' is already taken");
             }).end(done);
-    })
+    });
 
     it('Getting establishments without specify cursor. Should return status 200 and the first 5 establishments',function(done){
         supertest(app)
@@ -370,7 +371,7 @@ xdescribe('Establishments', function(){
                     new Buffer(res.body.Establishments.rows[4].id.toString()).toString('base64')+'&limit=5');
             })
             .end(done);
-    })
+    });
 
     it('Getting establishments specifying cursor but limit. Should return status 200 and the first n establishments', function(done){
         supertest(app)
@@ -390,7 +391,7 @@ xdescribe('Establishments', function(){
                     new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     it('Getting establishments specifying after cursor. Should return status 200 and the first n establishments', function(done){
         var id = 3;
@@ -413,7 +414,7 @@ xdescribe('Establishments', function(){
                     new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     it('Getting establishments specifying before cursor. Should return status 200 and the first n establishments', function(done){
         var id = 6;
@@ -435,7 +436,7 @@ xdescribe('Establishments', function(){
                     new Buffer(res.body.Establishments.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     it('Getting establishment that exists. Should return status 200',function(done){
         var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
@@ -459,7 +460,7 @@ xdescribe('Establishments', function(){
                 assert.equal(res.body.Owner.gender, owner.gender);
             })
             .end(done);
-    })
+    });
 
 
     it('Getting establishment that does not exist. Should return status 404',function(done){
@@ -470,7 +471,7 @@ xdescribe('Establishments', function(){
                 assert.equal(res.body.message, 'The establishment was not found');
             })
             .end(done);
-    })
+    });
 
     it('Getting establishment passing string as id.Should return status 400',function(done){
         supertest(app)
@@ -480,7 +481,7 @@ xdescribe('Establishments', function(){
                 assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
             })
             .end(done);
-    })
+    });
 
     it('Getting all establishment from specific owner. Should return status 200', function(done){
         supertest(app)
@@ -491,7 +492,7 @@ xdescribe('Establishments', function(){
                 assert.equal(res.body.Establishments.count, 7);
             })
             .end(done);
-    })
+    });
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
@@ -502,6 +503,6 @@ xdescribe('Establishments', function(){
                 '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
-        })
+        });
     });
 });

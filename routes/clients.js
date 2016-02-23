@@ -26,7 +26,7 @@ router.post('/new', function(req, res) {
             res.status(201).send(client);
         }).catch(function(err){
             res.status(500).send(err);
-        })
+        });
     }
     else
         res.status(400).send({message: "Json is malformed: application name, and userId is required"});

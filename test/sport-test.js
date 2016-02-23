@@ -1,8 +1,9 @@
 /**
  * Created by Norman on 04/11/2015.
  */
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -55,8 +56,8 @@ xdescribe('Sports', function(){
             umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
                 seeder.up(['20151119155422-user-sport-seeder']).then(function(){
                     done();
-                })
-            })
+                });
+            });
         });
     });
 
@@ -192,7 +193,7 @@ xdescribe('Sports', function(){
             .set('Authorization', 'Bearer '+token)
             .expect(204)
             .end(done);
-    })
+    });
 
     it('Updating sport that does not exist. Should return status 404', function (done) {
         var sport = {name: 'Crossfit'};
@@ -203,7 +204,7 @@ xdescribe('Sports', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'The sport was not found');
             }).end(done);
-    })
+    });
 
     it('Updating sport passing a string as id. Should return status 400', function (done) {
         var sport = {name: 'Crossfit'};
@@ -214,7 +215,7 @@ xdescribe('Sports', function(){
             .expect(function(res){
                 assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
             }).end(done);
-    })
+    });
 
 
     it('Updating sport with a malformed JSON. Should return status 400', function (done) {
@@ -227,7 +228,7 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'Json is malformed, it must include the name field');
             })
             .end(done);
-    })
+    });
 
     it('Updating sport whithout an access token. Should return status 401', function (done) {
         var sport = {name: 'Crossfit'};
@@ -235,7 +236,7 @@ xdescribe('Sports', function(){
             .put('/api/sports/1').send(sport)
             .expect(401)
             .end(done);
-    })
+    });
 
     it('Updating sport without being owner. Should return status 403', function (done) {
         var sport = {name: 'Crossfit'};
@@ -247,7 +248,7 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'You are not authorized to perform this action');
             })
             .end(done);
-    })
+    });
 
 
     it('Deleting sport that exists. Should return status 204', function (done) {
@@ -256,7 +257,7 @@ xdescribe('Sports', function(){
             .set('Authorization', 'Bearer '+admin_token)
             .expect(204)
             .end(done);
-    })
+    });
 
     it('Deleting sport that does not exist. Should return status 404', function (done) {
         supertest(app)
@@ -267,14 +268,14 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'The sport was not found');
             })
             .end(done);
-    })
+    });
 
     it('Deleting sport without an access token. Should return status 401', function (done) {
         supertest(app)
             .delete('/api/sports/1')
             .expect(401)
             .end(done);
-    })
+    });
 
     it('Deleting sport without being admin. Should return status 403', function (done) {
         supertest(app)
@@ -285,7 +286,7 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'You are not authorized to perform this action');
             })
             .end(done);
-    })
+    });
 
     it('Getting info about a sport that exists. Should return status 200', function(done){
         var sport = {name: 'Crossfit'};
@@ -298,8 +299,8 @@ xdescribe('Sports', function(){
                     assert.equal(res.body.id, sport.id);
                 })
                 .end(done);
-        })
-    })
+        });
+    });
 
     it('Getting info about a sport that does not exist. Should return status 404', function(done){
         supertest(app)
@@ -309,7 +310,7 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'The sport was not found');
             })
             .end(done);
-    })
+    });
 
     it('Getting info about a sport passing string as id. Should return status 400', function(done){
         supertest(app)
@@ -319,7 +320,7 @@ xdescribe('Sports', function(){
                 assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
             })
             .end(done);
-    })
+    });
 
     it('Getting sports without specify cursor. Should return status 200 and the first 5 sports', function(done){
         models.sport.bulkCreate([{name: 'Zumba'},{name:'Fitness'},{name: 'Aerobic'},
@@ -344,8 +345,8 @@ xdescribe('Sports', function(){
                         new Buffer(res.body.Sports.rows[4].id.toString()).toString('base64')+'&limit=5');
                 })
                 .end(done);
-        })
-    })
+        });
+    });
 
 
     it('Getting sports without specify cursor but limit. Should return status 200 and the first n sports', function(done){
@@ -366,7 +367,7 @@ xdescribe('Sports', function(){
                     new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     it('Getting sports specifying after cursor. Should return status 200 and the first n sports', function(done){
         var id = 3;
@@ -389,7 +390,7 @@ xdescribe('Sports', function(){
                     new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     it('Getting sports specifying before cursor. Should return status 200 and the first n sports', function(done){
         var id = 6;
@@ -411,13 +412,13 @@ xdescribe('Sports', function(){
                     new Buffer(res.body.Sports.rows[2].id.toString()).toString('base64')+'&limit=3');
             })
             .end(done);
-    })
+    });
 
     after('Dropping database',function(done) {
         seeder.down(['20151119155422-user-sport-seeder']).then(function(){
             umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
                 done();
             });
-        })
+        });
     });
 });

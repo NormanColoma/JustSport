@@ -1,8 +1,9 @@
 /**
  * Created by Norman on 09/11/2015.
  */
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -55,14 +56,14 @@ xdescribe('Establishments filtered by city and location', function() {
             method: 'down'
         }).then(function (migrations) {
             done();
-        })
+        });
     });
 
     before('Setting database in a known state: Creating', function (done) {
         umzug.up(['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
             '20151106004323-create-establishmentsport', '20151108193656-create-course']).then(function (migrations) {
             done();
-        })
+        });
     });
 
     before('Filling database', function (done) {
@@ -72,8 +73,8 @@ xdescribe('Establishments filtered by city and location', function() {
             method: 'up'
         }).then(function (mig) {
             done();
-        })
-    })
+        });
+    });
 
     it('Getting all establishments filtered by sport and location.Should return status 200', function(done){
         supertest(app)
@@ -111,7 +112,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
-    })
+    });
 
     it('Getting all establishments filtered by sport and location (without specifiying cursor, but limit)' +
         '.Should return status 200', function(done){
@@ -144,7 +145,7 @@ xdescribe('Establishments filtered by city and location', function() {
                     new Buffer(res.body.Establishments.rows[res.body.Establishments.rows.length -1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
-    })
+    });
 
 
     it('Getting all establishments filtered by sport and location (specifying after cursor)' +
@@ -171,7 +172,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
-    })
+    });
 
     it('Getting all establishments filtered by sport and location (specifying befpre cursor)' +
         '.Should return status 200', function(done){
@@ -205,7 +206,7 @@ xdescribe('Establishments filtered by city and location', function() {
                     new Buffer(res.body.Establishments.rows[1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
-    })
+    });
 
     it('Getting all establishments filtered by sport and location (specifying after cursor but not limit)' +
         '.Should return status 400', function(done){
@@ -218,7 +219,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             })
             .end(done);
-    })
+    });
 
     it('Getting all establishments filtered by sport and location (specifying before cursor but not limit)' +
         '.Should return status 400', function(done){
@@ -231,7 +232,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             })
             .end(done);
-    })
+    });
 
 
     it('Getting all establishments filtered by sport and location but retrieving 0.Should return status 404', function(done){
@@ -242,7 +243,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 assert.equal(res.body.message, 'There are no establishments that match the current filter');
             })
             .end(done);
-    })
+    });
 
     after('Dropping database',function(done) {
         seeder.execute({
@@ -254,7 +255,7 @@ xdescribe('Establishments filtered by city and location', function() {
                 '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
-        })
+        });
     });
 
-})
+});

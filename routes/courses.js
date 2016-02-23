@@ -15,7 +15,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, fun
             models.course.create(req.body).then(function (course) {
                 var url = req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/" + course.id;
                 res.setHeader("Location", url);
-                var links = new Array();
+                var links = [];
                 var link1 = {
                     rel: 'self',
                     href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/new"
@@ -29,13 +29,12 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, fun
                     href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/courses/" + course.id
                 };
                 links.push([link1, link2, link3]);
-                res.status(201).send({
-                    id: course.id, sportId: course.sportId, establishmentId: course.establishmentId
-                    , instructor: course.instructor, price: course.price, info: course.info, links: links
+                res.status(201).send({id: course.id, sportId: course.sportId, establishmentId: course.establishmentId,
+                    instructor: course.instructor, price: course.price, info: course.info, links: links
                 });
             }).catch(function (err) {
                 res.status(500).send({errors: handler.customServerError(err)});
-            })
+            });
 
         }
         else
@@ -53,13 +52,13 @@ router.get('/:id',function(req, res) {
     }
     else {
         models.course.findById(req.params.id).then(function(course){
-            if(course == undefined)
+            if(course === undefined)
                 res.status(404).send({message: 'The course was not found'});
             else {
                 course.getEstablishment({attributes: ['id', 'name', 'desc', 'city', 'province',
                     'addr', 'phone', 'website', 'main_img','owner']}).then(function(est){
                     course.getSport({attributes: ['id', 'name']}).then(function(sport){
-                        var links = new Array();
+                        var links = [];
                         var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+req.params.id};
                         var link2 = {rel: 'schedule',
                             href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/courses/"+req.params.id+"/schedule"};
@@ -67,18 +66,17 @@ router.get('/:id',function(req, res) {
                         var cour = {id: course.id, Sport: sport, Establishment: est, instructor: course.instructor,
                             price: course.price, info: course.info, links: links};
                         res.status(200).send(cour);
-                    })
-                })
+                    });
+                });
             }
-        })
+        });
     }
 });
 
 router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination, function(req,res){
     var where = "";
     var limit = 5;
-    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
-        + req.params.id + "/schedule";
+    var url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id + "/schedule";
     var before = 0;
     var prev = 'none';
     var after = 0;
@@ -86,20 +84,20 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
-        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
-            + req.params.id + "/schedule?after="+req.query.after+"?limit"+limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
+            req.params.id + "/schedule?after="+req.query.after+"?limit"+limit;
         where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$gt: after},courseId: req.params.id}};
     }else if(req.query.before){
         before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
         limit = req.query.limit;
-        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
-            + req.params.id + "/schedule?before="+req.query.before+"?limit"+limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
+            req.params.id + "/schedule?before="+req.query.before+"?limit"+limit;
         where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{id: {$lt: before},courseId: req.params.id}};
     }else{
         if(req.query.limit) {
             limit = req.query.limit;
-            url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/"
-                + req.params.id + "/schedule?limit="+limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" +
+                req.params.id + "/schedule?limit="+limit;
         }
         where = {attributes: ['id', 'day', 'startTime', 'endTime'], limit: limit, where:{courseId: req.params.id}};
     }
@@ -128,8 +126,8 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
                             res.status(200).send({
                                 Schedule: schedule, paging: pag, links: {rel: 'self', href: url}
                             });
-                        })
-                    })
+                        });
+                    });
                 }else{
                     res.status(404).send({message: "There are no schedules for this course"});
                 }
@@ -137,8 +135,8 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
         }
         else
             res.status(404).send({message: "The course was not found"});
-    })
-})
+    });
+});
 
 router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdCourse, user.isOwner,
     user.isEstabOwner2, function(req, res) {
@@ -152,7 +150,7 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdC
             res.status(404).send({message: "The course was not found"});
     }).catch(function (err) {
         res.status(500).send({errors: handler.customServerError(err)});
-    })
+    });
 });
 
 router.delete('/:id', authController.isBearerAuthenticated, middleware.numericalIdCourse, user.isOwner,
@@ -164,6 +162,6 @@ router.delete('/:id', authController.isBearerAuthenticated, middleware.numerical
                 res.status(404).send({message: "The course was not found"});
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
-        })
+        });
 });
 module.exports = router;
