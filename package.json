@@ -30,6 +30,8 @@
     "umzug": "^1.6.0"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^1.0.0",
     "supertest": "^1.1.0"
   }
 }
