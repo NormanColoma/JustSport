@@ -125,19 +125,19 @@ router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, fun
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"+
             req.params.id+"/sports" + "?after="+req.query.after+"?limit"+limit;
-        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}};
+        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}, order: 'id ASC'};
     }else if(req.query.before){
         before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
         limit = req.query.limit;
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports" +
             "?before="+req.query.before+"?limit"+limit;
-        where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$lt: before}}};
+        where = {attributes: ['id', 'name'], limit: parseInt(limit), where:{id: {$lt: before}}, order: 'id ASC'};
     }else{
         if(req.query.limit) {
             limit = req.query.limit;
             url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports" + "?limit="+limit;
         }
-        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}};
+        where = {attributes: ['id', 'name'],limit: parseInt(limit), where:{id: {$gt: after}}, order: 'id ASC'};
     }
     before = 0;
     after = 0;

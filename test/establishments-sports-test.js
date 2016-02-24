@@ -36,7 +36,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('EstablishmentsSports', function(){
+describe('EstablishmentsSports', function(){
     this.timeout(15000);
     var credentials = {
         "grant_type" : "password",
@@ -315,7 +315,6 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .get('/api/establishments/1/sports?before='+before+'&limit=2')
             .expect(200)
             .expect(function (res) {
-                console.log(res.body.Sports.rows);
                 assert.equal(res.body.Sports.rows.length, 2);
                 assert.equal(res.body.Sports.rows[0].name, 'Spinning');
                 assert.equal(res.body.Sports.rows[1].name, 'GAP');
