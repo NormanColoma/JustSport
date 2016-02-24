@@ -1,10 +1,10 @@
 
 [0m[0m
 [0m  Schedule of a course[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (311ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (237ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (288ms)[0m
-[2K[0G  [32m  √[0m[90m Getting schedule from a course that exists. Should return status 200[0m[33m (55ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (285ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (235ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (256ms)[0m
+[2K[0G  [32m  √[0m[90m Getting schedule from a course that exists. Should return status 200[0m[33m (46ms)[0m
 [2K[0G  [32m  √[0m[90m Getting schedule from a course that exists, limiting rows. Should return status 200[0m
 [2K[0G  [32m  √[0m[90m Getting schedule from a course that exists, specifying after cursor. Should return status 200[0m
 [2K[0G  [32m  √[0m[90m Getting schedule from a course that exists, specifying before cursor. Should return status 200[0m
@@ -16,21 +16,21 @@
 [2K[0G  [32m  √[0m[90m Getting schedule that is not established yet from a course that exists. Should return status 404[0m
 
 [0m  Course[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (344ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (363ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (331ms)[0m
-[2K[0G  [32m  √[0m[90m Adding new course of sport that is imparted in the specified establishment.Should return status 201[0m[33m (71ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (296ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (231ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (218ms)[0m
+[2K[0G  [32m  √[0m[90m Adding new course of sport that is imparted in the specified establishment.Should return status 201[0m[31m (127ms)[0m
 [2K[0G  [32m  √[0m[90m Adding new course passing invalid formats.Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Adding new course passing empty fields.Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Adding new course of sport that is imparted in the specified establishment without access token.Should return status 401[0m
 [2K[0G  [32m  √[0m[90m Adding new course of sport that is imparted in the specified establishment without permisions.Should return status 403[0m
 [2K[0G  [32m  √[0m[90m Adding new course without be a owner of any establishment. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Adding new course with a nonexistent sport.Should return status 500[0m[33m (69ms)[0m
+[2K[0G  [32m  √[0m[90m Adding new course with a nonexistent sport.Should return status 500[0m[31m (84ms)[0m
 [2K[0G  [32m  √[0m[90m Adding new course with a malformed JSON.Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Getting a course that exists. Should return status 200[0m
 [2K[0G  [32m  √[0m[90m Getting a course that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Getting a course passing id as string. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Updating a course that exists. Should return status 204[0m[33m (57ms)[0m
+[2K[0G  [32m  √[0m[90m Updating a course that exists. Should return status 204[0m[33m (66ms)[0m
 [2K[0G  [32m  √[0m[90m Checking the course after updated it (only info was changed). Should return status 200[0m
 [2K[0G  [32m  √[0m[90m Updating a course passing id as string. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Updating a course that does not exist. Should return status 404[0m
@@ -42,38 +42,38 @@
 [2K[0G  [32m  √[0m[90m Deleting a course without owner token. Should return status 403[0m
 [2K[0G  [32m  √[0m[90m Deleting a course passing id as string. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Deleting a course that does not exist. Should return status 404[0m
-[2K[0G  [32m  √[0m[90m Deleting a course that exists. Should return status 204[0m[33m (59ms)[0m
+[2K[0G  [32m  √[0m[90m Deleting a course that exists. Should return status 204[0m[31m (100ms)[0m
 
 [0m  Establishments filtered by city and location[0m
-[2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location.Should return status 200[0m[31m (90ms)[0m
+[2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location.Should return status 200[0m[33m (41ms)[0m
 [2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (without specifiying cursor, but limit).Should return status 200[0m
 [2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (specifying after cursor).Should return status 200[0m
-[2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (specifying befpre cursor).Should return status 200[0m
+[2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (specifying befpre cursor).Should return status 200[0m[31m (221ms)[0m
 [2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (specifying after cursor but not limit).Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location (specifying before cursor but not limit).Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Getting all establishments filtered by sport and location but retrieving 0.Should return status 404[0m
 
 [0m  Establishments[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (334ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (336ms)[0m
-[2K[0G  [32m  √[0m[90m Registering new establishment. Should return status 201[0m[33m (67ms)[0m
-[2K[0G  [32m  √[0m[90m Registering new establishment with duplicated phone. Should return status 500[0m[33m (55ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (264ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (235ms)[0m
+[2K[0G  [32m  √[0m[90m Registering new establishment. Should return status 201[0m[31m (315ms)[0m
+[2K[0G  [32m  √[0m[90m Registering new establishment with duplicated phone. Should return status 500[0m[33m (53ms)[0m
 [2K[0G  [32m  √[0m[90m Registering new establishment passing malformed JSON. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Registering new establishment passing required fields with wrong format. Should return status 500[0m
-[2K[0G  [32m  √[0m[90m Registering new establishment without existent owner. Should return status 500[0m[33m (41ms)[0m
+[2K[0G  [32m  √[0m[90m Registering new establishment without existent owner. Should return status 500[0m[33m (70ms)[0m
 [2K[0G  [32m  √[0m[90m Registering new establishment without being owner. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Deleting establishment that does not exist. Should return status 204[0m[31m (80ms)[0m
+[2K[0G  [32m  √[0m[90m Deleting establishment that does not exist. Should return status 204[0m[31m (230ms)[0m
 [2K[0G  [32m  √[0m[90m Deleting establishment that does not exits. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Deleting establishment without being owner. Should return status 403[0m
 [2K[0G  [32m  √[0m[90m Deleting establishment passing a string as id. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Updating establishment that exists with correct fields. Should return status 204[0m[31m (98ms)[0m
+[2K[0G  [32m  √[0m[90m Updating establishment that exists with correct fields. Should return status 204[0m[31m (148ms)[0m
 [2K[0G  [32m  √[0m[90m Checking out the establishment after full update.[0m
 [2K[0G  [32m  √[0m[90m Updating establishment with malformed JSON. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Updating establishment without access token. Should return status 401[0m
-[2K[0G  [32m  √[0m[90m Updating only certain fields. Should return status 204[0m[33m (47ms)[0m
+[2K[0G  [32m  √[0m[90m Updating only certain fields. Should return status 204[0m[33m (45ms)[0m
 [2K[0G  [32m  √[0m[90m Checking out the establishment after partil update.[0m
 [2K[0G  [32m  √[0m[90m Updating establishment passing a string as id. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Updating establishment with duplicated phone. Should return status 500[0m[33m (42ms)[0m
+[2K[0G  [32m  √[0m[90m Updating establishment with duplicated phone. Should return status 500[0m[33m (43ms)[0m
 [2K[0G  [32m  √[0m[90m Getting establishments without specify cursor. Should return status 200 and the first 5 establishments[0m
 [2K[0G  [32m  √[0m[90m Getting establishments specifying cursor but limit. Should return status 200 and the first n establishments[0m
 [2K[0G  [32m  √[0m[90m Getting establishments specifying after cursor. Should return status 200 and the first n establishments[0m
@@ -101,10 +101,10 @@
 [2K[0G  [32m  √[0m[90m Getting all sports specifying after cursor. Should return status 200 and the first n sports[0m
 [2K[0G  [32m  √[0m[90m Getting all sports specifying before cursor. Should return status 200 and the first n sports[0m
 [2K[0G  [32m  √[0m[90m Getting all sports specifying after cursor but not limit. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (361ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (391ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (402ms)[0m
-[2K[0G  [32m  √[0m[90m Associating new sport to establishment. Should return status 204[0m[31m (135ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (239ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (242ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (228ms)[0m
+[2K[0G  [32m  √[0m[90m Associating new sport to establishment. Should return status 204[0m[31m (106ms)[0m
 [2K[0G  [32m  √[0m[90m Associating new sport (that does not exist) to establishment. Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Associating new sport to establishment (that does not exist). Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Associating new sport to establishment without owner token. Should return status 403[0m
@@ -113,10 +113,10 @@
 [2K[0G  [32m  √[0m[90m Associating new sport to establishment, without pass the sport. Should return status 400[0m
 
 [0m  Schedule[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (272ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (251ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (256ms)[0m
-[2K[0G  [32m  √[0m[90m Adding new schedule to an existent course. Should return status 201[0m[33m (56ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (240ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (233ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for another owner that will not be the owner of establishments[0m[31m (232ms)[0m
+[2K[0G  [32m  √[0m[90m Adding new schedule to an existent course. Should return status 201[0m[31m (84ms)[0m
 [2K[0G  [32m  √[0m[90m Adding new schedule to a course that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Adding new schedule without access token. Should return status 401[0m
 [2K[0G  [32m  √[0m[90m Adding new schedule without owner token. Should return status 403[0m
@@ -124,7 +124,7 @@
 [2K[0G  [32m  √[0m[90m Adding new schedule passing malformed JSON. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Adding new schedule passing invalid format. Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Adding new schedule passing empty values. Should return status 500[0m
-[2K[0G  [32m  √[0m[90m Updating a schedule that exists. Should return status 204[0m[33m (54ms)[0m
+[2K[0G  [32m  √[0m[90m Updating a schedule that exists. Should return status 204[0m[33m (62ms)[0m
 [2K[0G  [32m  √[0m[90m Checking schedule after updated it[0m
 [2K[0G  [32m  √[0m[90m Updating a schedule that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Updating a schedule to a course that does not exists. Should return status 404[0m
@@ -135,43 +135,43 @@
 [2K[0G  [32m  √[0m[90m Deleting a schedule that exists but course not exists. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Deleting a schedule without be the owner of th establishment. Should return status 403[0m
 [2K[0G  [32m  √[0m[90m Deleting a schedule passing id as string. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Deleting a schedule that exist. Should return status 204[0m[33m (52ms)[0m
+[2K[0G  [32m  √[0m[90m Deleting a schedule that exist. Should return status 204[0m[33m (41ms)[0m
 
 [0m  Sports[0m
-[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (268ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (254ms)[0m
-[2K[0G  [32m  √[0m[90m Getting access token for admin[0m[31m (509ms)[0m
-[2K[0G  [32m  √[0m[90m Creating sport that does not exist. Should return status 201[0m[33m (56ms)[0m
-[2K[0G  [32m  √[0m[90m Creating sport that already exists. Should return status 500, unique constraint error[0m[33m (51ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token[0m[31m (325ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for user[0m[31m (280ms)[0m
+[2K[0G  [32m  √[0m[90m Getting access token for admin[0m[31m (521ms)[0m
+[2K[0G  [32m  √[0m[90m Creating sport that does not exist. Should return status 201[0m[31m (125ms)[0m
+[2K[0G  [32m  √[0m[90m Creating sport that already exists. Should return status 500, unique constraint error[0m[31m (165ms)[0m
 [2K[0G  [32m  √[0m[90m Creating sport without pass its name. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Creating sport without valid name format. Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Creating sport without passing empty name. Should return status 500[0m
 [2K[0G  [32m  √[0m[90m Creating sport without access token. Should return status 401[0m
 [2K[0G  [32m  √[0m[90m Creating sport without being owner. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Updating sport that exists. Should return status 204[0m[33m (38ms)[0m
+[2K[0G  [32m  √[0m[90m Updating sport that exists. Should return status 204[0m[31m (102ms)[0m
 [2K[0G  [32m  √[0m[90m Updating sport that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Updating sport passing a string as id. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Updating sport with a malformed JSON. Should return status 400[0m
 [2K[0G  [32m  √[0m[90m Updating sport whithout an access token. Should return status 401[0m
 [2K[0G  [32m  √[0m[90m Updating sport without being owner. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Deleting sport that exists. Should return status 204[0m[33m (43ms)[0m
+[2K[0G  [32m  √[0m[90m Deleting sport that exists. Should return status 204[0m[31m (105ms)[0m
 [2K[0G  [32m  √[0m[90m Deleting sport that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Deleting sport without an access token. Should return status 401[0m
 [2K[0G  [32m  √[0m[90m Deleting sport without being admin. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Getting info about a sport that exists. Should return status 200[0m[33m (38ms)[0m
+[2K[0G  [32m  √[0m[90m Getting info about a sport that exists. Should return status 200[0m[31m (84ms)[0m
 [2K[0G  [32m  √[0m[90m Getting info about a sport that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Getting info about a sport passing string as id. Should return status 400[0m
-[2K[0G  [32m  √[0m[90m Getting sports without specify cursor. Should return status 200 and the first 5 sports[0m[33m (67ms)[0m
+[2K[0G  [32m  √[0m[90m Getting sports without specify cursor. Should return status 200 and the first 5 sports[0m[33m (60ms)[0m
 [2K[0G  [32m  √[0m[90m Getting sports without specify cursor but limit. Should return status 200 and the first n sports[0m
 [2K[0G  [32m  √[0m[90m Getting sports specifying after cursor. Should return status 200 and the first n sports[0m
 [2K[0G  [32m  √[0m[90m Getting sports specifying before cursor. Should return status 200 and the first n sports[0m
 
 [0m  User[0m
-[2K[0G  [32m  √[0m[90m Creating user that does not exist already. Should return the posted user[0m[31m (302ms)[0m
-[2K[0G  [32m  √[0m[90m Creating user that already exists. Should return status 500, unique constrainr error[0m[31m (317ms)[0m
+[2K[0G  [32m  √[0m[90m Creating user that does not exist already. Should return the posted user[0m[31m (346ms)[0m
+[2K[0G  [32m  √[0m[90m Creating user that already exists. Should return status 500, unique constrainr error[0m[31m (292ms)[0m
 [2K[0G  [32m  √[0m[90m Getting access token and user id[0m[31m (249ms)[0m
 [2K[0G  [32m  √[0m[90m Deleting user without being himself. Should return status 403[0m
-[2K[0G  [32m  √[0m[90m Deleting user that exists. Should return status 204[0m[31m (81ms)[0m
+[2K[0G  [32m  √[0m[90m Deleting user that exists. Should return status 204[0m[33m (39ms)[0m
 [2K[0G  [32m  √[0m[90m Retrieving info about user that exists. Should return status 200[0m[31m (289ms)[0m
 [2K[0G  [32m  √[0m[90m Retrieving info about user that does not exist. Should return status 404[0m
 [2K[0G  [32m  √[0m[90m Creating user with invalid required fields. Should return status 500[0m
@@ -179,5 +179,5 @@
 [2K[0G  [32m  √[0m[90m Creating user with optional fields, but not the corrects. Should return status 500[0m
 
 
-[92m [0m[32m 162 passing[0m[90m (44s)[0m
+[92m [0m[32m 162 passing[0m[90m (46s)[0m
 
