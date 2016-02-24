@@ -3,3 +3,5 @@ node_js:
   - "4.1"
 services:
   - mysql
+env:
+  -NODE_ENV=travis
