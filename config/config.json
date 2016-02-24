@@ -23,7 +23,7 @@
   "travis":{
     "username": "travis",
     "password": "",
-    "database": "database_travis",
+    "database": "travis_test_database",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
