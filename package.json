@@ -32,8 +32,10 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify":         "*",
-    "grunt-contrib-watch":          "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.4.5",
     "supertest": "^1.1.0"
   }
 }
