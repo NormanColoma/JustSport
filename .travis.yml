@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "4.1"
+services:
+  - mysql
+env:
+  -NODE_ENV=travis
+  -DB=mysql
+before_script:
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS travis_test_database;'; fi"
+deploy:
+  provider: heroku
+  app: justsport-api
+  api_key:
+    secure: "31dcaa24-8994-4def-a702-0e4a6e2a9915"

@@ -19,5 +19,12 @@
     "database": "heroku_b6e22957fb663c5",
     "host": "us-cdbr-iron-east-03.cleardb.net",
     "dialect": "mysql"
+  },
+  "travis":{
+    "username": "travis",
+    "password": "",
+    "database": "travis_test_database",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   }
 }

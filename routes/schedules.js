@@ -17,7 +17,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, fu
         models.schedule.create(req.body).then(function (schedule) {
             var url = req.protocol + "://" + req.hostname + ":" + global.port + "/api/schedules/" + schedule.id;
             res.setHeader("Location", url);
-            var links = new Array();
+            var links = [];
             var link1 = {
                 rel: 'self',
                 href: req.protocol + "://" + req.hostname + ":" + global.port + "/api/schedules/new"
@@ -37,7 +37,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner2, fu
             });
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
-        })
+        });
 
     }
     else
@@ -56,7 +56,7 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdS
                 res.status(404).send({message: "The schedule was not found"});
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
-        })
+        });
     }
     else
         res.status(400).send({message: "Json is malformed: courseId field is required for updates"});
@@ -71,7 +71,7 @@ router.delete('/:id', authController.isBearerAuthenticated, middleware.numerical
                 res.status(404).send({message: "The schedule was not found"});
         }).catch(function (err) {
             res.status(500).send({errors: handler.customServerError(err)});
-        })
+        });
     }
     else
         res.status(400).send({message: "Json is malformed: courseId field is required for deletions"});
