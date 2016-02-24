@@ -1,5 +1,6 @@
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -23,7 +24,8 @@ var umzug = new Umzug({
     logging: false
 });
 
-xdescribe('User', function(){
+describe('User', function(){
+    this.timeout(15000);
     var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
     var credentials = {
         "grant_type" : "password",
@@ -39,7 +41,7 @@ xdescribe('User', function(){
         }).then(function (migrations) {
             umzug.up('20151022133423-create-user').then(function(){
                 done();
-            })
+            });
         });
     });
     it('Creating user that does not exist already. Should return the posted user', function(done){
@@ -51,9 +53,9 @@ xdescribe('User', function(){
             .expect(function(res){
                 assert.equal(res.body.name, 'Norman');
                 assert.equal(res.body.lname, 'Coloma García');
-                assert.equal(res.body.email, 'ua.norman@mail.com')
+                assert.equal(res.body.email, 'ua.norman@mail.com');
                 assert.equal(res.body.gender, 'male');
-                assert.equal(res.body.role, 'user')
+                assert.equal(res.body.role, 'user');
                 assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/users/'+res.body.uuid);
             }).end(done);
 
@@ -108,9 +110,9 @@ xdescribe('User', function(){
                 .expect(function(res){
                     assert.equal(res.body.name, 'Norman');
                     assert.equal(res.body.lname, 'Coloma García');
-                    assert.equal(res.body.email, 'ua.norman@mail.com')
+                    assert.equal(res.body.email, 'ua.norman@mail.com');
                     assert.equal(res.body.gender, 'male');
-                    assert.equal(res.body.role, 'user')
+                    assert.equal(res.body.role, 'user');
                 }).end(done);
         });
     });
@@ -132,7 +134,7 @@ xdescribe('User', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.errors.length, 4)
+                assert.equal(res.body.errors.length, 4);
                 assert.equal(res.body.errors[0].message, 'name must only contain letters');
                 assert.equal(res.body.errors[1].message, 'lname must only contain letters');
                 assert.equal(res.body.errors[2].message, 'email is not valid, it must be like: youremail@domain.es');
@@ -149,7 +151,7 @@ xdescribe('User', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.errors.length, 2)
+                assert.equal(res.body.errors.length, 2);
                 assert.equal(res.body.errors[0].message, 'lname cannot be null');
                 assert.equal(res.body.errors[1].message, 'email cannot be null');
             }).end(done);
@@ -164,7 +166,7 @@ xdescribe('User', function(){
             .expect(500)
             .expect('Content-type', 'application/json; charset=utf-8')
             .expect(function(res){
-                assert.equal(res.body.errors.length, 2)
+                assert.equal(res.body.errors.length, 2);
                 assert.equal(res.body.errors[0].message, "gender must match 'male' or 'female' values");
                 assert.equal(res.body.errors[1].message, "role must match 'user' or 'owner' values");
             }).end(done);

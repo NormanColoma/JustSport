@@ -8,7 +8,7 @@ exports.numericalIdCourse= function(req,res,next){
     }
     else
         next();
-}
+};
 
 exports.numericalIdSport= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
@@ -16,7 +16,7 @@ exports.numericalIdSport= function(req,res,next){
     }
     else
         next();
-}
+};
 
 exports.numericalIdSchedule= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
@@ -24,14 +24,14 @@ exports.numericalIdSchedule= function(req,res,next){
     }
     else
         next();
-}
+};
 exports.numericalIdEstab= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
         res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
     }
     else
         next();
-}
+};
 
 exports.stringLocation = function(req,res,next){
     if (req.params.location == parseInt(req.params.location, 10)){
@@ -39,15 +39,15 @@ exports.stringLocation = function(req,res,next){
     }
     else
         next();
-}
+};
 
 exports.pagination = function(req,res,next){
     if (req.query.after || req.query.before){
         if(req.query.limit){
             if(req.query.limit > 0)
-                next()
+                next();
             else
-                res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+                res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
         }
         else
             res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
@@ -55,11 +55,11 @@ exports.pagination = function(req,res,next){
     else {
         if(req.query.limit){
             if(req.query.limit <= 0)
-                res.status(400).send({message: 'The limit for pagination, must be greater than 0'})
+                res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
             else
                 next();
         }else{
             next();
         }
     }
-}
+};

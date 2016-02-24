@@ -7,8 +7,9 @@
 /**
  * Created by Norman on 08/11/2015.
  */
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -44,7 +45,8 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('Schedule of a course', function() {
+describe('Schedule of a course', function() {
+    this.timeout(15000);
     var credentials = {
         "grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };
@@ -58,7 +60,7 @@ xdescribe('Schedule of a course', function() {
     var s4 = {id: 4, day: 'Jueves', startTime: '12:00', endTime:"13:00"};
     var s5 = {id: 5, day: 'Jueves', startTime: '20:00', endTime:"21:00"};
     var s6 = {id: 6, day: 'Viernes', startTime: '09:00', endTime:"10:00"};
-    var schedule = new Array();
+    var schedule = [];
     before('Setting database in a known state: Deleting', function (done) {
         umzug.execute({
             migrations: ['20151113141451-create-schedule', '20151108193656-create-course', '20151106004323-create-establishmentsport', '20151106004253-create-establishment',
@@ -66,7 +68,7 @@ xdescribe('Schedule of a course', function() {
             method: 'down'
         }).then(function (migrations) {
             done();
-        })
+        });
     });
 
     before('Setting database in a known state: Creating', function (done) {
@@ -77,7 +79,7 @@ xdescribe('Schedule of a course', function() {
         }).then(function (migrations) {
             umzug.up({migrations: ['20151113141451-create-schedule']});
             done();
-        })
+        });
     });
 
     before('Filling database', function (done) {
@@ -87,8 +89,8 @@ xdescribe('Schedule of a course', function() {
             method: 'up'
         }).then(function (mig) {
             done();
-        })
-    })
+        });
+    });
 
     it('Getting access token', function (done) {
         supertest(app)
@@ -144,10 +146,10 @@ xdescribe('Schedule of a course', function() {
                     new Buffer(res.body.Schedule.rows[4].id.toString()).toString('base64')+'&limit=5');
             }).end(done);
 
-    })
+    });
 
     it('Getting schedule from a course that exists, limiting rows. Should return status 200', function(done){
-        schedule = new Array();
+        schedule = [];
         schedule.push(s1,s2,s3);
         supertest(app)
             .get('/api/courses/1/schedule?limit=3')
@@ -161,12 +163,12 @@ xdescribe('Schedule of a course', function() {
                     new Buffer(res.body.Schedule.rows[2].id.toString()).toString('base64')+'&limit=3');
             }).end(done);
 
-    })
+    });
 
     it('Getting schedule from a course that exists, specifying after cursor. Should return status 200', function(done){
-        schedule = new Array();
+        schedule = [];
         schedule.push(s4,s5,s6);
-        var id = 3
+        var id = 3;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/courses/1/schedule?after='+after+"&limit=5")
@@ -179,12 +181,12 @@ xdescribe('Schedule of a course', function() {
                     new Buffer(res.body.Schedule.rows[0].id.toString()).toString('base64')+'&limit=5');
                 assert.equal(res.body.paging.next, 'none');
             }).end(done);
-    })
+    });
 
     it('Getting schedule from a course that exists, specifying before cursor. Should return status 200', function(done){
-        schedule = new Array();
+        schedule = [];
         schedule.push(s1,s2,s3);
-        var id = 4
+        var id = 4;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/courses/1/schedule?before='+before+"&limit=5")
@@ -197,31 +199,31 @@ xdescribe('Schedule of a course', function() {
                 assert.equal(res.body.paging.next, 'http://127.0.0.1:3000/api/courses/1/schedule?after='+
                     new Buffer(res.body.Schedule.rows[2].id.toString()).toString('base64')+'&limit=5');
             }).end(done);
-    })
+    });
 
     it('Getting schedule from a course that exists, specifying before cursor, but not limit. Should return status 400', function(done){
-        schedule = new Array();
+        schedule = [];
         schedule.push(s1,s2,s3);
-        var id = 4
+        var id = 4;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/courses/1/schedule?before='+before)
             .expect(400).expect(function (res) {
                 assert(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             }).end(done);
-    })
+    });
 
     it('Getting schedule from a course that exists, specifying after cursor, but not limit. Should return status 400', function(done){
-        schedule = new Array();
+        schedule = [];
         schedule.push(s1,s2,s3);
-        var id = 4
+        var id = 4;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/courses/1/schedule?after='+after)
             .expect(400).expect(function (res) {
                 assert(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             }).end(done);
-    })
+    });
 
     it('Getting schedule from a course that exists, limiting rows to 0. Should return status 400', function(done){
         supertest(app)
@@ -230,7 +232,7 @@ xdescribe('Schedule of a course', function() {
                 assert(res.body.message, "The limit for pagination, must be greater than 0");
             }).end(done);
 
-    })
+    });
 
     it('Getting schedule from a course that does not exists. Should return status 404', function(done){
         supertest(app)
@@ -239,7 +241,7 @@ xdescribe('Schedule of a course', function() {
                 assert(res.body.message, 'The course was not found');
             }).end(done);
 
-    })
+    });
 
     it('Getting schedule from a course passing id as string. Should return status 400', function(done){
         supertest(app)
@@ -248,14 +250,14 @@ xdescribe('Schedule of a course', function() {
                 assert(res.body.message, 'The supplied id that specifies the course is not a numercial id');
             }).end(done);
 
-    })
+    });
     it('Getting schedule that is not established yet from a course that exists. Should return status 404', function(done){
         supertest(app)
             .get('/api/courses/3/schedule')
             .expect(404).expect(function (res) {
                 assert(res.body.message, 'The are no schedules for this course');
             }).end(done);
-    })
+    });
 
     after('Dropping database',function(done) {
         seeder.execute({
@@ -267,6 +269,6 @@ xdescribe('Schedule of a course', function() {
                 '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
-        })
+        });
     });
 });

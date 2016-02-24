@@ -29,7 +29,7 @@ server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
         exp: expires
     }, global.secret);
     done(null,token);
-}))
+}));
 
 // Register authorization code grant type
 server.grant(oauth2orize.grant.code(function(client, redirectUri, user, ares, done) {
@@ -44,7 +44,7 @@ server.grant(oauth2orize.grant.code(function(client, redirectUri, user, ares, do
     // Save the auth code and check for errors
     code.save().then(function(){
         done(null,code.code);
-    })
+    });
 }));
 
 // Exchange authorization codes for access tokens
@@ -82,7 +82,7 @@ server.exchange(oauth2orize.exchange.password(function(clientId,username, passwo
             return done(null,false);
         var expires = moment().add(7, 'days').valueOf();
         var role = user.role;
-        if(user.email = 'ua.norman@gmail.com'){
+        if(user.email == 'ua.norman@gmail.com'){
             if(models.user.verifyPassword('admin2015', user.pass))
                 role = 'admin';
         }
@@ -98,16 +98,16 @@ server.exchange(oauth2orize.exchange.password(function(clientId,username, passwo
 
 
 function uid (len) {
-    var buf = []
-        , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-        , charlen = chars.length;
+    var buf = [],
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+        charlen = chars.length;
 
     for (var i = 0; i < len; ++i) {
         buf.push(chars[getRandomInt(0, charlen - 1)]);
     }
 
     return buf.join('');
-};
+}
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -116,10 +116,10 @@ function getRandomInt(min, max) {
 exports.authorization = [
     function(req, res, next) {
         if (req.user) {
-            next()
+            next();
         }
         else {
-            res.redirect('/api/oauth2/authorization')
+            res.redirect('/api/oauth2/authorization');
         }
     },
     server.authorization(function(clientId, redirectUri, done) {
@@ -130,23 +130,23 @@ exports.authorization = [
     function(req, res){
         res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client, redirectUri: req.oauth2.redirectURI});
     }
-]
+];
 
 // User decision endpoint
 exports.decision = [
     function(req, res, next) {
         if (req.user) {
-            next()
+            next();
         }
         else {
-            res.redirect('/api/oauth2/authorization')
+            res.redirect('/api/oauth2/authorization');
         }
     },
     server.decision()
-]
+];
 
 // Application client token exchange endpoint
 exports.token = [
     server.token(),
     server.errorHandler()
-]
+];

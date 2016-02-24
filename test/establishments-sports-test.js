@@ -1,5 +1,6 @@
+/*jshint -W069 */
 var supertest = require('supertest');
-var assert  = require ('assert')
+var assert  = require ('assert');
 var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
@@ -35,7 +36,8 @@ var seeder = new Umzug({
     logging: false
 });
 
-xdescribe('EstablishmentsSports', function(){
+describe('EstablishmentsSports', function(){
+    this.timeout(15000);
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",
@@ -50,7 +52,7 @@ xdescribe('EstablishmentsSports', function(){
         lname: 'Coloma García',
         email: 'ua.norman@mail.com',
         gender: 'male'
-    }
+    };
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment','20151022133423-create-user','20151016205501-sport-migration',
@@ -59,8 +61,8 @@ xdescribe('EstablishmentsSports', function(){
         }).then(function (migrations) {
             umzug.up(['20151022133423-create-user','20151106004253-create-establishment','20151016205501-sport-migration','20151106004323-create-establishmentsport']).then(function(migrations){
                 done();
-            })
-        })
+            });
+        });
     });
 
     before('Filling database', function(done){
@@ -70,10 +72,10 @@ xdescribe('EstablishmentsSports', function(){
             method: 'up'
         }).then(function(mig){
             done();
-        })
-    })
+        });
+    });
 
-    xit('Getting all establishments where the sport is imparted.Should return status 200', function(done){
+    it('Getting all establishments where the sport is imparted.Should return status 200', function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
             email: 'ua.norman@mail.com', gender: 'male'};
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
@@ -95,9 +97,9 @@ xdescribe('EstablishmentsSports', function(){
             assert.equal(res.body.paging.next, 'none');
         })
         .end(done);
-})
+});
 
-xit('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
+it('Getting all establishments where the sport is imparted, which does not exists.Should return status 404', function(done){
     supertest(app)
         .get('/api/sports/15/establishments')
         .expect(404)
@@ -105,8 +107,8 @@ xit('Getting all establishments where the sport is imparted, which does not exis
             assert.equal(res.body.message, 'The sport was not found');
         })
         .end(done);
-})
-xit('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
+});
+it('Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400', function(done){
     supertest(app)
         .get('/api/sports/Zumba/establishments')
         .expect(400)
@@ -114,12 +116,12 @@ xit('Getting all establishments where the sport is imparted, by passing the id a
             assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
         })
         .end(done);
-})
+});
 
-xit('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
+it('Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
-            email: 'ua.norman@mail.com', gender: 'male'}
+            email: 'ua.norman@mail.com', gender: 'male'};
         var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
             city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
             phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg', Owner: owner};
@@ -139,12 +141,12 @@ xit('Getting all establishments where the sport is imparted without specify curs
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
-    })
+    });
 
-xit('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
+it('Getting all establishments where the sport is imparted specifying after cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
-            email: 'ua.norman@mail.com', gender: 'male'}
+            email: 'ua.norman@mail.com', gender: 'male'};
         var est2 = {id:2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
             city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
             phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'noray.jpeg', Owner: owner};
@@ -163,12 +165,12 @@ xit('Getting all establishments where the sport is imparted specifying after cur
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
-    })
+    });
 
-xit('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
+it('Getting all establishments where the sport is imparted specifying before cursor.Should return status 200',
     function(done){
         var owner = {uuid: '8b75a3aa-767e-46f1-ba86-a56a0f107738', name: 'Norman', lname: 'Coloma García',
-            email: 'ua.norman@mail.com', gender: 'male'}
+            email: 'ua.norman@mail.com', gender: 'male'};
         var est1 = {id:1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
             city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
             phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg', Owner: owner};
@@ -187,9 +189,9 @@ xit('Getting all establishments where the sport is imparted specifying before cu
                     new Buffer(res.body.Establishments.rows[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
-    })
+    });
 
-xit('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
+it('Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -200,8 +202,8 @@ xit('Getting all establishments where the sport is imparted specifying cursor, b
                 assert.equal(res.body.message, "Wrong parameters, limit parameter must be set for paging");
             })
             .end(done);
-    })
-xit('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
+    });
+it('Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -212,8 +214,8 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, "The limit for pagination, must be greater than 0");
             })
             .end(done);
-    })
-    xit('Getting all establishments where the sport, but got 0 recors.Should return status 404',
+    });
+    it('Getting all establishments where the sport, but got 0 recors.Should return status 404',
     function(done){
         var id = 1;
         var before = new Buffer(id.toString()).toString('base64');
@@ -224,7 +226,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, "The are no sports added yet");
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports imparted in the establishment.Should return status 200', function(done){
         supertest(app)
@@ -237,7 +239,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.Sports.rows[2].name, 'Body Jump');
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports imparted in establishment that does not exist.Should return status 404', function(done){
         supertest(app)
@@ -247,7 +249,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, 'The establishment was not found');
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports imparted from establishment that is empty yet.Should return status 404', function(done){
         supertest(app)
@@ -257,7 +259,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, 'The are no sports added yet');
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports without specify cursor but limit. Should return status 200 and the first n sports set by the limit', function(done){
         supertest(app)
@@ -275,7 +277,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                     new Buffer(res.body.Sports.rows[0].id.toString()).toString('base64')+'&limit=1');
             })
             .end(done);
-    })
+    });
     it('Getting all sports without specify cursor but limit (0). Should return status 400', function(done){
         supertest(app)
             .get('/api/establishments/1/sports?limit=0')
@@ -284,7 +286,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, "The limit for pagination, must be greater than 0");
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports specifying after cursor. Should return status 200 and the first n sports', function(done){
         var id = 1;
@@ -304,7 +306,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.paging.next, 'none');
             })
             .end(done);
-    })
+    });
 
     it('Getting all sports specifying before cursor. Should return status 200 and the first n sports', function(done){
         var id = 3;
@@ -324,7 +326,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                     new Buffer(res.body.Sports.rows[1].id.toString()).toString('base64')+'&limit=2');
             })
             .end(done);
-    })
+    });
 
 
     it('Getting all sports specifying after cursor but not limit. Should return status 400', function(done){
@@ -337,7 +339,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, 'Wrong parameters, limit parameter must be set for paging');
             })
             .end(done);
-    })
+    });
 
     it('Getting access token', function(done){
         supertest(app)
@@ -386,9 +388,9 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 .set('Authorization', 'Bearer '+owner_token)
                 .expect(204)
                 .end(done);
-        })
+        });
 
-    })
+    });
 
     it('Associating new sport (that does not exist) to establishment. Should return status 500', function(done){
         var sport = {id: 125};
@@ -401,7 +403,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
             })
             .end(done);
 
-    })
+    });
 
     it('Associating new sport to establishment (that does not exist). Should return status 404', function(done){
         var sport = {id: 125};
@@ -414,7 +416,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
             })
             .end(done);
 
-    })
+    });
 
     it('Associating new sport to establishment without owner token. Should return status 403', function(done){
         var sport = {id: 125};
@@ -427,7 +429,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
             })
             .end(done);
 
-    })
+    });
 
     it('Associating new sport to establishment without be the owner of it. Should return status 403', function(done){
         var sport = {id: 125};
@@ -440,7 +442,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
             })
             .end(done);
 
-    })
+    });
 
     it('Associating new sport to establishment passing string as id of it. Should return status 400', function(done){
         var sport = {id: 125};
@@ -453,7 +455,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
             })
             .end(done);
 
-    })
+    });
 
 
     it('Associating new sport to establishment, without pass the sport. Should return status 400', function(done){
@@ -466,7 +468,7 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 assert.equal(res.body.message, "Json is malformed: id of sport must be included for perform this action");
             })
             .end(done);
-    })
+    });
 
     after('Dropping database',function(done) {
         seeder.execute({
@@ -478,6 +480,6 @@ xit('Getting all establishments where the sport is imparted specifying cursor, a
                 '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
-        })
+        });
     });
 });

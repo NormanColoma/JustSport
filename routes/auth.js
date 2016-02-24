@@ -21,7 +21,7 @@ passport.use(new BasicStrategy(
 
         }).catch(function(err){
             throw err;
-        })
+        });
     }
 ));
 
@@ -44,17 +44,17 @@ passport.use(new LocalStrategy({
 
         }).catch(function(err){
             throw err;
-        })
+        });
     }
-))
+));
 
 passport.serializeUser(function(user, done) {
     done(null, user);
-})
+});
 
 passport.deserializeUser(function(user, done) {
     done(null,user);
-})
+});
 
 
 passport.use('client-basic', new BasicStrategy(
@@ -63,14 +63,15 @@ passport.use('client-basic', new BasicStrategy(
             if(!client || client.clientSecret !== clientSecret)
                 return done(null,false);
             return done(null,client);
-        })
+        });
     }
 ));
 
 passport.use(new BearerStrategy(
     function(accessToken, done) {
+        var decodedToken;
         try {
-            var decodedToken = jwt.decode(accessToken, global.secret);
+            decodedToken = jwt.decode(accessToken, global.secret);
         }catch(err){
             return done(null,false);
         }
@@ -80,7 +81,7 @@ passport.use(new BearerStrategy(
         models.user.findOne({ where: {uuid: decodedToken.sub},  attributes: ['uuid', 'name', 'lname', 'email', 'gender']}).then(function(user){
             if(!user)
                 return done(null,false);
-            done(null,user,{scope: '*'})
+            done(null,user,{scope: '*'});
         }).catch(function(err){
            return (null,false);
         });

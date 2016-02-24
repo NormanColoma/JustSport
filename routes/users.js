@@ -10,15 +10,15 @@ router.post('/new', function(req, res) {
       var url = req.protocol + "://" + req.hostname +":"+ global.port + "/api/users/" + user.uuid;
       res.setHeader("Location", url);
       res.status(201).send(user);
-    })
+    });
   }).catch(function (err){
     res.status(500).send({errors: handler.customServerError(err)});
-  })
+  });
 });
 
 router.get('/:id', function(req, res) {
   models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role']}).then(function (user) {
-      if (user == undefined)
+      if (user === null)
         res.status(404).send({message: "User was not found"});
       else {
         res.status(200).send(user);
@@ -42,7 +42,7 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
           res.status(404).send({message: "User was not found"});
       }).catch(function (err) {
         res.status(500).send(err);
-      })
+      });
     }
    else {
       res.status(403).send({message: "You are not authorized to perform this action"});
