@@ -46,6 +46,7 @@ var seeder = new Umzug({
 });
 
 describe('Schedule of a course', function() {
+    this.timeout(15000);
     var credentials = {
         "grant_type": "password", "username": "ua.norman@mail.com", "password": "adi2015"
     };

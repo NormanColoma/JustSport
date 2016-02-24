@@ -40,6 +40,7 @@ var seeder = new Umzug({
 });
 
 describe('Sports', function(){
+    this.timeout(15000);
     var credentials = {
         "grant_type" : "password",
         "username" : "ua.norman@mail.com",

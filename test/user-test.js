@@ -25,6 +25,7 @@ var umzug = new Umzug({
 });
 
 describe('User', function(){
+    this.timeout(15000);
     var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
     var credentials = {
         "grant_type" : "password",

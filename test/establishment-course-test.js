@@ -40,6 +40,7 @@ var seeder = new Umzug({
 });
 
 describe('Establishments filtered by city and location', function() {
+    this.timeout(15000);
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
         phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'atope.jpeg'};
