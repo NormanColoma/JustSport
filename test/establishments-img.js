@@ -52,6 +52,7 @@ describe.only('Img estab', function() {
     var owner_token = "";
     var user_token = "";
     var another_owner_token = "";
+
     before('Setting database in a known state', function (done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment', '20151022133423-create-user', '20151016205501-sport-migration',
@@ -134,27 +135,7 @@ describe.only('Img estab', function() {
             .end(done);
     });
 
-    it('Should return database down, status 500',function(done){
-        sequelize.close();
-        supertest(app).put('/api/establishments/1/new/image/')
-            .set('Authorization', 'Bearer '+owner_token)
-            .set('Content-Type', 'multipart/form-data')
-            .field('name','est_profile')
-            .attach('est_profile', './test/test-images/img-1.jpg')
-            .expect(500)
-            .expect(function(res){
-                assert.equal('Database is not running right now. Please try it back in few moments', res.body.errors[0].message);
-            })
-            .end(done);
-    });
-
     it('Should return status 401, unauthorized. Triying to upload img without token', function(done){
-        sequelize = new Sequelize(
-            config.database,
-            config.username,
-            config.password,
-            {logging: false}
-        );
         supertest(app).put('/api/establishments/1/new/image/')
             .set('Content-Type', 'multipart/form-data')
             .field('name','est_profile')
@@ -192,7 +173,50 @@ describe.only('Img estab', function() {
             .end(done);
     });
 
+    it('Should return database down, status 500',function(done){
+        sequelize.close();
+        supertest(app).put('/api/establishments/1/new/image/')
+            .set('Authorization', 'Bearer '+owner_token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('name','est_profile')
+            .attach('est_profile', './test/test-images/img-1.jpg')
+            .expect(500)
+            .expect(function(res){
+                assert.equal('Database is not running right now. Please try it back in few moments', res.body.errors[0].message);
+            })
+            .end(done);
+    });
+
     after('Dropping database',function(done) {
+        sequelize = new Sequelize(
+            config.database,
+            config.username,
+            config.password,
+            {logging: false} //Disable output from each time that sequelize is being fired
+        );
+        umzug = new Umzug({
+            migrations: {
+                params: [ sequelize.getQueryInterface(), Sequelize ],
+                path: "migrations"
+            },
+            storage: "sequelize",
+            storageOptions: {
+                sequelize: sequelize
+            },
+            logging: false
+        });
+
+        seeder = new Umzug({
+            migrations: {
+                params: [ sequelize.getQueryInterface(), Sequelize ],
+                path: "seeders/test"
+            },
+            storage: "sequelize",
+            storageOptions: {
+                sequelize: sequelize
+            },
+            logging: false
+        });
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
                 '20151105165744-establishments-test-seeder'],
@@ -204,4 +228,5 @@ describe.only('Img estab', function() {
             });
         });
     });
+
 });
