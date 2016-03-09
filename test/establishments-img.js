@@ -178,7 +178,7 @@ describe.only('Img estab', function() {
             .expect(204)
             .end(done);
     });
-    
+
 
     it('Should remove the img and return status 204', function(done){
         supertest(app).delete('/api/establishments/1/new/image/')
@@ -216,7 +216,7 @@ describe.only('Img estab', function() {
         supertest(app).delete('/api/establishments/103/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(404).expect(function(res){
-                asser.equal('The establishment was not found', res.body.message);
+                assert.equal('The establishment was not found', res.body.message);
             })
             .end(done);
     });
@@ -225,7 +225,7 @@ describe.only('Img estab', function() {
         supertest(app).delete('/api/establishments/string/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                asser.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
+                assert.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
             })
             .end(done);
     });
@@ -234,10 +234,10 @@ describe.only('Img estab', function() {
         supertest(app).delete('/api/establishments/3/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(403).expect(function(res){
-                asser.equal('You cannot remove the deafult image', res.body.message);
+                assert.equal('You cannot remove the deafult image', res.body.message);
             })
             .end(done);
-    })
+    });
 
     after('Dropping database',function(done) {
         seeder.execute({
