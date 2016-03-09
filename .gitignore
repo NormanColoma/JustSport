@@ -1,3 +1,6 @@
 node_modules/
 .idea/
 results.txt
+public/images
+test/test-images
+test/test-uploads

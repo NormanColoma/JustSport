@@ -15,7 +15,7 @@ var oauth2Controller = require('./routes/oauth2');
 var router = express.Router();
 var app = express();
 var cors = require('cors');
-
+var listeners = process.env.MAX_LISTENERS || 10;
 
 global.secret = '23asdfwer5676asdfaqzxsrt56woppxcjq12341pasdfasfd547kjxhoaefr44556añksdfjlka13a2adf4134sjdfla';
 global.port = '3000';
@@ -95,5 +95,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
+process.setMaxListeners(parseInt(listeners));
 
 module.exports = app;

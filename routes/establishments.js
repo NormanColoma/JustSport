@@ -10,7 +10,7 @@ var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
-
+var fs = require('fs');
 //Set this to use raw queries
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'test';
@@ -27,14 +27,49 @@ else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
 
+var dest = process.env.UPLOAD_DEST || '../public/images/ests';
 //Set options for Multer.js
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../public/images/ests');
+        cb(null, dest);
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
     }
+});
+
+var upload = multer({ storage: storage, limits: {fileSize:512000}}).single('est_profile');
+router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res) {
+    upload(req,res, function(err){
+        if(err){
+            res.status(500).send({message: "File size is too long"});
+        }else{
+            models.establishment.find({where: {id: req.params.id}}).then(function(est){
+                if(est === null){
+                    res.status(404).send({message: "The establishment was not found"});
+                }else{
+                    if(est.get("main_img") != "default.jpeg")
+                        fs.unlinkSync(dest+'/'+est.get("main_img"));
+                    est.set("main_img", req.file.filename);
+                    est.save();
+                    res.status(204).send();
+                }
+            });
+        }
+    });
+});
+
+router.delete('/:id/image',authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res){
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+            if(est.get("main_img") == "default.jpeg")
+                res.status(403).send({message: 'You cannot remove the default image'});
+            else{
+                fs.unlinkSync(dest+'/'+est.get("main_img"));
+                est.set("main_img", "default.jpeg");
+                est.save();
+                res.status(204).send();
+            }
+    });
 });
 
 router.get('', function(req, res) {
@@ -293,8 +328,7 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
         });
     });
 });
-router.post('/new', authController.isBearerAuthenticated, multer({ storage: storage}).single('est_profile'),
-    function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
             models.establishment.create(req.body).then(function (est) {
