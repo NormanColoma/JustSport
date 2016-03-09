@@ -10,7 +10,7 @@ var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
-
+var fs = require('fs');
 //Set this to use raw queries
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'test';
@@ -48,7 +48,10 @@ router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.n
                 if(est === null){
                     res.status(404).send({message: "The establishment was not found"});
                 }else{
+                    if(est.get("main_img") != "deafult.jpeg")
+                        fs.unlinkSync(dest+'/'+est.get("main_img"));
                     est.set("main_img", req.file.filename);
+                    est.save();
                     res.status(204).send();
                 }
             });

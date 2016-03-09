@@ -37,5 +37,6 @@ module.exports = function(grunt){
         }
     });
     grunt.registerTask('default', ['env:test','jshint', 'mochaTest']);
+    grunt.registerTask('test', ['env:test', 'mochaTest']);
 
 };

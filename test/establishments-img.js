@@ -43,7 +43,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Img estab', function() {
+describe.only('Img estab', function() {
     this.timeout(15000);
     var credentials = {
         "grant_type": "password",
@@ -155,6 +155,16 @@ describe('Img estab', function() {
             .end(done);
     });
 
+    it('Should updload another img and return status 204', function(done){
+        supertest(app).put('/api/establishments/1/new/image/')
+            .set('Authorization', 'Bearer '+owner_token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('name','est_profile')
+            .attach('est_profile', './test/test-images/img-2.jpg')
+            .expect(204)
+            .end(done);
+    });
+
     xit('Should return database down, status 500',function(done){
         supertest(app).put('/api/establishments/1/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
@@ -182,7 +192,7 @@ describe('Img estab', function() {
     });
 
     after('Deleting files uploaded', function(done){
-        fs.unlinkSync('./test/test-uploads/img-1.jpg');
+        fs.unlinkSync('./test/test-uploads/img-2.jpg');
         done();
     });
 

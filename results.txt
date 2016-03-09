@@ -1,15 +1,19 @@
-[31m>> [39mMocha exploded!
-[31m>> [39mTypeError: Cannot read property 'database' of undefined[31m
->> [39m    at Object.<anonymous> (C:\Users\Norman\Desktop\JustSport\test\course-schedules-test.js:18:11)[31m
->> [39m    at Module._compile (module.js:434:26)[31m
->> [39m    at Object.Module._extensions..js (module.js:452:10)[31m
->> [39m    at Module.load (module.js:355:32)[31m
->> [39m    at Function.Module._load (module.js:310:12)[31m
->> [39m    at Module.require (module.js:365:17)[31m
->> [39m    at require (module.js:384:17)[31m
->> [39m    at C:\Users\Norman\Desktop\JustSport\node_modules\mocha\lib\mocha.js:219:27[31m
->> [39m    at Array.forEach (native)[31m
->> [39m    at Mocha.loadFiles (C:\Users\Norman\Desktop\JustSport\node_modules\mocha\lib\mocha.js:216:14)[31m
+[31m>> [39mM    √ Getting access token (304ms)
+    √ Getting access token for user (237ms)
+    √ Should updload the img and return status 204 (57ms)
+    √ Passing string as id of est, should return status 400
+    √ Passing img with longer size than 500KB, should return status 500 (47ms)
+    √ Should return status 401, unauthorized. Triying to upload img without token
+    √ Should return status 403, forbbiden. Triying to upload img without owner token
+    √ Should return status 404, not found. Passing id of establishment that does not exist
+    √ Should updload another img and return status 204 (40ms)
+    - Should return database down, status 500
+
+
+  9 passing (5s)
+  1 pending
+
+es (C:\Users\Norman\Desktop\JustSport\node_modules\mocha\lib\mocha.js:216:14)[31m
 >> [39m    at MochaWrapper.run (C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\lib\MochaWrapper.js:51:15)[31m
 >> [39m    at C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\mocha-test.js:86:20[31m
 >> [39m    at capture (C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\mocha-test.js:33:5)[31m
