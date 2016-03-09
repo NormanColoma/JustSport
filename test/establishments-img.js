@@ -251,10 +251,4 @@ describe.only('Img estab', function() {
             });
         });
     });
-
-    /*after('Deleting files uploaded', function(done){
-        fs.unlinkSync('./test/test-uploads/img-2.jpg');
-        done();
-    });*/
-
 });
