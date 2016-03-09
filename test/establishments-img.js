@@ -43,7 +43,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Img estab', function() {
+describe('Img estab', function() {
     this.timeout(15000);
     var credentials = {
         "grant_type": "password",
