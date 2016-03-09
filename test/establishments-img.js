@@ -99,6 +99,20 @@ describe.only('Img estab', function() {
         }).end(done);
     });
 
+    it('Getting access token for another owner that will not be the owner of establishments', function(done){
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type" : "password",
+                "username" : "pepito@mail.com",
+                "password" : "pepin15"
+            })
+            .expect(200).expect(function(res){
+            assert(res.body.access_token);
+            another_owner_token = res.body.access_token;
+        }).end(done);
+
+    });
+
     it('Should updload the img and return status 204', function(done){
         supertest(app).put('/api/establishments/1/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
@@ -164,19 +178,66 @@ describe.only('Img estab', function() {
             .expect(204)
             .end(done);
     });
+    
 
-    xit('Should return database down, status 500',function(done){
-        supertest(app).put('/api/establishments/1/new/image/')
+    it('Should remove the img and return status 204', function(done){
+        supertest(app).delete('/api/establishments/1/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
-            .set('Content-Type', 'multipart/form-data')
-            .field('name','est_profile')
-            .attach('est_profile', './test/test-images/img-1.jpg')
-            .expect(500)
-            .expect(function(res){
-                assert.equal('Database is not running right now. Please try it back in few moments', res.body.errors[0].message);
+            .expect(204)
+            .end(done);
+    });
+
+    it('Should return status 400 when passing empty Token', function(done){
+        supertest(app).delete('/api/establishments/1/new/image/')
+            .set('Authorization', 'Bearer ')
+            .expect(401)
+            .end(done);
+    });
+
+    it('Should return status 403 when passing user Token', function(done){
+        supertest(app).delete('/api/establishments/1/new/image/')
+            .set('Authorization', 'Bearer '+user_token)
+            .expect(403).expect(function(res){
+                assert.equal('You are not authorized to perform this action', res.body.message);
             })
             .end(done);
     });
+
+    it('Should return status 403 when passing another owner Token', function(done){
+        supertest(app).delete('/api/establishments/1/new/image/')
+            .set('Authorization', 'Bearer '+another_owner_token)
+            .expect(403).expect(function(res){
+                assert.equal('You are not authorized to perform this action', res.body.message);
+            })
+            .end(done);
+    });
+
+    it('Should return status 404, when passing id of establishement that does not exist', function(done){
+        supertest(app).delete('/api/establishments/103/new/image/')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(404).expect(function(res){
+                asser.equal('The establishment was not found', res.body.message);
+            })
+            .end(done);
+    });
+
+    it('Should return status 400, when passing string as id of establishement', function(done){
+        supertest(app).delete('/api/establishments/string/new/image/')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(400).expect(function(res){
+                asser.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
+            })
+            .end(done);
+    });
+
+    it('Should return status 403, when passing id of establishment that has default img', function(done){
+        supertest(app).delete('/api/establishments/3/new/image/')
+            .set('Authorization', 'Bearer '+owner_token)
+            .expect(403).expect(function(res){
+                asser.equal('You cannot remove the deafult image', res.body.message);
+            })
+            .end(done);
+    })
 
     after('Dropping database',function(done) {
         seeder.execute({
@@ -191,9 +252,9 @@ describe.only('Img estab', function() {
         });
     });
 
-    after('Deleting files uploaded', function(done){
+    /*after('Deleting files uploaded', function(done){
         fs.unlinkSync('./test/test-uploads/img-2.jpg');
         done();
-    });
+    });*/
 
 });
