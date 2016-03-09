@@ -59,6 +59,20 @@ router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.n
     });
 });
 
+router.delete('/:id/image',authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res){
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+            if(est.get("main_img") == "deafult.jpeg")
+                res.status(403).send({message: 'You cannot remove the default image'});
+            else{
+                console.log(est.get("main_img"));
+                fs.unlinkSync(dest+'/'+est.get("main_img"));
+                est.set("main_img", "default.jpeg");
+                est.save();
+                res.status(204).send();
+            }
+    });
+});
+
 router.get('', function(req, res) {
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments",
         before = 0, prev = 'none', after = 0, next = 'none';

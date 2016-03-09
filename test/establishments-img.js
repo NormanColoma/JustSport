@@ -181,21 +181,21 @@ describe.only('Img estab', function() {
 
 
     it('Should remove the img and return status 204', function(done){
-        supertest(app).delete('/api/establishments/1/new/image/')
+        supertest(app).delete('/api/establishments/1/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(204)
             .end(done);
     });
 
     it('Should return status 400 when passing empty Token', function(done){
-        supertest(app).delete('/api/establishments/1/new/image/')
+        supertest(app).delete('/api/establishments/1/image/')
             .set('Authorization', 'Bearer ')
             .expect(401)
             .end(done);
     });
 
     it('Should return status 403 when passing user Token', function(done){
-        supertest(app).delete('/api/establishments/1/new/image/')
+        supertest(app).delete('/api/establishments/1/image/')
             .set('Authorization', 'Bearer '+user_token)
             .expect(403).expect(function(res){
                 assert.equal('You are not authorized to perform this action', res.body.message);
@@ -204,7 +204,7 @@ describe.only('Img estab', function() {
     });
 
     it('Should return status 403 when passing another owner Token', function(done){
-        supertest(app).delete('/api/establishments/1/new/image/')
+        supertest(app).delete('/api/establishments/1/image/')
             .set('Authorization', 'Bearer '+another_owner_token)
             .expect(403).expect(function(res){
                 assert.equal('You are not authorized to perform this action', res.body.message);
@@ -213,7 +213,7 @@ describe.only('Img estab', function() {
     });
 
     it('Should return status 404, when passing id of establishement that does not exist', function(done){
-        supertest(app).delete('/api/establishments/103/new/image/')
+        supertest(app).delete('/api/establishments/103/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(404).expect(function(res){
                 assert.equal('The establishment was not found', res.body.message);
@@ -222,7 +222,7 @@ describe.only('Img estab', function() {
     });
 
     it('Should return status 400, when passing string as id of establishement', function(done){
-        supertest(app).delete('/api/establishments/string/new/image/')
+        supertest(app).delete('/api/establishments/string/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
                 assert.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
@@ -231,10 +231,10 @@ describe.only('Img estab', function() {
     });
 
     it('Should return status 403, when passing id of establishment that has default img', function(done){
-        supertest(app).delete('/api/establishments/3/new/image/')
+        supertest(app).delete('/api/establishments/3/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(403).expect(function(res){
-                assert.equal('You cannot remove the deafult image', res.body.message);
+                assert.equal('You cannot remove the default image', res.body.message);
             })
             .end(done);
     });
