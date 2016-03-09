@@ -5,6 +5,8 @@ services:
   - mysql
 env:
   -NODE_ENV=travis
+  -UPLOAD_DEST=./test/test-uploads
+  -MAX_LISTENERS=0
   -DB=mysql
 before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS travis_test_database;'; fi"
