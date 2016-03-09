@@ -312,8 +312,7 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
         });
     });
 });
-router.post('/new', authController.isBearerAuthenticated, multer({ storage: storage}).single('est_profile'),
-    function(req, res) {
+router.post('/new', authController.isBearerAuthenticated, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
         if (req.body.name && req.body.desc && req.body.city && req.body.province && req.body.phone && req.body.addr && req.body.owner) {
             models.establishment.create(req.body).then(function (est) {
