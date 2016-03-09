@@ -1,18 +1,202 @@
-[31m>> [39mMocha exploded!
-[31m>> [39mTypeError: Cannot read property 'database' of undefined[31m
->> [39m    at Object.<anonymous> (C:\Users\Norman\Desktop\JustSport\test\course-schedules-test.js:18:11)[31m
->> [39m    at Module._compile (module.js:434:26)[31m
->> [39m    at Object.Module._extensions..js (module.js:452:10)[31m
->> [39m    at Module.load (module.js:355:32)[31m
->> [39m    at Function.Module._load (module.js:310:12)[31m
->> [39m    at Module.require (module.js:365:17)[31m
->> [39m    at require (module.js:384:17)[31m
->> [39m    at C:\Users\Norman\Desktop\JustSport\node_modules\mocha\lib\mocha.js:219:27[31m
->> [39m    at Array.forEach (native)[31m
->> [39m    at Mocha.loadFiles (C:\Users\Norman\Desktop\JustSport\node_modules\mocha\lib\mocha.js:216:14)[31m
->> [39m    at MochaWrapper.run (C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\lib\MochaWrapper.js:51:15)[31m
->> [39m    at C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\mocha-test.js:86:20[31m
->> [39m    at capture (C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\mocha-test.js:33:5)[31m
->> [39m    at Object.<anonymous> (C:\Users\Norman\Desktop\JustSport\node_modules\grunt-mocha-test\tasks\mocha-test.js:81:5)[31m
->> [39m    at Object.<anonymous> (C:\Users\Norman\Desktop\JustSport\node_modules\grunt\lib\grunt\task.js:264:15)[31m
->> [39m    at Object.thisTask.fn (C:\Users\Norman\Desktop\JustSport\node_modules\grunt\lib\grunt\task.js:82:16)
+
+
+  Schedule of a course
+    √ Getting access token (304ms)
+    √ Getting access token for user (243ms)
+    √ Getting access token for another owner that will not be the owner of establishments (233ms)
+    √ Getting schedule from a course that exists. Should return status 200
+    √ Getting schedule from a course that exists, limiting rows. Should return status 200
+    √ Getting schedule from a course that exists, specifying after cursor. Should return status 200
+    √ Getting schedule from a course that exists, specifying before cursor. Should return status 200
+    √ Getting schedule from a course that exists, specifying before cursor, but not limit. Should return status 400
+    √ Getting schedule from a course that exists, specifying after cursor, but not limit. Should return status 400
+    √ Getting schedule from a course that exists, limiting rows to 0. Should return status 400
+    √ Getting schedule from a course that does not exists. Should return status 404
+    √ Getting schedule from a course passing id as string. Should return status 400
+    √ Getting schedule that is not established yet from a course that exists. Should return status 404
+
+  Course
+    √ Getting access token (237ms)
+    √ Getting access token for user (236ms)
+    √ Getting access token for another owner that will not be the owner of establishments (251ms)
+    √ Adding new course of sport that is imparted in the specified establishment.Should return status 201 (85ms)
+    √ Adding new course passing invalid formats.Should return status 500
+    √ Adding new course passing empty fields.Should return status 500
+    √ Adding new course of sport that is imparted in the specified establishment without access token.Should return status 401
+    √ Adding new course of sport that is imparted in the specified establishment without permisions.Should return status 403
+    √ Adding new course without be a owner of any establishment. Should return status 403
+    √ Adding new course with a nonexistent sport.Should return status 500 (65ms)
+    √ Adding new course with a malformed JSON.Should return status 400
+    √ Getting a course that exists. Should return status 200
+    √ Getting a course that does not exist. Should return status 404
+    √ Getting a course passing id as string. Should return status 400
+    √ Updating a course that exists. Should return status 204 (56ms)
+    √ Checking the course after updated it (only info was changed). Should return status 200
+    √ Updating a course passing id as string. Should return status 400
+    √ Updating a course that does not exist. Should return status 404
+    √ Updating a course without access token. Should return status 401
+    √ Updating a course without permissions. Should return status 403
+    √ Updating a course without be the owner of establishment. Should return status 403
+    √ Deleting a course without be the owner of the establishment. Should return status 403
+    √ Deleting a course without access token. Should return status 401
+    √ Deleting a course without owner token. Should return status 403
+    √ Deleting a course passing id as string. Should return status 400
+    √ Deleting a course that does not exist. Should return status 404
+    √ Deleting a course that exists. Should return status 204 (60ms)
+
+  Establishments filtered by city and location
+    √ Getting all establishments filtered by sport and location.Should return status 200 (41ms)
+    √ Getting all establishments filtered by sport and location (without specifiying cursor, but limit).Should return status 200
+    √ Getting all establishments filtered by sport and location (specifying after cursor).Should return status 200
+    √ Getting all establishments filtered by sport and location (specifying befpre cursor).Should return status 200
+    √ Getting all establishments filtered by sport and location (specifying after cursor but not limit).Should return status 400
+    √ Getting all establishments filtered by sport and location (specifying before cursor but not limit).Should return status 400
+    √ Getting all establishments filtered by sport and location but retrieving 0.Should return status 404
+
+  Establishments
+    √ Getting access token (263ms)
+    √ Getting access token for user (240ms)
+    √ Registering new establishment. Should return status 201 (67ms)
+    √ Registering new establishment with duplicated phone. Should return status 500 (42ms)
+    √ Registering new establishment passing malformed JSON. Should return status 400
+    √ Registering new establishment passing required fields with wrong format. Should return status 500
+    √ Registering new establishment without existent owner. Should return status 500 (46ms)
+    √ Registering new establishment without being owner. Should return status 403
+    √ Deleting establishment that does not exist. Should return status 204 (140ms)
+    √ Deleting establishment that does not exits. Should return status 404
+    √ Deleting establishment without being owner. Should return status 403
+    √ Deleting establishment passing a string as id. Should return status 400
+    √ Updating establishment that exists with correct fields. Should return status 204 (80ms)
+    √ Checking out the establishment after full update.
+    √ Updating establishment with malformed JSON. Should return status 400
+    √ Updating establishment without access token. Should return status 401
+    √ Updating only certain fields. Should return status 204 (45ms)
+    √ Checking out the establishment after partil update.
+    √ Updating establishment passing a string as id. Should return status 400
+    √ Updating establishment with duplicated phone. Should return status 500 (53ms)
+    √ Getting establishments without specify cursor. Should return status 200 and the first 5 establishments
+    √ Getting establishments specifying cursor but limit. Should return status 200 and the first n establishments
+    √ Getting establishments specifying after cursor. Should return status 200 and the first n establishments
+    √ Getting establishments specifying before cursor. Should return status 200 and the first n establishments
+    √ Getting establishment that exists. Should return status 200
+    √ Getting establishment that does not exist. Should return status 404
+    √ Getting establishment passing string as id.Should return status 400
+    √ Getting all establishment from specific owner. Should return status 200
+
+  Img estab
+    √ Getting access token (263ms)
+    √ Getting access token for user (243ms)
+    √ Getting access token for another owner that will not be the owner of establishments (245ms)
+    √ Should updload the img and return status 204 (55ms)
+    √ Passing string as id of est, should return status 400
+    √ Passing img with longer size than 500KB, should return status 500 (50ms)
+    √ Should return status 401, unauthorized. Triying to upload img without token
+    √ Should return status 403, forbbiden. Triying to upload img without owner token
+    √ Should return status 404, not found. Passing id of establishment that does not exist
+    √ Should updload another img and return status 204
+    √ Should remove the img and return status 204
+    √ Should return status 400 when passing empty Token
+    √ Should return status 403 when passing user Token
+    √ Should return status 403 when passing another owner Token
+    √ Should return status 404, when passing id of establishement that does not exist
+    √ Should return status 400, when passing string as id of establishement
+    √ Should return status 403, when passing id of establishment that has default img
+
+  EstablishmentsSports
+    √ Getting all establishments where the sport is imparted.Should return status 200 (55ms)
+    √ Getting all establishments where the sport is imparted, which does not exists.Should return status 404
+    √ Getting all establishments where the sport is imparted, by passing the id as string.Should return status 400
+    √ Getting all establishments where the sport is imparted without specify cursor but limit.Should return status 200
+    √ Getting all establishments where the sport is imparted specifying after cursor.Should return status 200
+    √ Getting all establishments where the sport is imparted specifying before cursor.Should return status 200
+    √ Getting all establishments where the sport is imparted specifying cursor, but not limit.Should return status 400
+    √ Getting all establishments where the sport is imparted specifying cursor, and limit 0.Should return status 400
+    √ Getting all establishments where the sport, but got 0 recors.Should return status 404
+    √ Getting all sports imparted in the establishment.Should return status 200
+    √ Getting all sports imparted in establishment that does not exist.Should return status 404
+    √ Getting all sports imparted from establishment that is empty yet.Should return status 404
+    √ Getting all sports without specify cursor but limit. Should return status 200 and the first n sports set by the limit
+    √ Getting all sports without specify cursor but limit (0). Should return status 400
+    √ Getting all sports specifying after cursor. Should return status 200 and the first n sports
+    √ Getting all sports specifying before cursor. Should return status 200 and the first n sports
+    √ Getting all sports specifying after cursor but not limit. Should return status 400
+    √ Getting access token (249ms)
+    √ Getting access token for user (248ms)
+    √ Getting access token for another owner that will not be the owner of establishments (274ms)
+    √ Associating new sport to establishment. Should return status 204 (97ms)
+    √ Associating new sport (that does not exist) to establishment. Should return status 500
+    √ Associating new sport to establishment (that does not exist). Should return status 404
+    √ Associating new sport to establishment without owner token. Should return status 403
+    √ Associating new sport to establishment without be the owner of it. Should return status 403
+    √ Associating new sport to establishment passing string as id of it. Should return status 400
+    √ Associating new sport to establishment, without pass the sport. Should return status 400
+
+  Schedule
+    √ Getting access token (234ms)
+    √ Getting access token for user (238ms)
+    √ Getting access token for another owner that will not be the owner of establishments (295ms)
+    √ Adding new schedule to an existent course. Should return status 201 (134ms)
+    √ Adding new schedule to a course that does not exist. Should return status 404
+    √ Adding new schedule without access token. Should return status 401
+    √ Adding new schedule without owner token. Should return status 403
+    √ Adding new schedule without be the owner of the establishment. Should return status 403
+    √ Adding new schedule passing malformed JSON. Should return status 400
+    √ Adding new schedule passing invalid format. Should return status 500
+    √ Adding new schedule passing empty values. Should return status 500
+    √ Updating a schedule that exists. Should return status 204 (80ms)
+    √ Checking schedule after updated it
+    √ Updating a schedule that does not exist. Should return status 404
+    √ Updating a schedule to a course that does not exists. Should return status 404
+    √ Updating a schedule without access token. Should return status 401
+    √ Updating a schedule without be owner. Should return status 403
+    √ Updating a schedule without be a owner of the establishment. Should return status 403
+    √ Deleting a schedule that does not exist. Should return status 404
+    √ Deleting a schedule that exists but course not exists. Should return status 404
+    √ Deleting a schedule without be the owner of th establishment. Should return status 403
+    √ Deleting a schedule passing id as string. Should return status 400
+    √ Deleting a schedule that exist. Should return status 204 (57ms)
+
+  Sports
+    √ Getting access token (237ms)
+    √ Getting access token for user (241ms)
+    √ Getting access token for admin (475ms)
+    √ Creating sport that does not exist. Should return status 201 (49ms)
+    √ Creating sport that already exists. Should return status 500, unique constraint error (43ms)
+    √ Creating sport without pass its name. Should return status 400
+    √ Creating sport without valid name format. Should return status 500
+    √ Creating sport without passing empty name. Should return status 500
+    √ Creating sport without access token. Should return status 401
+    √ Creating sport without being owner. Should return status 403
+    √ Updating sport that exists. Should return status 204 (48ms)
+    √ Updating sport that does not exist. Should return status 404
+    √ Updating sport passing a string as id. Should return status 400
+    √ Updating sport with a malformed JSON. Should return status 400
+    √ Updating sport whithout an access token. Should return status 401
+    √ Updating sport without being owner. Should return status 403
+    √ Deleting sport that exists. Should return status 204 (47ms)
+    √ Deleting sport that does not exist. Should return status 404
+    √ Deleting sport without an access token. Should return status 401
+    √ Deleting sport without being admin. Should return status 403
+    √ Getting info about a sport that exists. Should return status 200 (41ms)
+    √ Getting info about a sport that does not exist. Should return status 404
+    √ Getting info about a sport passing string as id. Should return status 400
+    √ Getting sports without specify cursor. Should return status 200 and the first 5 sports (62ms)
+    √ Getting sports without specify cursor but limit. Should return status 200 and the first n sports
+    √ Getting sports specifying after cursor. Should return status 200 and the first n sports
+    √ Getting sports specifying before cursor. Should return status 200 and the first n sports
+
+  User
+    √ Creating user that does not exist already. Should return the posted user (303ms)
+    √ Creating user that already exists. Should return status 500, unique constrainr error (274ms)
+    √ Getting access token and user id (244ms)
+    √ Deleting user without being himself. Should return status 403
+    √ Deleting user that exists. Should return status 204 (60ms)
+    √ Retrieving info about user that exists. Should return status 200 (281ms)
+    √ Retrieving info about user that does not exist. Should return status 404
+    √ Creating user with invalid required fields. Should return status 500
+    √ Creating user with null fields. Should return status 500
+    √ Creating user with optional fields, but not the corrects. Should return status 500
+
+
+  179 passing (44s)
+

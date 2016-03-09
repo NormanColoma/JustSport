@@ -48,7 +48,7 @@ router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.n
                 if(est === null){
                     res.status(404).send({message: "The establishment was not found"});
                 }else{
-                    if(est.get("main_img") != "deafult.jpeg")
+                    if(est.get("main_img") != "default.jpeg")
                         fs.unlinkSync(dest+'/'+est.get("main_img"));
                     est.set("main_img", req.file.filename);
                     est.save();
@@ -61,10 +61,9 @@ router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.n
 
 router.delete('/:id/image',authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res){
     models.establishment.find({where: {id: req.params.id}}).then(function(est){
-            if(est.get("main_img") == "deafult.jpeg")
+            if(est.get("main_img") == "default.jpeg")
                 res.status(403).send({message: 'You cannot remove the default image'});
             else{
-                console.log(est.get("main_img"));
                 fs.unlinkSync(dest+'/'+est.get("main_img"));
                 est.set("main_img", "default.jpeg");
                 est.save();
