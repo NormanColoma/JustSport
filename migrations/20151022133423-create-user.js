@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'user'
       },
+      img:{
+        type: Sequelize.STRING,
+        defaultValue: 'default.jpg'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -7,6 +7,7 @@ var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
 var config = require("../config/config")[process.env.NODE_ENV];
+var fs=require("fs");
 var sequelize = new Sequelize(
     config.database,
     config.username,
@@ -26,18 +27,6 @@ var umzug = new Umzug({
     logging: false
 });
 
-var seeder = new Umzug({
-    migrations: {
-        params: [ sequelize.getQueryInterface(), Sequelize ],
-        path: "seeders/test"
-    },
-    storage: "sequelize",
-    storageOptions: {
-        sequelize: sequelize
-    },
-    logging: false
-});
-
 describe.only('User Img Upload', function() {
     this.timeout(15000);
     var credentials = {
@@ -45,8 +34,8 @@ describe.only('User Img Upload', function() {
         "username": "ua.norman@mail.com",
         "password": "adi2015"
     };
+    var user1 = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
     var token = "";
-    var other_token="";
     before('Setting database in a known state', function (done) {
         umzug.execute({
             migrations: ['20151022133423-create-user'],
@@ -58,26 +47,15 @@ describe.only('User Img Upload', function() {
         });
     });
 
-    before('Filling database', function (done) {
-        seeder.execute({
-            migrations: ['20151105165531-user-test-seeder'],
-            method: 'up'
-        }).then(function (mig) {
-            done();
-        });
-    });
-
-    it('Getting access token for user', function(done){
+    it('Creating user that does not exist already. Should return the posted user', function(done){
         supertest(app)
-            .post('/api/oauth2/token').send({
-                "grant_type" : "password",
-                "username" : "pepe@mail.com",
-                "password" : "pepito15"
-            })
-            .expect(200).expect(function(res){
-            assert(res.body.access_token);
-            token = res.body.access_token;
-        }).end(done);
+            .post('/api/users/new').send(user1)
+            .expect(201)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/users/'+res.body.uuid);
+            }).end(done);
+
     });
 
     it('Getting access token', function(done){
@@ -85,13 +63,13 @@ describe.only('User Img Upload', function() {
             .post('/api/oauth2/token').send(credentials)
             .expect(200).expect(function(res){
             assert(res.body.access_token);
-            other_token = res.body.access_token;
+            token = res.body.access_token;
         }).end(done);
 
     });
 
     it('Should return status 204, when uploading jpg file <= 500KB', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
+        supertest(app).put('/api/users/me/profile/image/')
             .set('Authorization', 'Bearer '+token)
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
@@ -101,7 +79,7 @@ describe.only('User Img Upload', function() {
     });
 
     it('Should return status 204, when uploading png file <= 500KB', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
+        supertest(app).put('/api/users/me/profile/image/')
             .set('Authorization', 'Bearer '+token)
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
@@ -111,64 +89,52 @@ describe.only('User Img Upload', function() {
     });
 
     it('Should return status 401, when trying to upload image with empty token', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
+        supertest(app).put('/api/users/me/profile/image/')
             .set('Authorization', 'Bearer ')
-            .set('Content-Type', 'multipart/form-data')
-            .field('name','user_profile')
-            .attach('user_profile', './test/test-images/img-1.png')
             .expect(401)
             .end(done);
     });
 
-    it('Should return status 403, when trying to upload image to another account', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
-            .set('Authorization', 'Bearer '+other_token)
-            .set('Content-Type', 'multipart/form-data')
-            .field('name','user_profile')
-            .attach('user_profile', './test/test-images/img-1.png')
-            .expect(403).expect(function(res){
-                assert.equal("You are not authorized to perform this action", res.body.message);
-            }).end(done);
-    });
-
     it('Should return status 500, when trying to upload image > 500KB', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
+        supertest(app).put('/api/users/me/profile/image/')
             .set('Authorization', 'Bearer '+token)
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
-            .attach('user_profile', './test/test-images/bigger.jpg')
+            .attach('user_profile', './test/test-images/bigger.jpeg')
             .expect(500).expect(function(res){
                 assert.equal("File size is too long", res.body.message);
             }).end(done);
     });
 
     it('Should return status 404, when trying to upload image without attach it, function(done)', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
+        supertest(app).put('/api/users/me/profile/image/')
+            .set('Authorization', 'Bearer '+token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('name','user_profile')
+            .expect(404).expect(function(res){
+                assert.equal("Image file was not found", res.body.message);
+             }).end(done);
+    });
+
+    it('Should return status 400, when trying to upload image with different mime type than jpg/png', function(done){
+        supertest(app).put('/api/users/me/profile/image/')
             .set('Authorization', 'Bearer '+token)
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
             .attach('user_profile', './test/test-images/text.txt')
             .expect(400).expect(function(res){
                 assert.equal("File must be jpg/png type", res.body.message);
-             }).end(done);
-    });
 
-    it('Should return status 400, when trying to upload image with different mime type than jpg/png', function(done){
-        supertest(app).put('/api/user/me/profile/image/')
-            .set('Authorization', 'Bearer '+token)
-            .expect(400).expect(function(res){
-            assert.equal("Image file was not found", res.body.message);
-        }).end(done);
+            }).end(done);
     });
 
     after('Dropping database',function(done) {
-        seeder.execute({
-            migrations: ['20151105165531-user-test-seeder'],
+        umzug.execute({
+            migrations: ['20151022133423-create-user'],
             method: 'down'
-        }).then(function (mig) {
-            umzug.down('20151022133423-create-user').then(function (migrations) {
-                done();
-            });
+        }).then(function (migrations) {
+            fs.unlinkSync("./test/test-user-uploads/img-1.png");
+            done();
         });
     });
 });

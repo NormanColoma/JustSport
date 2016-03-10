@@ -77,6 +77,9 @@ module.exports = function(sequelize, DataTypes) {
           msg: "role must match 'user' or 'owner' values"
         }
       }
+    },
+    img: {
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {
