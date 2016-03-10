@@ -27,7 +27,7 @@ var umzug = new Umzug({
     logging: false
 });
 
-describe.only('User Img Upload', function() {
+describe('User Img Upload', function() {
     this.timeout(15000);
     var credentials = {
         "grant_type": "password",
