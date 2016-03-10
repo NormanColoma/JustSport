@@ -13,7 +13,8 @@ module.exports = function(grunt){
             },
             test : {
                 NODE_ENV : 'test',
-                UPLOAD_DEST     : './test/test-uploads',
+                UPLOAD_DEST: './test/test-uploads',
+                UPLOAD_USER_DEST: './test/test-user-uploads',
                 MAX_LISTENERS: '0'
             }
         },
