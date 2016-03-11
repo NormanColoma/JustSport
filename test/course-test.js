@@ -65,7 +65,7 @@ describe('Course', function() {
     });
 
     before('Setting database in a known state: Creating', function (done) {
-        umzug.up(['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
+        umzug.up(['20151022133423-create-user','20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
             '20151106004323-create-establishmentsport', '20151108193656-create-course']).then(function (migrations) {
             done();
         });
@@ -361,7 +361,7 @@ describe('Course', function() {
             method: 'down'
         }).then(function(mig){
             umzug.down(['20151108193656-create-course','20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
-                '20151022133423-create-user']).then(function (migrations) {
+                '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         });

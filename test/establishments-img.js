@@ -60,7 +60,7 @@ describe('Img estab', function() {
                 '20151106004323-create-establishmentsport'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration', '20151106004323-create-establishmentsport']).then(function (migrations) {
+            umzug.up(['20151022133423-create-user','20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration', '20151106004323-create-establishmentsport']).then(function (migrations) {
                 done();
             });
         });
@@ -246,7 +246,7 @@ describe('Img estab', function() {
             method: 'down'
         }).then(function(mig){
             umzug.down(['20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
-                '20151022133423-create-user']).then(function (migrations) {
+                '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         });
