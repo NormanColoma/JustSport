@@ -4,6 +4,7 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -16,6 +17,11 @@ module.exports = function(grunt){
                 UPLOAD_DEST: './test/test-uploads',
                 UPLOAD_USER_DEST: './test/test-user-uploads',
                 MAX_LISTENERS: '0'
+            }
+        },
+        shell: {
+            migrate_BD: {
+                command: 'sequelize db:migrate'
             }
         },
         jshint: {
@@ -38,5 +44,5 @@ module.exports = function(grunt){
     });
     grunt.registerTask('default', ['env:test','jshint', 'mochaTest']);
     grunt.registerTask('test', ['env:test', 'mochaTest']);
-
+    grunt.registerTask('migrate BD', ['shell:migrate_BD']);
 };

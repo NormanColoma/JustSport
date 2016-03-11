@@ -41,7 +41,7 @@ describe('User Img Upload', function() {
             migrations: ['20151022133423-create-user'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up('20151022133423-create-user').then(function () {
+            umzug.up(['20151022133423-create-user', '20160311103832-add-img-user']).then(function (mig) {
                 done();
             });
         });
@@ -130,7 +130,7 @@ describe('User Img Upload', function() {
 
     after('Dropping database',function(done) {
         umzug.execute({
-            migrations: ['20151022133423-create-user'],
+            migrations: ['20160311103832-add-img-user','20151022133423-create-user'],
             method: 'down'
         }).then(function (migrations) {
             fs.unlinkSync("./test/test-user-uploads/img-1.png");

@@ -54,7 +54,7 @@ describe('Sports', function(){
             migrations: ['20151022133423-create-user', '20151016205501-sport-migration'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151016205501-sport-migration','20151022133423-create-user']).then(function(){
+            umzug.up(['20151016205501-sport-migration','20151022133423-create-user', '20160311103832-add-img-user']).then(function(){
                 seeder.up(['20151119155422-user-sport-seeder']).then(function(){
                     done();
                 });
@@ -417,7 +417,7 @@ describe('Sports', function(){
 
     after('Dropping database',function(done) {
         seeder.down(['20151119155422-user-sport-seeder']).then(function(){
-            umzug.down(['20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
+            umzug.down(['20160311103832-add-img-user','20151022133423-create-user', '20151016205501-sport-migration']).then(function (migrations) {
                 done();
             });
         });

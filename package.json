@@ -35,6 +35,7 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-mocha-test": "^0.12.7",
+    "grunt-shell": "^1.2.1",
     "mocha": "^2.4.5",
     "supertest": "^1.1.0"
   }
