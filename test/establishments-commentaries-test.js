@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Establishments commentaries', function() {
+describe('Establishments commentaries', function() {
     this.timeout(15000);
 
     var user_token = "";
