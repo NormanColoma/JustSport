@@ -41,10 +41,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isIn:{
-          args: [['Albacete', 'Alicante', 'Almería', 'Álava', 'Asturias', 'Ávila', 'Badajoz','Islas Baleares', 'Barcelona',
-            'Vizcaya', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Coruña A', 'Cuenca',
-            'Gipuzkoa', 'Girona', 'Granda', 'Guadalajara', 'Huelva', 'Huesca', 'Jaén','La Rioja','Las Palmas','León', 'Lleida', 'Lugo', 'Madrid',
-            'Málaga', 'Melilla', 'Murcia','Navarra', 'Ourense', 'Palencia','Pontevedra','Salamanca', 'Santa Cruz de Tenerife', 'Segovia',
+          args: [['Albacete', 'Alicante', 'Almerï¿½a', 'ï¿½lava', 'Asturias', 'ï¿½vila', 'Badajoz','Islas Baleares', 'Barcelona',
+            'Vizcaya', 'Burgos', 'Cï¿½ceres', 'Cï¿½diz', 'Cantabria', 'Castellï¿½n', 'Ceuta', 'Ciudad Real', 'Cï¿½rdoba', 'Coruï¿½a A', 'Cuenca',
+            'Gipuzkoa', 'Girona', 'Granda', 'Guadalajara', 'Huelva', 'Huesca', 'Jaï¿½n','La Rioja','Las Palmas','Leï¿½n', 'Lleida', 'Lugo', 'Madrid',
+            'Mï¿½laga', 'Melilla', 'Murcia','Navarra', 'Ourense', 'Palencia','Pontevedra','Salamanca', 'Santa Cruz de Tenerife', 'Segovia',
             'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Zamora', 'Zaragoza']],
           msg: 'province must match a existent spanish province'
         },
@@ -98,7 +98,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         establishment.belongsToMany(models.sport, {through: 'establishmentsports'}),
         establishment.belongsTo(models.user, {foreignKey: 'owner', as:'Owner'}),
-        establishment.hasMany(models.course,{as: 'Courses'})
+        establishment.hasMany(models.course,{as: 'Courses'}),
+        establishment.hasMany(models.commentary,{as: 'Commentaries'})
       }
     }
   });
