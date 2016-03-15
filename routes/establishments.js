@@ -429,4 +429,33 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
             res.status(400).send({message: "Json is malformed: owner field is required for updatings"});
     }
 });
+
+router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  middleware.numericalIdEstab, function(req, res) {
+    var user = models.user.getAdminId(req.get('Authorization').slice('7'));
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est === null){
+            res.status(404).send({message: "The establishment was not found"});
+        }else{
+            var commentary={user: user, text: req.body.text, idEstab: req.params.id};
+            models.commentary.create(commentary).then(function(commentary){
+                var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/" + est.id + "/commentaries/"+commentary.id;
+                res.setHeader("Location", url);
+                var links = [];
+                var link1 = {rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries/new"};
+                var link2 = {rel: 'update',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                var link3 = {rel: 'delete',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                var link4 = {rel: 'all',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                links.push([link1,link2,link3,link4]);
+                var comm = {id: commentary.id, user: commentary.user, text: commentary.text, idEstab: commentary.idEstab};
+                res.status(201).send({Commentary: comm,links: links});
+            }).catch(function (err) {
+                res.status(500).send({errors: handler.customServerError(err)});
+            });
+        }
+    });
+});
 module.exports = router;

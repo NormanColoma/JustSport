@@ -49,10 +49,11 @@ describe.only('Establishments commentaries', function() {
     before('Setting database in a known state', function (done) {
         umzug.execute({
             migrations: ['20151106004253-create-establishment', '20151022133423-create-user', '20151016205501-sport-migration',
-                '20151106004323-create-establishmentsport'],
+                '20151106004323-create-establishmentsport', '20160315113959-create-commentary'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user', '20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration', '20151106004323-create-establishmentsport']).then(function (migrations) {
+            umzug.up(['20151022133423-create-user', '20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration', '20151106004323-create-establishmentsport',
+                '20160315113959-create-commentary']).then(function (migrations) {
                 done();
             });
         });
@@ -89,9 +90,9 @@ describe.only('Establishments commentaries', function() {
             .set('Authorization', 'Bearer '+user_token)
             .expect(201)
             .expect(function(res){
-                assert.equal(res.body.text, commentary_1.text);
-                assert.equal(res.body.user, '8d75a3xa-767e-46f1-bc86-a46a0f103735');
-                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.id);
+                assert.equal(res.body.Commentary.text, commentary_1.text);
+                assert.equal(res.body.Commentary.user, '8d75a3xa-767e-46f1-bc86-a46a0f103735');
+                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.Commentary.idEstab+"/commentaries/"+res.body.Commentary.id);
             }).end(done);
 
     });
@@ -128,14 +129,14 @@ describe.only('Establishments commentaries', function() {
             .post('/api/establishments/105/commentaries/new').send(commentary_2)
             .set('Authorization', 'Bearer '+user_token)
             .expect(404).expect(function(res){
-                assert.equal(res.body.errors.message, "The establishment was not found");
+                assert.equal(res.body.message, "The establishment was not found");
             })
             .end(done);
     });
 
     it('Should return status 500, when trying to post commentary without text field', function(done){
         supertest(app)
-            .post('/api/establishments/1/commentaries/new').send(empty_commentary)
+            .post('/api/establishments/1/commentaries/new')
             .set('Authorization', 'Bearer '+user_token)
             .expect(500).expect(function(res){
                 assert.equal(res.body.errors.length, 1);
@@ -148,10 +149,10 @@ describe.only('Establishments commentaries', function() {
 
     it('Should return status 500, when trying to post empty commentary', function(done){
         supertest(app)
-            .post('/api/establishments/1/commentaries/new').send(commentary_1)
+            .post('/api/establishments/1/commentaries/new').send({text:""})
             .set('Authorization', 'Bearer '+user_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.errors.length, 1);
+                assert.equal(res.body.errors.length, 2);
                 assert.equal(res.body.errors[0].type, "Validation failed");
                 assert.equal(res.body.errors[0].field, "text");
                 assert.equal(res.body.errors[0].message, "text cannot be empty");
@@ -166,7 +167,7 @@ describe.only('Establishments commentaries', function() {
                 '20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
-            umzug.down(['20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
+            umzug.down(['20160315113959-create-commentary','20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
                 '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
