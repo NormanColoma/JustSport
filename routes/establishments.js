@@ -436,7 +436,7 @@ router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  midd
         if(est === null){
             res.status(404).send({message: "The establishment was not found"});
         }else{
-            var commentary={user: user, text: req.body.text, idEstab: req.params.id};
+            var commentary={user: user, text: req.body.text, establishmentId: req.params.id};
             models.commentary.create(commentary).then(function(commentary){
                 var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/" + est.id + "/commentaries/"+commentary.id;
                 res.setHeader("Location", url);
@@ -450,12 +450,76 @@ router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  midd
                 var link4 = {rel: 'all',
                     href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
                 links.push([link1,link2,link3,link4]);
-                var comm = {id: commentary.id, user: commentary.user, text: commentary.text, idEstab: commentary.idEstab};
+                var comm = {id: commentary.id, user: commentary.user, text: commentary.text, establishmentId: commentary.establishmentId};
                 res.status(201).send({Commentary: comm,links: links});
             }).catch(function (err) {
                 res.status(500).send({errors: handler.customServerError(err)});
             });
         }
     });
+});
+
+router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.pagination, function(req, res) {
+    var where = "", limit = 10, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"+req.params.id+"/commentaries",
+        before = 0, prev = 'none', after = 0, next = 'none';
+    if(req.query.after){
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+"?after="+req.query.after+"?limit="+limit;
+        where = {attributes: ['id', 'text', 'createdAt'], include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$gt: after}, establishmentId: req.params.id}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+ "?before="+req.query.before+"?limit="+limit;
+        where = {attributes: ['id', 'text', 'createdAt'],include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$lt: before}, establishmentId: req.params.id}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+ "?limit="+limit;
+        }
+        where = {attributes: ['id', 'text', 'createdAt'],include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$gt: after}, establishmentId: req.params.id}};
+    }
+    before = 0;
+    after = 0;
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est===null){
+            res.status(404).send({message:"The establishment was not found"});
+        }
+        else {
+            models.commentary.findAndCountAll(where).then(function (comm) {
+                if (comm.rows.length == 0) {
+                    res.status(404).send({message: "There are no commentaries added yet"});
+                } else {
+                    models.commentary.findAndCountAll().then(function (total) {
+                        if (comm.count > 0) {
+                            //Check if there are after cursors
+                            if (comm.rows.length < comm.count || comm.rows[comm.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+                                after = new Buffer(comm.rows[comm.rows.length - 1].id.toString()).toString('base64');
+                                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + +req.params.id + "/commentaries" + "?after=" + after + '&limit=' + limit;
+                            }
+                            models.commentary.min('id').then(function (min) {
+                                //Check if there are before cursors
+                                if (comm.rows[0].id > min) {
+                                    before = new Buffer(comm.rows[0].id.toString()).toString('base64');
+                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + +req.params.id + "/commentaries" + "?before=" + before + '&limit=' + limit;
+                                }
+                                var curs = {before: before, after: after};
+                                var pag = {cursors: curs, previous: prev, next: next};
+                                comm.count = total.count;
+                                res.status(200).send({
+                                    Commentaries: comm, paging: pag, links: {rel: 'self', href: url}
+                                });
+                            });
+                        } else
+                            res.status(404).send({message: "The are no commentaries added yet"});
+                    });
+                }
+            });
+        }
+    });
+
 });
 module.exports = router;

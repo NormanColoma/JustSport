@@ -23,12 +23,12 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: new Date()
     },
     user: DataTypes.UUID,
-    idEstab: DataTypes.INTEGER
+    establishmentId: DataTypes.INTEGER
     }, {
     classMethods: {
       associate: function(models) {
-        commentary.belongsTo(models.user, {foreignKey: 'owner', as:'Owner'}),
-        commentary.belongsTo(models.establishment, {foreignKey: 'id', as:'Establishment'})
+        commentary.belongsTo(models.user, {foreignKey: 'user', as:'User'}),
+        commentary.belongsTo(models.establishment, {foreignKey: 'establishmentId', as:'Establishment'})
       }
     }
   });
