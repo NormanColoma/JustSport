@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Establishments list commentaries', function() {
+describe('Establishments list commentaries', function() {
     this.timeout(15000);
     before('Setting database in a known state', function (done) {
         umzug.execute({
