@@ -92,7 +92,7 @@ describe('Establishments commentaries', function() {
             .expect(function(res){
                 assert.equal(res.body.Commentary.text, commentary_1.text);
                 assert.equal(res.body.Commentary.user, '8d75a3xa-767e-46f1-bc86-a46a0f103735');
-                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.Commentary.idEstab+"/commentaries/"+res.body.Commentary.id);
+                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.Commentary.establishmentId+"/commentaries/"+res.body.Commentary.id);
             }).end(done);
 
     });
