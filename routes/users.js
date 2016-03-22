@@ -6,7 +6,7 @@ var handler = require('../handlers/errorHandler');
 var dest = process.env.UPLOAD_USER_DEST || '../public/images/users';
 var multer = require('multer');
 var fs = require('fs');
-
+var apicache = require('apicache').options({ debug: false }).middleware;
 //Set options for Multer.js
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -63,7 +63,7 @@ router.post('/new', function(req, res) {
   });
 });
 
-router.get('/:id', function(req, res) {
+router.get('/:id', apicache('5 minutes'),function(req, res,next) {
   models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role']}).then(function (user) {
       if (user === null)
         res.status(404).send({message: "User was not found"});
