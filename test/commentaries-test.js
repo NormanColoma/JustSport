@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Commentaries', function() {
+describe.only('Commentaries', function() {
     this.timeout(15000);
 
     var user_token = "";
@@ -97,7 +97,7 @@ describe('Commentaries', function() {
 
     });
 
-    describe('Update commentaries', function(){
+    xdescribe('Update commentaries', function(){
         it('Should return status 204, when trying to update a commentary', function(done){
             supertest(app).put('/api/commentaries/1').send({text:"El comentario ha cambiado"})
                 .set('Authorization', 'Bearer '+user_token)
@@ -161,6 +161,51 @@ describe('Commentaries', function() {
                     assert.equal(res.body.errors[0].type, "Missing field");
                     assert.equal(res.body.errors[0].field, "text");
                     assert.equal(res.body.errors[0].message, "text cannot be null");
+                })
+                .end(done);
+        });
+    });
+
+    describe('Delete commentaries', function(){
+        it('Should return status 204, when trying to delete a commentary', function(done){
+            supertest(app).delete('/api/commentaries/1')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(204)
+                .end(done);
+        });
+
+
+        it('Should return status 401, when trying to delete a commentary without token', function(done){
+            supertest(app).delete('/api/commentaries/1')
+                .set('Authorization', '')
+                .expect(401)
+                .end(done);
+        });
+
+        it('Should return status 403, when trying to delete a commentary with invalid token', function(done){
+            supertest(app).delete('/api/commentaries/1')
+                .set('Authorization', 'Bearer '+another_token)
+                .expect(403).expect(function(res){
+                    assert.equal("You are not authorized to perform this action", res.body.message);
+                })
+                .end(done);
+        });
+
+        it('Should return status 400, when trying to delete a commentary when passing string as id of commentary', function(done){
+            supertest(app).delete('/api/commentaries/string')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(400).expect(function(res){
+                    assert.equal("The supplied id that specifies the commentary is not a numerical id", res.body.message);
+                })
+                .end(done);
+        });
+
+
+        it('Should return status 404, when trying to delete a commentary that does not exist', function(done){
+            supertest(app).delete('/api/commentaries/103')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(404).expect(function(res){
+                    assert.equal("The commentary was not found", res.body.message);
                 })
                 .end(done);
         });
