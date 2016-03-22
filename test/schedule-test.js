@@ -313,7 +313,7 @@ describe('Schedule', function() {
             .delete('/api/schedules/horario').send(deleted)
             .set('Authorization', 'Bearer '+another_owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, "The supplied id that specifies the schedule is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the schedule is not a numerical id");
             }).end(done);
     });
 

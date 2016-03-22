@@ -120,7 +120,7 @@ describe('Establishments commentaries', function() {
             .post('/api/establishments/string/commentaries/new').send(commentary_1)
             .set('Authorization', 'Bearer '+user_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numerical id");
             })
             .end(done);
     });

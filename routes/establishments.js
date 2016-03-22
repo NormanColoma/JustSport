@@ -490,7 +490,7 @@ router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.paginatio
         }
         else {
             models.commentary.findAndCountAll(where).then(function (comm) {
-                if (comm.rows.length == 0) {
+                if (comm.rows.length === 0) {
                     res.status(404).send({message: "There are no commentaries added yet"});
                 } else {
                     models.commentary.findAndCountAll().then(function (total) {
@@ -498,13 +498,13 @@ router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.paginatio
                             //Check if there are after cursors
                             if (comm.rows.length < comm.count || comm.rows[comm.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
                                 after = new Buffer(comm.rows[comm.rows.length - 1].id.toString()).toString('base64');
-                                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + +req.params.id + "/commentaries" + "?after=" + after + '&limit=' + limit;
+                                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id + "/commentaries" + "?after=" + after + '&limit=' + limit;
                             }
                             models.commentary.min('id').then(function (min) {
                                 //Check if there are before cursors
                                 if (comm.rows[0].id > min) {
                                     before = new Buffer(comm.rows[0].id.toString()).toString('base64');
-                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" + +req.params.id + "/commentaries" + "?before=" + before + '&limit=' + limit;
+                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id + "/commentaries" + "?before=" + before + '&limit=' + limit;
                                 }
                                 var curs = {before: before, after: after};
                                 var pag = {cursors: curs, previous: prev, next: next};
