@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Commentaries', function() {
+describe('Commentaries', function() {
     this.timeout(15000);
 
     var user_token = "";
@@ -117,7 +117,7 @@ describe.only('Commentaries', function() {
             supertest(app).put('/api/commentaries/1').send({text:"Cambio otra vez"})
                 .set('Authorization', 'Bearer '+another_token)
                 .expect(403).expect(function(res){
-                    assert.equal("You are not authorized to perform this action");
+                    assert.equal("You are not authorized to perform this action", res.body.message);
                 })
                 .end(done);
         });
@@ -126,7 +126,7 @@ describe.only('Commentaries', function() {
             supertest(app).put('/api/commentaries/string').send({text:"Cambio otra vez"})
                 .set('Authorization', 'Bearer '+another_token)
                 .expect(400).expect(function(res){
-                    assert.equal("The supplied id that specifies the commentary is not a numerical id");
+                    assert.equal("The supplied id that specifies the commentary is not a numerical id", res.body.message);
                 })
                 .end(done);
         });
@@ -136,14 +136,14 @@ describe.only('Commentaries', function() {
             supertest(app).put('/api/commentaries/103').send({text:"Cambio otra vez"})
                 .set('Authorization', 'Bearer '+another_token)
                 .expect(404).expect(function(res){
-                    assert.equal("The commentary was not found");
+                    assert.equal("The commentary was not found", res.body.message);
                 })
                 .end(done);
         });
 
         it('Should return status 500, when trying to set commentary to empty', function(done){
             supertest(app).put('/api/commentaries/1').send({text:""})
-                .set('Authorization', 'Bearer '+another_token)
+                .set('Authorization', 'Bearer '+user_token)
                 .expect(500).expect(function(res){
                     assert.equal(res.body.errors.length, 2);
                     assert.equal(res.body.errors[0].type, "Validation failed");
@@ -155,7 +155,7 @@ describe.only('Commentaries', function() {
 
         it('Should return status 500, when trying to set commentary to empty', function(done){
             supertest(app).put('/api/commentaries/1').send({text:null})
-                .set('Authorization', 'Bearer '+another_token)
+                .set('Authorization', 'Bearer '+user_token)
                 .expect(500).expect(function(res){
                     assert.equal(res.body.errors.length, 1);
                     assert.equal(res.body.errors[0].type, "Missing field");

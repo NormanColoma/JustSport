@@ -7,6 +7,7 @@ var courses = require('./routes/courses');
 var schedules = require('./routes/schedules');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var commentaries = require('./routes/commentaries');
 var clients = require('./routes/clients');
 var passport = require('passport');
 var authController = require('./routes/auth');
@@ -63,6 +64,7 @@ app.use('/api/users', users);
 app.use('/api/establishments', establishments);
 app.use('/api/courses', courses);
 app.use('/api/schedules', schedules);
+app.use('/api/commentaries', commentaries);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
