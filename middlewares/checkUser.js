@@ -42,6 +42,21 @@ exports.isEstabOwner2 = function(req,res,next){
     });
 };
 
+exports.isCommentaryOwner = function(req,res,next){
+    var user = jwt.decode(req.get('Authorization').slice('7'), global.secret).sub;
+    var id = req.params.id;
+    models.commentary.findOne({where:{id:id}}).then(function(found){
+        if(found){
+            if(user == found.user)
+                next();
+            else
+                res.status(403).send({message: "You are not authorized to perform this action"});
+        }
+        else
+            res.status(404).send({message: "The commentary was not found"});
+    });
+};
+
 exports.isOwner = function(req,res,next){
     var decodedToken = jwt.decode(req.get('Authorization').slice('7'), global.secret);
     if(decodedToken.role === 'owner') {

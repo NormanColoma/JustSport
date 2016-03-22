@@ -42,6 +42,7 @@ describe('Establishments commentaries', function() {
     this.timeout(15000);
 
     var user_token = "";
+    var another_token="";
     var commentary_1 = {text: "Primer comentario"};
     var commentary_2 = {text: "Segundo comentario"};
     var empty_commentary = {text:""};
