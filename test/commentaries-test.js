@@ -166,6 +166,51 @@ describe('Commentaries', function() {
         });
     });
 
+    describe('Delete commentaries', function(){
+        it('Should return status 204, when trying to delete a commentary', function(done){
+            supertest(app).delete('/api/commentaries/1')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(204)
+                .end(done);
+        });
+
+
+        it('Should return status 401, when trying to delete a commentary without token', function(done){
+            supertest(app).delete('/api/commentaries/1')
+                .set('Authorization', '')
+                .expect(401)
+                .end(done);
+        });
+
+        it('Should return status 403, when trying to delete a commentary with invalid token', function(done){
+            supertest(app).delete('/api/commentaries/2')
+                .set('Authorization', 'Bearer '+another_token)
+                .expect(403).expect(function(res){
+                    assert.equal("You are not authorized to perform this action", res.body.message);
+                })
+                .end(done);
+        });
+
+        it('Should return status 400, when trying to delete a commentary when passing string as id of commentary', function(done){
+            supertest(app).delete('/api/commentaries/string')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(400).expect(function(res){
+                    assert.equal("The supplied id that specifies the commentary is not a numerical id", res.body.message);
+                })
+                .end(done);
+        });
+
+
+        it('Should return status 404, when trying to delete a commentary that does not exist', function(done){
+            supertest(app).delete('/api/commentaries/103')
+                .set('Authorization', 'Bearer '+user_token)
+                .expect(404).expect(function(res){
+                    assert.equal("The commentary was not found", res.body.message);
+                })
+                .end(done);
+        });
+    });
+
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20160316105534-commentaries-test','20151105165531-user-test-seeder', '20151105165744-establishments-test-seeder'],

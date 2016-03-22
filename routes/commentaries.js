@@ -30,4 +30,21 @@ router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdC
         res.status(500).send({errors: handler.customServerError(err)});
     });
 });
+
+router.delete('/:id', authController.isBearerAuthenticated, middleware.numericalIdCommentary, user.isCommentaryOwner, function(req, res) {
+    models.commentary.destroy({
+        where: {
+            id: req.params.id,
+            user: jwt.decode(req.get('Authorization').slice('7'), global.secret).sub
+        }
+    }).then(function (rows) {
+        if (rows > 0)
+            res.status(204).send();
+        else
+            res.status(404).send({message: "The establishment was not found"});
+    }).catch(function (err) {
+        res.status(500).send({errors: handler.customServerError(err)});
+    });
+});
+
 module.exports = router;
