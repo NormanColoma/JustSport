@@ -15,6 +15,7 @@ var fs = require('fs');
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'test';
 var config    = require('../config/config.json')[env];
+var apicache = require('apicache').options({ debug: false }).middleware;
 if(process.env.DATABASE_URL){
     var sequelize = new Sequelize(process.env.DATABASE_URL,{
         dialect: 'mysql',
@@ -72,7 +73,7 @@ router.delete('/:id/image',authController.isBearerAuthenticated, middleware.nume
     });
 });
 
-router.get('', function(req, res) {
+router.get('', apicache('5 minutes'), function(req, res, next) {
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments",
         before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
@@ -122,7 +123,7 @@ router.get('', function(req, res) {
         });
     });
 });
-router.get('/:id', function(req, res) {
+router.get('/:id', apicache('5 minutes'), function(req, res, next) {
     if (req.params.id != parseInt(req.params.id, 10)){
         res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
     }else {
@@ -152,7 +153,7 @@ router.get('/:id', function(req, res) {
         });
     }
 });
-router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, function(req, res) {
+router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, apicache('5 minutes'),function(req, res, next) {
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports",
         before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
@@ -211,7 +212,7 @@ router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, fun
     });
 });
 router.get('/sport/:id/location/:location', middleware.numericalIdSport, middleware.stringLocation, middleware.pagination,
-    function(req,res){
+    apicache('5 minutes'),function(req,res,next){
         var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000"+
         "/api/establishments/sport/" + req.params.id + "/location/" + req.params.location,
             before = 0, prev = 'none', after = 0, next = 'none';
@@ -280,7 +281,7 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
             res.status(500).send({errors: handler.customServerError(err)});
         });
 });
-router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, function(req,res){
+router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, apicache('5 minutes'),function(req,res,next){
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all",
     before = 0, prev = 'none', after = 0, next = 'none', owner_id = models.user.getAdminId(req.get('Authorization').slice('7'));
     if(req.query.after){
@@ -459,7 +460,7 @@ router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  midd
     });
 });
 
-router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.pagination, function(req, res) {
+router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.pagination, apicache('5 minutes'),function(req, res,next) {
     var where = "", limit = 10, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"+req.params.id+"/commentaries",
         before = 0, prev = 'none', after = 0, next = 'none';
     if(req.query.after){
