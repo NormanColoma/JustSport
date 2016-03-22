@@ -38,7 +38,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Commentaries', function() {
+describe('Commentaries', function() {
     this.timeout(15000);
 
     var user_token = "";
@@ -97,7 +97,7 @@ describe.only('Commentaries', function() {
 
     });
 
-    xdescribe('Update commentaries', function(){
+    describe('Update commentaries', function(){
         it('Should return status 204, when trying to update a commentary', function(done){
             supertest(app).put('/api/commentaries/1').send({text:"El comentario ha cambiado"})
                 .set('Authorization', 'Bearer '+user_token)
@@ -183,7 +183,7 @@ describe.only('Commentaries', function() {
         });
 
         it('Should return status 403, when trying to delete a commentary with invalid token', function(done){
-            supertest(app).delete('/api/commentaries/1')
+            supertest(app).delete('/api/commentaries/2')
                 .set('Authorization', 'Bearer '+another_token)
                 .expect(403).expect(function(res){
                     assert.equal("You are not authorized to perform this action", res.body.message);
