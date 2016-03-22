@@ -113,7 +113,7 @@ it('Getting all establishments where the sport is imparted, by passing the id as
         .get('/api/sports/Zumba/establishments')
         .expect(400)
         .expect(function (res) {
-            assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numercial id');
+            assert.equal(res.body.message, 'The supplied id that specifies the sport is not a numerical id');
         })
         .end(done);
 });
@@ -451,7 +451,7 @@ it('Getting all establishments where the sport is imparted specifying cursor, an
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400)
             .expect(function (res) {
-                assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the establishment is not a numerical id");
             })
             .end(done);
 

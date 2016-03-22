@@ -261,7 +261,7 @@ describe('Course', function() {
             .put('/api/courses/Curso1').send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
+                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numerical id');
             }).end(done);
     });
 
@@ -333,7 +333,7 @@ describe('Course', function() {
             .delete('/api/courses/Curso')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, "The supplied id that specifies the course is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the course is not a numerical id");
             }).end(done);
     });
 

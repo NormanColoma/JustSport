@@ -127,7 +127,7 @@ describe('Img estab', function() {
         supertest(app).put('/api/establishments/string/new/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
+                assert.equal('The supplied id that specifies the establishment is not a numerical id', res.body.message);
             })
             .end(done);
     });
@@ -225,7 +225,7 @@ describe('Img estab', function() {
         supertest(app).delete('/api/establishments/string/image/')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal('The supplied id that specifies the establishment is not a numercial id', res.body.message);
+                assert.equal('The supplied id that specifies the establishment is not a numerical id', res.body.message);
             })
             .end(done);
     });

@@ -145,7 +145,7 @@ describe('Establishments list commentaries', function() {
         supertest(app)
             .get('/api/establishments/string/commentaries')
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numercial id');
+                assert.equal(res.body.message, 'The supplied id that specifies the establishment is not a numerical id');
             }).end(done);
     });
 
