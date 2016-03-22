@@ -294,6 +294,7 @@ describe('Sports', function(){
         models.sport.create(sport).then(function(sport){
             supertest(app)
                 .get('/api/sports/'+sport.id)
+                .set('x-apicache-bypass', 'true') 
                 .expect(200)
                 .expect(function (res) {
                     assert.equal(res.body.name, 'Crossfit');
@@ -306,6 +307,7 @@ describe('Sports', function(){
     it('Getting info about a sport that does not exist. Should return status 404', function(done){
         supertest(app)
             .get('/api/sports/15')
+            .set('x-apicache-bypass', 'true')
             .expect(404)
             .expect(function (res) {
                 assert.equal(res.body.message, 'The sport was not found');
@@ -328,6 +330,7 @@ describe('Sports', function(){
             {name: 'Spinning'}, {name: 'Step'}]).then(function(){
             supertest(app)
                 .get('/api/sports')
+                .set('x-apicache-bypass', 'true')
                 .expect(200)
                 .expect(function (res) {
                     assert.equal(res.body.Sports.count, 6);
@@ -353,6 +356,7 @@ describe('Sports', function(){
     it('Getting sports without specify cursor but limit. Should return status 200 and the first n sports', function(done){
         supertest(app)
             .get('/api/sports?limit=3')
+            .set('x-apicache-bypass', 'true')
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.Sports.rows.length, 3);
@@ -375,6 +379,7 @@ describe('Sports', function(){
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/sports?after='+after+'&limit=3')
+            .set('x-apicache-bypass', 'true')
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.Sports.rows.length, 3);
@@ -398,6 +403,7 @@ describe('Sports', function(){
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)
             .get('/api/sports?before='+before+'&limit=3')
+            .set('x-apicache-bypass', 'true')
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.Sports.rows.length, 3);

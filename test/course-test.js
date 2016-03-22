@@ -247,6 +247,7 @@ describe('Course', function() {
     it('Checking the course after updated it (only info was changed). Should return status 200', function(done){
         supertest(app)
             .get('/api/courses/1')
+            .set('x-apicache-bypass', 'true')
             .expect(200).expect(function(res){
                 assert.equal(JSON.stringify(res.body.Sport), JSON.stringify(sport));
                 assert.equal(JSON.stringify(res.body.Establishment), JSON.stringify(est));
