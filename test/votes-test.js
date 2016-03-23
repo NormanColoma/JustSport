@@ -41,7 +41,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe('Votes', function() {
+describe.only('Votes', function() {
     this.timeout(15000);
 
     var user_token = "";
@@ -82,6 +82,20 @@ describe('Votes', function() {
             .expect(200).expect(function (res) {
             assert(res.body.access_token);
             user_token = res.body.access_token;
+        }).end(done);
+
+    });
+
+    it('Getting access token for user', function (done) {
+        supertest(app)
+            .post('/api/oauth2/token').send({
+                "grant_type": "password",
+                "username": "ua.norman@mail.com",
+                "password": "adi2015"
+            })
+            .expect(200).expect(function (res) {
+            assert(res.body.access_token);
+            another_token = res.body.access_token;
         }).end(done);
 
     });
@@ -145,6 +159,25 @@ describe('Votes', function() {
 
     });
 
+    describe('Getting all votes from establishment',function(){
+        it('Should return status 201 when posting another vote', function(done){
+            supertest(app)
+                .post('/api/establishments/1/votes/new')
+                .set('Authorization', 'Bearer '+another_token)
+                .expect(201)
+                .end(done);
+        });
+
+        it('Should return 2 votes from the 1 establishment in the collection', function(done){
+            supertest(app)
+                .get('/api/establishments/1')
+                .expect(200)
+                .expect(function(res){
+                    assert.equal(res.body.Votes.length, 2);
+                })
+                .end(done);
+        });
+    });
     after('Dropping database',function(done) {
         seeder.execute({
             migrations: ['20151105165531-user-test-seeder', '20151105165744-establishments-test-seeder'],
