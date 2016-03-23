@@ -41,7 +41,7 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Votes', function() {
+describe('Votes', function() {
     this.timeout(15000);
 
     var user_token = "";
@@ -52,10 +52,11 @@ describe.only('Votes', function() {
 
     before('Setting database in a known state', function (done) {
         umzug.execute({
-            migrations: ['20151106004253-create-establishment', '20151022133423-create-user', '20160315113959-create-commentary'],
+            migrations: ['20160323111436-create-vote','20151106004253-create-establishment', '20151022133423-create-user', '20160315113959-create-commentary'],
             method: 'down'
         }).then(function (migrations) {
-            umzug.up(['20151022133423-create-user', '20160311103832-add-img-user', '20151106004253-create-establishment']).then(function (migrations) {
+            umzug.up(['20151022133423-create-user', '20160311103832-add-img-user', '20151106004253-create-establishment',
+                '20160323111436-create-vote']).then(function (migrations) {
                 done();
             });
         });
@@ -96,13 +97,16 @@ describe.only('Votes', function() {
                 }).end(done);
         });
 
-        it('Should return status 400 when trying to vote the same establishment', function(done){
+        it('Should return status 500 when trying to vote the same establishment', function(done){
             supertest(app)
                 .post('/api/establishments/1/votes/new')
                 .set('Authorization', 'Bearer '+user_token)
-                .expect(400)
+                .expect(500)
                 .expect(function(res){
-                    assert.equal(res.body.message, 'You have already voted this establishment');
+                    assert.equal(res.body.errors.length, 1);
+                    assert.equal(res.body.errors[0].type, "Duplicated entry");
+                    assert.equal(res.body.errors[0].field, "PRIMARY");
+                    assert.equal(res.body.errors[0].message, "The value: '8d75a3xa-767e-46f1-bc86-a46a0f103735-1' is already taken");
                 }).end(done);
         });
 
@@ -116,7 +120,7 @@ describe.only('Votes', function() {
             supertest(app)
                 .post('/api/establishments/1/votes/new')
                 .set('Authorization', 'Bearer ')
-                .expect(400).end(done);
+                .expect(401).end(done);
         });
 
         it('Should return status 400 when trying to vote, passing string as id of establishment', function(done){
@@ -146,7 +150,7 @@ describe.only('Votes', function() {
             migrations: ['20151105165531-user-test-seeder', '20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
-            umzug.down(['20151106004253-create-establishment',
+            umzug.down(['20160323111436-create-vote','20151106004253-create-establishment',
                 '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
