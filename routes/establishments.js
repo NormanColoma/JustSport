@@ -521,6 +521,28 @@ router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.paginatio
             });
         }
     });
+});
 
+router.post('/:id/votes/new', authController.isBearerAuthenticated,  middleware.numericalIdEstab, function(req, res) {
+    var user = models.user.getAdminId(req.get('Authorization').slice('7'));
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est === null){
+            res.status(404).send({message: "The establishment was not found"});
+        }else{
+            sequelize.query("INSERT INTO votes (user,establishmentId) VALUES ('"+user+"',"+req.params.id+")",
+            { type: sequelize.QueryTypes.INSERT}).then(function(result){
+                var links = [];
+                var link1 = {rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/votes/new"};
+                var link4 = {rel: 'all',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/votes"};
+                links.push([link1,link4]);
+                var vote = {user: user, establishmentId: req.params.id};
+                res.status(201).send({Vote: vote,links: links});
+            }).catch(function (err) {
+                res.status(500).send({errors: handler.customServerError(err)});
+            });
+        }
+    });
 });
 module.exports = router;
