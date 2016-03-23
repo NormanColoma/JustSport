@@ -20,8 +20,11 @@ module.exports = function(grunt){
             }
         },
         shell: {
-            migrate_BD: {
+            migrate_DB: {
                 command: 'sequelize db:migrate'
+            },
+            seed_DB:{
+                command: 'sequelize db:seed:all'
             }
         },
         jshint: {
@@ -44,5 +47,6 @@ module.exports = function(grunt){
     });
     grunt.registerTask('default', ['env:test','jshint', 'mochaTest']);
     grunt.registerTask('test', ['env:test', 'mochaTest']);
-    grunt.registerTask('migrate BD', ['shell:migrate_BD']);
+    grunt.registerTask('migrate DB', ['shell:migrate_DB']);
+    grunt.registerTask('seed DB', ['shell:seed_DB']);
 };

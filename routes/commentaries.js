@@ -13,7 +13,7 @@ var user = require('../middlewares/checkUser');
 var fs = require('fs');
 //Set this to use raw queries
 var Sequelize = require('sequelize');
-var env       = process.env.NODE_ENV  || 'test';
+var env       = process.env.NODE_ENV  || 'development';
 var config    = require('../config/config.json')[env];
 
 router.put('/:id', authController.isBearerAuthenticated, middleware.numericalIdCommentary, user.isCommentaryOwner, function(req, res) {

@@ -1,20 +1,20 @@
 #JustSport 
 
-JustSport es un aplicaicÛn diseÒada para facilitar la difusiÛn de los gimnasios, centros deportivos, y cualquier centro de dicho de ·mbito.
-Con ella podr·s anunciarte y facilitar a los usuarios, toda la informaciÛn relativa a las clases y actividades deportivas que ofertas. La 
-aplicaciÛn expone su propia API Rest.
+JustSport es un aplicaic√≥n dise√±ada para facilitar la difusi√≥n de los gimnasios, centros deportivos, y cualquier centro de dicho de √°mbito.
+Con ella podr√°s anunciarte y facilitar a los usuarios, toda la informaci√≥n relativa a las clases y actividades deportivas que ofertas. La
+aplicaci√≥n expone su propia API Rest.
 
-#GuÌa para desarrolladores 
+#Gu√≠a para desarrolladores
 
-A continuaciÛn, se proporcionar· una pequeÒa guÌa para los desarrolladores y cualquier persona que quiera hacer uso de ella. JustSport est·
-en estado de desarollo, por lo que la documentaciÛn se ir· actualizando a medida que se vayan incorporando nuevas caracterÌsitcas, o se sufran 
+A continuaci√≥n, se proporcionar√° una peque√±a gu√≠a para los desarrolladores y cualquier persona que quiera hacer uso de ella. JustSport est√°
+en estado de desarollo, por lo que la documentaci√≥n se ir√° actualizando a medida que se vayan incorporando nuevas caracter√≠sitcas, o se sufran
 modificaciones.
 
 ##API
 
 1. [Esquema](#esquema) 
-2. [PaginaciÛn](#paginaciÛn)
-3. [AutenticaciÛn](#autenticaciÛn) 
+2. [Paginaci√≥n](#paginaci√≥n)
+3. [Autenticaci√≥n](#autenticaci√≥n)
 4. [Headers](#headers)
 4. [Hipermedia](#hipermedia) 
 5. [Errores](#errores) 
@@ -24,6 +24,8 @@ modificaciones.
 9. [Establecimientos](#establecimientos) 
 10. [Cursos](#cursos) 
 11. [Horario](#horario)
+12. [Comentarios](#comentarios)
+13. [Votos](#votos)
 
 
 ###Esquema 
@@ -31,38 +33,38 @@ modificaciones.
 Todo el acceso a la API se hace bajo HTTPS. Todos los datos son enviados y recibidos en formato JSON.
 
 
-###PaginaciÛn 
+###Paginaci√≥n
 
-Todos los endpoints que apunten a la recopilaciÛn de colecciones, hacen uso de paginaciÛn mediante cursores. Por defecto, la paginaciÛn est· limitada a 5 elementos, pero 
-se puede establecer el n˙mero que se crea conveniente:  
+Todos los endpoints que apunten a la recopilaci√≥n de colecciones, hacen uso de paginaci√≥n mediante cursores. Por defecto, la paginaci√≥n est√° limitada a 5 elementos, pero
+se puede establecer el n√∫mero que se crea conveniente:
 
-**_api/sports?limit=2:_** Mediante el par·metro limit, se establece el lÌmite de la paginaciÛn. 
+**_api/sports?limit=2:_** Mediante el par√°metro limit, se establece el l√≠mite de la paginaci√≥n.
 
-El uso de los cursores ser· de la siguiente forma: 
+El uso de los cursores ser√° de la siguiente forma:
 
-**_api/sports?after=Mg==&limit=2:_** Mediante el par·metro after, se especifica, que la informaciÛn de la colecciÛn, comenzar· tras el elemento "after".
+**_api/sports?after=Mg==&limit=2:_** Mediante el par√°metro after, se especifica, que la informaci√≥n de la colecci√≥n, comenzar√° tras el elemento "after".
 
-**_api/sports?before=Mg==&limit=2:_** Mediante el par·metro before, se especifica, que la informaciÛn de la colecciÛn, comenzar· tras el elemento "before".
+**_api/sports?before=Mg==&limit=2:_** Mediante el par√°metro before, se especifica, que la informaci√≥n de la colecci√≥n, comenzar√° tras el elemento "before".
 
 
-####AutenticaciÛn 
+####Autenticaci√≥n
 
-Muchas de las rutas est·n protegidas. La autenticaciÛn de la aplicaciÛn se maneja mediante OAuth2. Es las prÛximas versiones se especificar· como hacer 
-uso de la autenticaciÛn en m·s detalle. 
+Muchas de las rutas est√°n protegidas. La autenticaci√≥n de la aplicaci√≥n se maneja mediante OAuth2. Es las pr√≥ximas versiones se especificar√° como hacer
+uso de la autenticaci√≥n en m√°s detalle.
 
-Por el momento, y tras estar registrado, basta con hacer una peticiÛn al siguiente endpoint: 
+Por el momento, y tras estar registrado, basta con hacer una petici√≥n al siguiente endpoint:
 
 ```javascript
 /api/oauth2/token?username=ua.norman@gmail.com&password=norman2015&grant_type=password&client_id=2xa001za-78b3-4f38-9376-e2dd88b7c682
 ```
 
-El par·metro "client_id" no es un par·metro obligatorio, pero por defecto, en caso de usarlo, se usar· el del cliente oficial (el cual est· indicado en el ejemplo).
-La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicaciÛn oficial.
+El par√°metro "client_id" no es un par√°metro obligatorio, pero por defecto, en caso de usarlo, se usar√° el del cliente oficial (el cual est√° indicado en el ejemplo).
+La API REST corre sobre el protocolo HTTPS, por lo que no se ha de ser temeroso a la hora de introducir el usuario y password en la aplicaci√≥n oficial.
 
 
 ###Headers 
 
-Puesto que la API requiere autenticaciÛn, como ya se ha comentado, se necesitar· enviar en cada peticiÛn el header *Authorization*
+Puesto que la API requiere autenticaci√≥n, como ya se ha comentado, se necesitar√° enviar en cada petici√≥n el header *Authorization*
 
 *Authorization* 
 Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmItYjg1YS0yMTEyNjllYjc4MTUiLCJleHAiOjE0NDc3NTQyNDE1MzIsInJvbGUiOiJvd25lciJ9.8VkHV8Q5pW0aJRJyTdMJ0dHn2zj7jWb7WIwDsq1xeNc
@@ -70,8 +72,8 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNmI0MDhlMy1iMWJjLTRhZmIt
 
 ###Hipermedia 
 
-Se ha provisto a la API de hipermedia, por lo que en el mayorÌa de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto. 
-La hipermedia a˙n est· por especificar completamente, y sufrir· fuertes modificaciones. 
+Se ha provisto a la API de hipermedia, por lo que en el mayor√≠a de endpoints, se puede ver como seguir interactuando con la API a partir de ese punto.
+La hipermedia a√∫n est√° por especificar completamente, y sufrir√° fuertes modificaciones.
 
 ```json
 "links": [
@@ -96,7 +98,7 @@ recurso actual.
 
 Nos podemos encontrar ante los siguientes errores:
 
-####Enviar un JSON con falta de campos. Devolver· una respuesta con cÛdigo *400 Bad Request* 
+####Enviar un JSON con falta de campos. Devolver√° una respuesta con c√≥digo *400 Bad Request*
 
 Si enviamos un JSON con falta de campos, obtendremos el siguiente error, ajustado al tipo de recurso que hayamos intentado consumir:
 
@@ -106,9 +108,9 @@ Si enviamos un JSON con falta de campos, obtendremos el siguiente error, ajustad
 }
 ```
 
-####Acceder a un recurso proporcionando una id no n˙merica. Devolver· una respuesta con cÛdigo *400 Bad Request* 
+####Acceder a un recurso proporcionando una id no n√∫merica. Devolver√° una respuesta con c√≥digo *400 Bad Request*
 
-Para los recursos, en los cuales se deba proporcionar la id, y esta no sea numÈrica, devolver· la siguiente respuesta: 
+Para los recursos, en los cuales se deba proporcionar la id, y esta no sea num√©rica, devolver√° la siguiente respuesta:
 
 ```json
 {
@@ -116,9 +118,9 @@ Para los recursos, en los cuales se deba proporcionar la id, y esta no sea numÈr
 }
 ```
 
-####Establecer el lÌmite de la paginaciÛn a 0. Devolver· una respuesta con cÛdigo *400 Bad Request* 
+####Establecer el l√≠mite de la paginaci√≥n a 0. Devolver√° una respuesta con c√≥digo *400 Bad Request*
 
-Al intentar acceder a una colecciÛn, podemos establecer el lÌmite de la misma, si dicho lÌmite es establecido a 0, devolver· la siguiente respuesta: 
+Al intentar acceder a una colecci√≥n, podemos establecer el l√≠mite de la misma, si dicho l√≠mite es establecido a 0, devolver√° la siguiente respuesta:
 
 ```json
 {
@@ -126,9 +128,9 @@ Al intentar acceder a una colecciÛn, podemos establecer el lÌmite de la misma, s
 }
 ```
 
-####Usar paginaciÛn con cursores sin establecer un lÌmite para los mismos. Devolver· una respuesta con cÛdigo *400 Bad Request* 
+####Usar paginaci√≥n con cursores sin establecer un l√≠mite para los mismos. Devolver√° una respuesta con c√≥digo *400 Bad Request*
 
-Al intentar acceder a una colecciÛn especificando los cursores, es obligatorio adem·s, especificar el lÌmite para los mismos. En caso de no hacerlo: 
+Al intentar acceder a una colecci√≥n especificando los cursores, es obligatorio adem√°s, especificar el l√≠mite para los mismos. En caso de no hacerlo:
 
 ```json
 {
@@ -136,7 +138,7 @@ Al intentar acceder a una colecciÛn especificando los cursores, es obligatorio a
 }
 ```
 
-####Enviar una peticiÛn con autorizaciÛn, sin tener permisos para dicho recurso. Devolver· una respuesta con cÛdigo *403 Forbidden*
+####Enviar una petici√≥n con autorizaci√≥n, sin tener permisos para dicho recurso. Devolver√° una respuesta con c√≥digo *403 Forbidden*
 
 Ciertos recursos, solo pueden ser creados, modificados, o eliminados, por cuentas con privilegios elevados (propietarios), o por los propios creadores del recurso.
 
@@ -146,11 +148,11 @@ Ciertos recursos, solo pueden ser creados, modificados, o eliminados, por cuenta
 }
 ```
 
-####Errores relativos a operaciones no permitidas. Devolver· una respuesta con cÛdigo *500 Internal Server Error*
+####Errores relativos a operaciones no permitidas. Devolver√° una respuesta con c√≥digo *500 Internal Server Error*
 
-En ocasiones podemos intentar realizar operaciones que no son posibles, como la creaciÛn de un recurso ˙nico (como podrÌa ser un email). El envÌo de valores
-no permitidos para un cierto campo (como podrÌa ser enviar un literal en un campo de tipo integer). Intentar relacionar a un recurso, a otro que no existe. O
-que la base de datos estÈ caÌda por cualquier problema en el servidor. Ante este tipo de errores, nos encontraremos con la siguiente respuesta: 
+En ocasiones podemos intentar realizar operaciones que no son posibles, como la creaci√≥n de un recurso √∫nico (como podr√≠a ser un email). El env√≠o de valores
+no permitidos para un cierto campo (como podr√≠a ser enviar un literal en un campo de tipo integer). Intentar relacionar a un recurso, a otro que no existe. O
+que la base de datos est√° ca√≠da por cualquier problema en el servidor. Ante este tipo de errores, nos encontraremos con la siguiente respuesta:
 
 ```json
 {
@@ -164,39 +166,39 @@ que la base de datos estÈ caÌda por cualquier problema en el servidor. Ante este
 }
 ```
 
-| Error                               | DescripciÛn del error                                                                                                                         |
+| Error                               | Descripci√≥n del error                                                                                                                         |
 | :-----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|
-| Missing field                       | Significa que uno de los campos obligatorios, no est· siendo enviado                                                                          |
-| Validation failed                   | Significa que alguna validaciÛn para alg˙n campo, no est· pasando, puesto que no se est· cumpliendo                                           |
-| Duplicated entry                    | Significa que alg˙n recurso existente, ya tiene establecido el valor ˙nico, que estamos intentado establecer a otro recurso                   |
+| Missing field                       | Significa que uno de los campos obligatorios, no est√° siendo enviado                                                                          |
+| Validation failed                   | Significa que alguna validaci√≥n para alg√∫n campo, no est√° pasando, puesto que no se est√° cumpliendo                                           |
+| Duplicated entry                    | Significa que alg√∫n recurso existente, ya tiene establecido el valor √∫nico, que estamos intentado establecer a otro recurso                   |
 | Inexistent reference                | Signfica que la referencia que estamos intentando establecer a un recurso a fallado, puesto que dicho recurso al que se referencia, no existe |
-| Database down                       | Significa que la base de datos est· caÌda temporalmente. Esto se debe a problemas internos con el servidor.
+| Database down                       | Significa que la base de datos est√° ca√≠da temporalmente. Esto se debe a problemas internos con el servidor.
 
 
 
 ###Usuarios
 
-Las cuentas de usuario pemitir·n tener un nivel de privilegios distintos en funciÛn del grado de la cuenta, estas pueden ser: 
+Las cuentas de usuario pemitir√°n tener un nivel de privilegios distintos en funci√≥n del grado de la cuenta, estas pueden ser:
 
 1. Usuario 
 2. Propietario
-3. Admin (No podr· ser creada)
+3. Admin (No podr√° ser creada)
 
 ####POST api/users/new
 
-Permite al usuario registrarse. Por defecto los usuarios ser·n del tipo "usuario". Pero este valor se puede establecer tambiÈn a
+Permite al usuario registrarse. Por defecto los usuarios ser√°n del tipo "usuario". Pero este valor se puede establecer tambi√©n a
 "owner" para conseguir los privilegios que este rol otorga. El campo que establece el nivel de privilegios es "role". Devuelve el usuario 
-creado si ha la operaciÛn ha tenido Èxito. 
+creado si ha la operaci√≥n ha tenido √©xito.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/users/new*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol       |
+| Formato de Respuesta | Autenticaci√≥n | Rol       |
 | ---------------------|:-------------:| :--------:|
-| JSON                 | No            | P˙blico   |
+| JSON                 | No            | P√∫blico   |
 
 
 #####Ejemplo del Resultado
@@ -214,25 +216,25 @@ creado si ha la operaciÛn ha tenido Èxito.
 
 ####GET api/users/:id
 
-Obtiene la informaciÛn del usuario especificado. 
+Obtiene la informaci√≥n del usuario especificado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/users/:id*
 
-#####Par·metros 
+#####Par√°metros
 
-**id:**      La id del usuario el cual queremos obtener la informaciÛn.
+**id:**      La id del usuario el cual queremos obtener la informaci√≥n.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol       |
+| Formato de Respuesta | Autenticaci√≥n | Rol       |
 | ---------------------|:-------------:| :--------:|
-| JSON                 | No            | P˙blico   |
+| JSON                 | No            | P√∫blico   |
 
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET 
 *https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815*
@@ -250,29 +252,29 @@ GET
 }
 ```
 
-El password del usuario se preserva, y no se incluye en la respuesta (aunque sea este el que est· realizando la peticiÛn)
+El password del usuario se preserva, y no se incluye en la respuesta (aunque sea este el que est√© realizando la petici√≥n)
 
 ####DELETE api/users/:id
 
-Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuestiÛn. Devuelve el 
-estado 204 en caso de Èxito de la operaciÛn.
+Permite al usuario dar de baja su cuenta. Se requiere ser el propietario de la cuenta a eliminar en cuesti√≥n. Devuelve el 
+estado 204 en caso de √©xito de la operaci√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/users/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del usuario el cual queremos obtener la informaciÛn.
+**id:**      La id del usuario el cual queremos obtener la informaci√≥n.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol       |
+| Formato de Respuesta | Autenticaci√≥n | Rol       |
 | ---------------------|:-------------:| :--------:|
-| JSON                 | No            | P˙blico   |
+| JSON                 | No            | P√∫blico   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 DELETE 
 *https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815*
@@ -280,24 +282,24 @@ DELETE
 
 ###Clientes
 
-Los clientes son necesarios para poder hacer uso de la API desde una aplicaciÛn externa a la oficial. Necesitar·s estar registrado en la misma, antes
+Los clientes son necesarios para poder hacer uso de la API desde una aplicaci√≥n externa a la oficial. Necesitar√°s estar registrado en la misma, antes
 de poder crear un Cliente.
 
 ####POST api/clients/new
 
-Crea un nuevo cliente asociado a un usuario. Este cliente es ˙nico. Devolver· la informaciÛn del cliente creado.
+Crea un nuevo cliente asociado a un usuario. Este cliente es √∫nico. Devolver√° la informaci√≥n del cliente creado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/clients/new*
 
-#####InformaciÛn del Recurso
+#####informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol       |
+| Formato de Respuesta | Autenticaci√≥n | Rol       |
 | ---------------------|:-------------:| :--------:|
-| JSON                 | SÌ            | Usuario   |
+| JSON                 | S√≠            | Usuario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 POST
 *https://localhost:3000/api/users/new* 
@@ -324,24 +326,24 @@ POST
 
 ####GET api/clients/:user_id
 
-Devuelve una colecciÛn de los clientes que pertenecen al usuario
+Devuelve una colecci√≥n de los clientes que pertenecen al usuario
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/clients/:user_id*
 
-#####Par·metros 
+#####Par√°metros 
 
-**user_id:**      La id del usuario del cual se quiere obtener la colecciÛn de clientes.
+**user_id:**      La id del usuario del cual se quiere obtener la colecci√≥n de clientes.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol       |
+| Formato de Respuesta | Autenticaci√≥n | Rol       |
 | ---------------------|:-------------:| :--------:|
-| JSON                 | SÌ            | Usuario   |
+| JSON                 | S√≠            | Usuario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815* 
@@ -365,20 +367,20 @@ GET
 
 ####POST api/sports/new
 
-Permite al usuario registrar un nuevo deporte. Este no va vinculado de forma directa a ning˙n establecimiento, ya que los deportes 
-poseen muchos establecimientos y viceversa. Se establece una relaciÛn N:M entre ellos. Devolver· el recurso creado.
+Permite al usuario registrar un nuevo deporte. Este no va vinculado de forma directa a ning√∫n establecimiento, ya que los deportes 
+poseen muchos establecimientos y viceversa. Se establece una relaci√≥n N:M entre ellos. Devolver√° el recurso creado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/new*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 POST
 *https://localhost:3000/api/sports/new* 
@@ -416,30 +418,30 @@ POST
 
 ####GET api/sports
 
-Devuelve la colecciÛn de todos los deportes registrados en la API.
+Devuelve la colecci√≥n de todos los deportes registrados en la API.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/*
 
-#####Par·metros 
+#####Par√°metros 
 
-**limit:**      El n˙mero de deportes que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de deportes que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte especificado (hacia delante).
+**after:**      El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte especificado (hacia delante).
 *opcional*
 
-**before:**     El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte especificado (hacia atr·s).
+**before:**     El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/sports/* 
@@ -483,23 +485,23 @@ GET
 
 ####GET api/sports/:id
 
-Devuelve la informaciÛn del deporte especificado.
+Devuelve la informaci√≥n del deporte especificado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del deporte el cual queremos obtener la informaciÛn.
+**id:**      La id del deporte el cual queremos obtener la informaci√≥n.
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/sports/2* 
@@ -528,34 +530,34 @@ GET
 
 ####GET api/sports/:id/establishment
 
-Devuelve la colecciÛn de todos los establecimientos, los cuales tienen asociados dicho deporte. De cada establecimiento, se devolver· tambiÈn
-la informaciÛn p˙blica de su propietario.
+Devuelve la colecci√≥n de todos los establecimientos, los cuales tienen asociados dicho deporte. De cada establecimiento, se devolver√° tambi√©n
+la informaci√≥n p√∫blica de su propietario.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/:id/establishemnts*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del deporte el cual queremos obtener la colecciÛn de establecimientos.
+**id:**      La id del deporte el cual queremos obtener la colecci√≥n de establecimientos.
 *obligatorio* 
 
-**limit:**      El n˙mero de establecimientos que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de establecimientos que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte especificado (hacia delante).
+**after:**      El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte especificado (hacia delante).
 *opcional*
 
-**before:**     El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte especificado (hacia atr·s).
+**before:**     El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/sports/1/establishments* 
@@ -573,14 +575,14 @@ GET
         "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
         "city": "San Vicente del Raspeig",
         "province": "Alicante",
-        "addr": "Calle San Franciso n∫15",
+        "addr": "Calle San Franciso n¬∫15",
         "phone": "965660327",
         "website": "http://wwww.gymatope.es",
         "main_img": "atope.jpeg",
         "Owner": {
           "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
           "name": "Norman",
-          "lname": "Coloma GarcÌa",
+          "lname": "Coloma Garc√≠a",
           "email": "ua.norman@gmail.com",
           "gender": "male"
         }
@@ -591,14 +593,14 @@ GET
         "desc": "Gimnasio muy acondicionado y en perfecto estado.",
         "city": "Santa Pola",
         "province": "Alicante",
-        "addr": "Calle Falsa n∫34",
+        "addr": "Calle Falsa n¬∫34",
         "phone": "965662347",
         "website": "http://wwww.noraygym.com",
         "main_img": "noray.jpeg",
         "Owner": {
           "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
           "name": "Norman",
-          "lname": "Coloma GarcÌa",
+          "lname": "Coloma Garc√≠a",
           "email": "ua.norman@gmail.com",
           "gender": "male"
         }
@@ -623,25 +625,25 @@ GET
 
 ####PUT api/sports/:id
 
-Actualiza la informaciÛn del deporte especificado mediante su id. Se requiere una cuenta con un nivel de propietario. Devuelve el 
-estado 204 en caso de Èxito de la operaciÛn.
+Actualiza la informaci√≥n del deporte especificado mediante su id. Se requiere una cuenta con un nivel de propietario. Devuelve el 
+estado 204 en caso de √©xito de la operaci√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del deporte el cual queremos modificar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 PUT
 *https://localhost:3000/api/sports/3*
@@ -655,26 +657,26 @@ PUT
 
 ####DELETE api/sports/:id
 
-Elimina el deporte especificado mediante su id. Con intenciÛn de que no se puedan llevar a cabo acciones malintencionadas, y que cualquier usuario
-con privilegios de propietario pueda eliminar un deporte (ya que recordemos que los deportes no pertenecen a ning˙n usuario especÌfico), esta operaciÛn
-solo est· permitida a usuarios con privilegios de administrador Devuelve el estado 204 en caso de Èxito de la operaciÛn.
+Elimina el deporte especificado mediante su id. Con intenci√≥n de que no se puedan llevar a cabo acciones malintencionadas, y que cualquier usuario
+con privilegios de propietario pueda eliminar un deporte (ya que recordemos que los deportes no pertenecen a ning√∫n usuario espec√≠fico), esta operaci√≥n
+solo est√° permitida a usuarios con privilegios de administrador Devuelve el estado 204 en caso de √©xito de la operaci√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/sports/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del deporte el cual queremos modificar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Administrador |
+| JSON                 | S√≠            | Administrador |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 DELETE
 *https://localhost:3000/api/sports/3*
@@ -684,22 +686,22 @@ DELETE
 
 ####POST api/establishments/new
 
-Permite al usuario registrar un nuevo establecimeinto. Un establecimiento posee muchos deportes, pero recordamos que la relaciÛn
-entre ambos es N:M, de forma que un establecimiento contendr· muchos deportes, pero un deporte pertenecer· a m·s de un establecimiento. Con esto se pretende conseguir
-una mayor coperaciÛn por parte de los clientes que hagan uso de la API. Devolver· el establecimiento creado en caso de Èxito.
+Permite al usuario registrar un nuevo establecimeinto. Un establecimiento posee muchos deportes, pero recordamos que la relaci√≥n
+entre ambos es N:M, de forma que un establecimiento contendr√° muchos deportes, pero un deporte pertenecer√° a m√°s de un establecimiento. Con esto se pretende conseguir
+una mayor coperaci√≥n por parte de los clientes que hagan uso de la API. Devolver√° el establecimiento creado en caso de √©xito.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/new*
 
 
-#####InformaciÛn del Recurso
+#####informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 POST
 *https://localhost:3000/api/establishemnts/new* 
@@ -753,33 +755,33 @@ POST
 
 ####GET api/establishments
 
-Devuelve la colecciÛn de todos los establecimientos, registrados en la API.
+Devuelve la colecci√≥n de todos los establecimientos, registrados en la API.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del establecimiento el cual queremos obtener la colecciÛn de establecimientos.
+**id:**      La id del establecimiento el cual queremos obtener la colecci√≥n de establecimientos.
 *obligatorio* 
 
-**limit:**      El n˙mero de establecimientos que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de establecimientos que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte establecimeiento  (hacia delante).
+**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte establecimeiento  (hacia delante).
 *opcional*
 
-**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del establecimeiento  especificado (hacia atr·s).
+**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del establecimeiento  especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/establishments* 
@@ -797,7 +799,7 @@ GET
         "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
         "city": "San Vicente del Raspeig",
         "province": "Alicante",
-        "addr": "Calle San Franciso n∫15",
+        "addr": "Calle San Franciso n¬∫15",
         "phone": "965660327",
         "website": "http://wwww.gymatope.es",
         "main_img": "atope.jpeg"
@@ -808,18 +810,18 @@ GET
         "desc": "Gimnasio muy acondicionado y en perfecto estado.",
         "city": "Santa Pola",
         "province": "Alicante",
-        "addr": "Calle Falsa n∫34",
+        "addr": "Calle Falsa n¬∫34",
         "phone": "965662347",
         "website": "http://wwww.noraygym.com",
         "main_img": "noray.jpeg"
       },
       {
         "id": 3,
-        "name": "M·s Sport",
-        "desc": "AsociaciÛn deportiva con unas instalaciones increÌbles.",
+        "name": "m√°s Sport",
+        "desc": "Asociaci√≥n deportiva con unas instalaciones incre√≠bles.",
         "city": "Valencia",
         "province": "Valencia",
-        "addr": "Calle Arco n∫32",
+        "addr": "Calle Arco n¬∫32",
         "phone": "965663057",
         "website": "http://wwww.masport.es",
         "main_img": "mas.jpeg"
@@ -827,7 +829,7 @@ GET
       {
         "id": 4,
         "name": "Montemar",
-        "desc": "Especializados en cursos y clases de tÈnis.",
+        "desc": "Especializados en cursos y clases de t√©nis.",
         "city": "Alicante",
         "province": "Alicante",
         "addr": "Avenida Novelda Km 14",
@@ -841,7 +843,7 @@ GET
         "desc": "El mejor lugar para ponerte en forma.",
         "city": "Barcelona",
         "province": "Barcelona",
-        "addr": "Gran VÌa n∫15",
+        "addr": "Gran V√≠a n¬∫15",
         "phone": "965662257",
         "website": "http://wwww.13gym.es",
         "main_img": "13gym.jpeg"
@@ -864,24 +866,24 @@ GET
 
 ####GET api/establishments/:id
 
-Obtiene la informaciÛn del establecimiento especificado. Devuelve tambiÈn la informaciÛn p˙blica del propietario del establecimiento.
+Obtiene la informaci√≥n del establecimiento especificado. Devuelve tambi√©n la informaci√≥n p√∫blica del propietario del establecimiento.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del establecimiento el cual queremos obtener la informaciÛn.
+**id:**      La id del establecimiento el cual queremos obtener la informaci√≥n.
 *obligatorio* 
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/establishments/2* 
@@ -896,14 +898,14 @@ GET
   "desc": "Gimnasio muy acondicionado y en perfecto estado.",
   "city": "Santa Pola",
   "province": "Alicante",
-  "addr": "Calle Falsa n∫34",
+  "addr": "Calle Falsa n¬∫34",
   "phone": "965662347",
   "website": "http://wwww.noraygym.com",
   "main_img": "noray.jpeg",
   "Owner": {
     "uuid": "8a74a3aa-757d-46f1-ba86-a56a0f107735",
     "name": "Norman",
-    "lname": "Coloma GarcÌa",
+    "lname": "Coloma Garc√≠a",
     "email": "ua.norman@gmail.com",
     "gender": "male"
   },
@@ -924,30 +926,30 @@ GET
 
 ####GET api/establishments/me/all
 
-Devuelve la colecciÛn de todos los establecimientos, registrados por el usuario (el propio que hace la peticiÛn) en la  API.
+Devuelve la colecci√≥n de todos los establecimientos, registrados por el usuario (el propio que hace la petici√≥n) en la  API.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/me/all*
 
-#####Par·metros 
+#####Par√°metros 
 
-**limit:**      El n˙mero de establecimientos que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de establecimientos que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte establecimeiento  (hacia delante).
+**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte establecimeiento  (hacia delante).
 *opcional*
 
-**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del establecimeiento  especificado (hacia atr·s).
+**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del establecimeiento  especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | P˙blico       |
+| JSON                 | S√≠            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/establishments/me/all* 
@@ -964,12 +966,12 @@ GET
         "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
         "city": "San Vicente del Raspeig",
         "province": "Alicante",
-        "addr": "Calle San Franciso n∫15"
+        "addr": "Calle San Franciso n¬∫15"
       },
       {
         "id": 26,
         "name": "prueba",
-        "desc": "prueba con im·genes",
+        "desc": "prueba con im√°genes",
         "city": "Alicante",
         "province": "Alicante",
         "addr": "Prueba"
@@ -977,7 +979,7 @@ GET
       {
         "id": 28,
         "name": "prueba",
-        "desc": "prueba con im·genes",
+        "desc": "prueba con im√°genes",
         "city": "Alicante",
         "province": "Alicante",
         "addr": "Prueba"
@@ -1001,37 +1003,37 @@ GET
 
 ####GET api/establishments/sports/:id/location/:location
 
-Devuelve la colecciÛn de todos los establecimientos registrados en la API, filtrados por el deporte especificado, y la localizaciÛn especificada.
-TambiÈn devuelve la id del curso asociado al deporte especificado.
+Devuelve la colecci√≥n de todos los establecimientos registrados en la API, filtrados por el deporte especificado, y la localizaci√≥n especificada.
+tambi√©n devuelve la id del curso asociado al deporte especificado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/sports/:id/location/:location*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del deporte el cual queremos obtener la colecciÛn de establecimientos.
+**id:**      La id del deporte el cual queremos obtener la colecci√≥n de establecimientos.
 *obligatorio* 
 
-**location:**      La ciudad o provincia de la cual queremos obtener la colecciÛn de establecimientos.
+**location:**      La ciudad o provincia de la cual queremos obtener la colecci√≥n de establecimientos.
 *obligatorio* 
 
-**limit:**      El n˙mero de establecimientos que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de establecimientos que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte establecimeiento  (hacia delante).
+**after:**      El establecimeiento tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte establecimeiento  (hacia delante).
 *opcional*
 
-**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del establecimeiento  especificado (hacia atr·s).
+**before:**     El establecimeiento  tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del establecimeiento  especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/establishments/sport/1/location/Alicante* 
@@ -1050,7 +1052,7 @@ GET
         "desc": "Gimnasio perfecto para realizar tus actividades deportivas.",
         "city": "San Vicente del Raspeig",
         "province": "Alicante",
-        "addr": "Calle San Franciso n∫15",
+        "addr": "Calle San Franciso n¬∫15",
         "phone": "965660327",
         "website": "http://wwww.gymatope.es",
         "main_img": "atope.jpeg",
@@ -1066,7 +1068,7 @@ GET
         "desc": "Gimnasio muy acondicionado y en perfecto estado.",
         "city": "Santa Pola",
         "province": "Alicante",
-        "addr": "Calle Falsa n∫34",
+        "addr": "Calle Falsa n¬∫34",
         "phone": "965662347",
         "website": "http://wwww.noraygym.com",
         "main_img": "noray.jpeg",
@@ -1079,7 +1081,7 @@ GET
       {
         "id": 4,
         "name": "Montemar",
-        "desc": "Especializados en cursos y clases de tÈnis.",
+        "desc": "Especializados en cursos y clases de t√©nis.",
         "city": "Alicante",
         "province": "Alicante",
         "addr": "Avenida Novelda Km 14",
@@ -1109,37 +1111,37 @@ GET
 }
 ```
 
-**_api/establishments/:id/sports (GET)_:** Recopila la informaciÛn de todos los deportes que se imparten en el establecimiento especificado mediante la id.
+**_api/establishments/:id/sports (GET)_:** Recopila la informaci√≥n de todos los deportes que se imparten en el establecimiento especificado mediante la id.
 
 ####GET api/establishments/:id/sports/
 
-Devuelve la colecciÛn de todos los deportes asociados al establecimiento que se especifica.
+Devuelve la colecci√≥n de todos los deportes asociados al establecimiento que se especifica.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/:id/sports*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del establecimiento el cual queremos obtener la colecciÛn de deportes.
+**id:**      La id del establecimiento el cual queremos obtener la colecci√≥n de deportes.
 *obligatorio* 
 
-**limit:**      El n˙mero de deportes que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de deportes que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte deporte  (hacia delante).
+**after:**      El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte deporte  (hacia delante).
 *opcional*
 
-**before:**     El deporte tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del deporte  especificado (hacia atr·s).
+**before:**     El deporte tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del deporte  especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/establishments/1/sports* 
@@ -1181,57 +1183,57 @@ GET
 
 ####PUT api/establishments/:id
 
-Modifica el establecimiento especificado mediante su id. Devolver· el estado 204 en caso de Èxito. El usuario autenticado debe ser el propietario del 
-establecimiento a modificar en cuestiÛn.
+Modifica el establecimiento especificado mediante su id. Devolver√° el estado 204 en caso de √©xito. El usuario autenticado debe ser el propietario del 
+establecimiento a modificar en cuesti√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishemnts/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del establecimiento el cual queremos modificar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 UPDATE
 *https://localhost:3000/api/establishments/1*
 
 ```json
 {
-    "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735", "desc" : "La descripciÛn a cambiado"
+    "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735", "desc" : "La descripci√≥n a cambiado"
 }
 ```
-En la peticiÛn se debe incluir la id del propietario. 
+Enla petici√≥nse debe incluir la id del propietario. 
 
 ####DELETE api/establishments/:id
 
-Elimina el establecimiento especificado mediante su id. Devuelve el estado 204 en caso de Èxito de la operaciÛn. Se debe ser el propietario 
-del establecimiento a eliminar en cuestiÛn.
+Elimina el establecimiento especificado mediante su id. Devuelve el estado 204 en caso de √©xito de la operaci√≥n. Se debe ser el propietario 
+del establecimiento a eliminar en cuesti√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/establishments/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del establecimiento el cual queremos eliminar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 DELETE
 *https://localhost:3000/api/establishments/9*
@@ -1241,29 +1243,29 @@ DELETE
 
 ####POST api/courses/new
 
-Permite al usuario establecer un curso. Un curso est· directamente relacionado con un establecimiento y un deporte. Por lo tanto
-es obligatorio establecer la id del establecimiento en el cual se quiere impartir dicho curso, y el deporte del cual ser· el curso. 
-Devolver· el recurso creado.
+Permite al usuario establecer un curso. Un curso est√° directamente relacionado con un establecimiento y un deporte. Por lo tanto
+es obligatorio establecer la id del establecimiento en el cual se quiere impartir dicho curso, y el deporte del cual ser√° el curso. 
+Devolver√° el recurso creado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/courses/new*
 
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 POST
 *https://localhost:3000/api/courses/new* 
 
 ```json
 {
-    "sportId" : 1, "establishmentId" : 1, "instrucotor" : "Juan DomÌnguez", 
+    "sportId" : 1, "establishmentId" : 1, "instrucotor" : "Juan Dom√≠nguez", 
     "price" : "20", "info" : "Un curso muy completo"
 }
 ```
@@ -1298,25 +1300,25 @@ POST
 
 ####GET api/courses/:id
 
-Obtiene la informaciÛn del curso especificado. Devuelve tambiÈn la informaciÛn del establecimiento al cual pertenece, 
+Obtiene la informaci√≥n del curso especificado. Devuelve tambi√©n la informaci√≥n del establecimiento al cual pertenece, 
 y del deporte el cual trata el curso.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/courses/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
-**id:**      La id del curso el cual queremos obtener la informaciÛn.
+**id:**      La id del curso el cual queremos obtener la informaci√≥n.
 *obligatorio* 
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/courses/2* 
@@ -1337,13 +1339,13 @@ GET
     "desc": "Gimnasio muy acondicionado y en perfecto estado.",
     "city": "Santa Pola",
     "province": "Alicante",
-    "addr": "Calle Falsa n∫34",
+    "addr": "Calle Falsa n¬∫34",
     "phone": "965662347",
     "website": "http://wwww.noraygym.com",
     "main_img": "noray.jpeg",
     "owner": "8a74a3aa-757d-46f1-ba86-a56a0f107735"
   },
-  "instructor": "Pepe CastaÒo",
+  "instructor": "Pepe Casta√±o",
   "price": 20,
   "info": "Un curso no tan completo",
   "links": [
@@ -1369,27 +1371,27 @@ Obtine el horario del curso especificado.
 
 *https://localhost:3000/api/courses/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del curso el cual queremos obtener el horario.
 *obligatorio* 
 
-**limit:**      El n˙mero de horarios que se quiere incluir en la colecciÛn (por defecto 5)
+**limit:**      El n√∫mero de horarios que se quiere incluir en la colecci√≥n (por defecto 5)
 *opcional*
 
-**after:**      El horario tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del horario especificado(hacia delante).
+**after:**      El horario tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del horario especificado(hacia delante).
 *opcional*
 
-**before:**     El horario tras el cual se quiere empezar a devolver la colecciÛn. La colecciÛn empezar· despuÈs del horario  especificado (hacia atr·s).
+**before:**     El horario tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del horario  especificado (hacia atr√°s).
 *opcional*
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | No            | P˙blico       |
+| JSON                 | No            | P√∫blico       |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 GET
 *https://localhost:3000/api/courses/1/schedule* 
@@ -1416,7 +1418,7 @@ GET
       },
       {
         "id": 3,
-        "day": "MiÈrcoles",
+        "day": "Mi√©rcoles",
         "startTime": "17:00",
         "endTime": "18:00"
       },
@@ -1451,25 +1453,25 @@ GET
 
 ####PUT api/courses/:id
 
-Modifica el curso especificado mediante su id. Devolver· el estado 204 en caso de Èxito. El usuario autenticado debe ser el propietario del 
-establecimento en el cual se da el curso a modificar en cuestiÛn.
+Modifica el curso especificado mediante su id. Devolver√° el estado 204 en caso de √©xito. El usuario autenticado debe ser el propietario del 
+establecimento en el cual se da el curso a modificar en cuesti√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/courses/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del curso el cual queremos modificar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 UPDATE
 *https://localhost:3000/api/courses/1*
@@ -1482,25 +1484,25 @@ UPDATE
 
 ####DELETE api/courses/:id
 
-Elimina el curso especificado mediante su id. Devuelve el estado 204 en caso de Èxito de la operaciÛn. Se debe ser el propietario 
-del establecimiento en el cual se imparte el curso a eliminar en cuestiÛn.
+Elimina el curso especificado mediante su id. Devuelve el estado 204 en caso de √©xito de la operaci√≥n. Se debe ser el propietario 
+del establecimiento en el cual se imparte el curso a eliminar en cuesti√≥n.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/courses/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del curso el cual queremos eliminar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 DELETE
 *https://localhost:3000/api/courses/9*
@@ -1510,20 +1512,20 @@ DELETE
 
 ####POST api/schedules/new
 
-Permite al usuario establecer un horario a un curso. Un horario est· directamente relacionado con un curso. Devolver· el recurso creado.
+Permite al usuario establecer un horario a un curso. Un horario est√° directamente relacionado con un curso. Devolver√° el recurso creado.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/schedules/new*
 
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 POST
 *https://localhost:3000/api/schedules/new* 
@@ -1534,7 +1536,7 @@ POST
 }
 ```
 
-Es obligatorio enviar en el cuerpo de la peticiÛn, la id del curso al cual se va a establecer el horario.
+Es obligatorio enviar en el cuerpo de la petici√≥n, la id del curso al cual se va a establecer el horario.
 
 #####Ejemplo del Resultado
 
@@ -1567,25 +1569,25 @@ Es obligatorio enviar en el cuerpo de la peticiÛn, la id del curso al cual se va
 
 ####PUT api/schedules/:id
 
-Modifica el horario especificado mediante su id. Devolver· el estado 204 en caso de Èxito. El usuario autenticado debe ser el propietario del 
+Modifica el horario especificado mediante su id. Devolver√° el estado 204 en caso de √©xito. El usuario autenticado debe ser el propietario del 
 establecimento en el cual se da el curso del que se quiere modificar el horario.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/schedules/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del horario el cual queremos modificar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 UPDATE
 *https://localhost:3000/api/schedules/1*
@@ -1596,29 +1598,29 @@ UPDATE
 }
 ```
 
-Es obligatorio enviar en el cuerpo de la peticiÛn, la id del curso al cual se va a actualizar el horario.
+Es obligatorio enviar en el cuerpo de la petici√≥n, la id del curso al cual se va a actualizar el horario.
 
 ####DELETE api/schedules/:id
 
-Elimina el horario especificado mediante su id. Devuelve el estado 204 en caso de Èxito de la operaciÛn. Se debe ser el propietario 
+Elimina el horario especificado mediante su id. Devuelve el estado 204 en caso de √©xito de la operaci√≥n. Se debe ser el propietario 
 del establecimiento en el cual se imparte el curso del que se quiere eliminar el horario.
 
 #####Ruta del Recurso
 
 *https://localhost:3000/api/schedules/:id*
 
-#####Par·metros 
+#####Par√°metros 
 
 **id:**      La id del horario el cual queremos eliminar.
 *obligatorio*  
 
-#####InformaciÛn del Recurso
+#####Informaci√≥n del Recurso
 
-| Formato de Respuesta | AutenticaciÛn | Rol           |
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
 | ---------------------|:-------------:| :------------:|
-| JSON                 | SÌ            | Propietario   |
+| JSON                 | S√≠            | Propietario   |
 
-#####Ejemplo de PeticiÛn 
+#####Ejemplo de Petici√≥n
 
 DELETE
 *https://localhost:3000/api/schedules/9*
@@ -1629,9 +1631,270 @@ DELETE
 }
 ```
 
-Es obligatorio enviar en el cuerpo de la peticiÛn, la id del curso al cual se va a eliminar el horario.
+Es obligatorio enviar en el cuerpo dela petici√≥n, la id del curso al cual se va a eliminar el horario.
 
 
+###Comentarios
+
+####POST api/schedules/new
+
+Permite al usuario establecer un horario a un curso. Un horario est√° directamente relacionado con un curso. Devolver√° el recurso creado.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/schedules/new*
+
+#####Par√°metros
+
+**id:**      La id del establecimiento en el cual queremos hacer un comentario.
+*obligatorio*
+
+#####Informaci√≥n del Recurso
+
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | S√≠            | Usuario       |
+
+#####Ejemplo de Petici√≥n
+
+POST
+*https://localhost:3000/api/schedules/:id/commentaries/new*
+
+```json
+{
+    "text": "El gimnasio tiene unas instalaciones incre√≠bles"
+}
+```
+
+#####Ejemplo del Resultado
+
+```json
+{
+  "Commentary": {
+    "id": 1,
+    "user": "3e7b8fc9-7c54-472e-aba0-d170e8d60a6b",
+    "text": "El gimansio es incre√≠ble",
+    "establishmentId": "1"
+  },
+  "links": [
+    [
+      {
+        "rel": "self",
+        "href": "https://localhost:3000/api/establishments/1/commentaries/new"
+      },
+      {
+        "rel": "update",
+        "href": "https://localhost:3000/api/establishments/1/commentaries"
+      },
+      {
+        "rel": "delete",
+        "href": "https://localhost:3000/api/establishments/1/commentaries"
+      },
+      {
+        "rel": "all",
+        "href": "https://localhost:3000/api/establishments/1/commentaries"
+      }
+    ]
+  ]
+}
+```
+
+####GET api/establishments/:id/commentaries
+
+Obtine una colecci√≥n de los comentarios que se han realizado para el establecimiento indicado por par√°metro.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/establishment/:id/commentaries*
+
+#####Par√°metros
+
+**id:**      La id del establecimiento el cual queremos obtener los comentarios.
+*obligatorio*
+
+**limit:**      El n√∫mero de comentarios que se quiere incluir en la colecci√≥n (por defecto 10)
+*opcional*
+
+**after:**      El establecimiento tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del establecimiento especificado(hacia delante).
+*opcional*
+
+**before:**     El establecimiento tras el cual se quiere empezar a devolver la colecci√≥n. La colecci√≥n empezar√° despu√©s del establecimiento  especificado (hacia atr√°s).
+*opcional*
+
+#####Informaci√≥n del Recurso
+
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | No            | P√∫blico       |
+
+#####Ejemplo de Petici√≥n
+
+GET
+*https://localhost:3000/api/establishments/1/commentaries*
+
+
+#####Ejemplo del Resultado
+
+```json
+{
+  "Commentaries": {
+    "count": 2,
+    "rows": [
+      {
+        "id": 1,
+        "text": "El gimansio es incre√≠ble",
+        "createdAt": "2016-03-23T17:34:02.000Z",
+        "User": {
+          "name": "Pepe",
+          "lname": "Cano G√≥mez"
+        }
+      },
+      {
+        "id": 2,
+        "text": "El gimansio tiene todas las actividades que puedas buscar",
+        "createdAt": "2016-03-23T17:34:02.000Z",
+        "User": {
+          "name": "Pepe",
+          "lname": "Cano G√≥mez"
+        }
+      }
+    ]
+  },
+  "paging": {
+    "cursors": {
+      "before": 0,
+      "after": 0
+    },
+    "previous": "none",
+    "next": "none"
+  },
+  "links": {
+    "rel": "self",
+    "href": "https://localhost:3000/api/establishments1/commentaries"
+  }
+}
+```
+
+####PUT api/commentaries/:id
+
+Modifica el comentario especificado, mediante la id.
+Devolver√° el estado 204 en caso de √©xito. El usuario autenticado debe ser el que realiz√≥ el
+comentario el cual se desea modificar.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/commentaries/:id*
+
+#####Par√°metros
+
+**id:**      La id del comentario que queremos actualiar.
+*obligatorio*
+
+
+#####Informaci√≥n del Recurso
+
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | S√≠            | Usuario       |
+
+#####Ejemplo de Petici√≥n
+
+UPDATE
+*https://localhost:3000/api/commentaries/1*
+
+```json
+{
+    "text": "He realizado una actualizaci√≥n en mi comentario"
+}
+```
+
+Es obligatorio enviar en el cuerpo de la petici√≥n, el texto del comentario.
+
+####DELETE api/commentaries/:id
+
+Elimina el comentario especificado, mediante la id.
+Devolver√° el estado 204 en caso de √©xito. El usuario autenticado debe ser el que realiz√≥ el
+comentario el cual se desea eliminar.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/commentaries/:id*
+
+#####Par√°metros
+
+**id:**      La id del comentario que queremos actualiar.
+*obligatorio*
+
+
+#####Informaci√≥n del Recurso
+
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | S√≠            | Usuario       |
+
+#####Ejemplo de Petici√≥n
+
+DELETE
+*https://localhost:3000/api/commentaries/1*
+
+
+###Votos
+
+Ahora cuando accedamos a la informaci√≥n de un establecimiento, tambi√©n se obtendr√° una colecci√≥n de votos.
+
+####POST api/establishments/:id/votes/new
+
+Permite al usuario votar un establecimiento. Un voto est√° directamente relacionado con un establecimiento y usuario. Devolver√° el recurso creado.
+Un usuario solo podr√° votar una vez, a cada establecimiento.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/establishments/:id/votes/new*
+
+#####Par√°metros
+
+**id:**      La id del establecimiento el cual queremos votar.
+*obligatorio*
+
+#####Informaci√≥n del Recurso
+
+| Formato de Respuesta | Autenticaci√≥n | Rol           |
+| ---------------------|:-------------:| :------------:|
+| JSON                 | S√≠            | Usuario       |
+
+#####Ejemplo de Petici√≥n
+
+POST
+*https://localhost:3000/api/establishments/1/votes/new*
+
+```json
+{
+    "text": "El gimnasio tiene unas instalaciones incre√≠bles"
+}
+```
+
+#####Ejemplo del Resultado
+
+```json
+{
+  "Vote": {
+    "user": "3e7b8fc9-7c54-472e-aba0-d170e8d60a6b",
+    "establishmentId": "1"
+  },
+  "links": [
+    [
+      {
+        "rel": "self",
+        "href": "https://localhost:3000/api/establishments/1/votes/new"
+      },
+      {
+        "rel": "all",
+        "href": "https://localhost:3000/api/establishments/1/votes"
+      }
+    ]
+  ]
+}
+```
 
 
 
