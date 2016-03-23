@@ -13,7 +13,8 @@ var apicache = require('apicache').options({ debug: false }).middleware;
  */
 router.get('', apicache('5 minutes'),function(req, res,next) {
   var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports",
-      before = 0, prev = 'none', after = 0, next = 'none';
+      before = 0, prev = 'none', after = 0;
+  next = 'none';
   if(req.query.after){
     after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
     limit = req.query.limit;
@@ -94,7 +95,8 @@ router.get('/:id', apicache('5 minutes'),function(req, res,next) {
  */
 router.get('/:id/establishments', middleware.numericalIdSport, middleware.pagination, apicache('5 minutes'),function(req, res,next) {
   var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/"+ req.params.id+"/establishments",
-      before = 0, prev = 'none', after = 0, next = 'none';
+      before = 0, prev = 'none', after = 0;
+  next = 'none';
   if(req.query.after){
     after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
     limit = req.query.limit;
