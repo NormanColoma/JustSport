@@ -8,7 +8,6 @@ var authController = require('../routes/auth');
 var user = require('../middlewares/checkUser');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
-var apicache = require('apicache').options({ debug: false }).middleware;
 
 router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, function(req, res) {
     if(models.user.isOwner(req.get('Authorization').slice('7'))){
@@ -47,7 +46,7 @@ router.post('/new', authController.isBearerAuthenticated, user.isEstabOwner, fun
 
 });
 
-router.get('/:id',apicache('5 minutes'),function(req, res,next) {
+router.get('/:id',function(req, res) {
     if (req.params.id != parseInt(req.params.id, 10)){
         res.status(400).send({message: 'The supplied id that specifies the course is not a numercial id'});
     }
@@ -74,14 +73,14 @@ router.get('/:id',apicache('5 minutes'),function(req, res,next) {
     }
 });
 
-router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination, apicache('5 minutes'),function(req,res,next){
+router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,function(req,res){
     var where = "";
     var limit = 5;
     var url = req.protocol + "://" + req.hostname + ":3000" + "/api/courses/" + req.params.id + "/schedule";
     var before = 0;
     var prev = 'none';
     var after = 0;
-    next = 'none';
+    var next = 'none';
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
