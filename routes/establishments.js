@@ -133,20 +133,22 @@ router.get('/:id', apicache('5 minutes'), function(req, res, next) {
                 res.status(404).send({message: "The establishment was not found"});
             else {
                 establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
-                    var links = [];
-                    var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
-                    var link2 = {rel: 'sports',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
-                    var link3 = {rel: 'filter',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
-                        "/sports/location/Alicante" };
-                    var link4 = {rel: 'associate',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
-                    links.push([link1,link2,link3,link4]);
-                    res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
-                        city: establishment.city, province: establishment.province, addr: establishment.addr,
-                        phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
-                        Owner: owner, links:links});
+                    establishment.getVotes({attributes: ['user']}).then(function(votes){
+                        var links = [];
+                        var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
+                        var link2 = {rel: 'sports',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
+                        var link3 = {rel: 'filter',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
+                            "/sports/location/Alicante" };
+                        var link4 = {rel: 'associate',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
+                        links.push([link1,link2,link3,link4]);
+                        res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
+                            city: establishment.city, province: establishment.province, addr: establishment.addr,
+                            phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
+                            Owner: owner, links:links, Votes: votes});
+                    });
                 });
             }
         }).catch(function(err){

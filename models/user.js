@@ -84,7 +84,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        user.hasMany(models.vote,{as: 'Votes'})
       },
       verifyPassword: function(pass, hPass){
          return bcrypt.compareSync(pass, hPass);
