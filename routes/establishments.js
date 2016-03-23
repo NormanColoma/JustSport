@@ -547,7 +547,6 @@ router.post('/:id/votes/new', authController.isBearerAuthenticated,  middleware.
                 var vote = {user: user, establishmentId: req.params.id};
                 res.status(201).send({Vote: vote,links: links});
             }).catch(function (err) {
-                console.log(err);
                 res.status(500).send({errors: handler.customServerError(err)});
             });
         }
