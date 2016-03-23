@@ -13,7 +13,7 @@ var user = require('../middlewares/checkUser');
 var fs = require('fs');
 //Set this to use raw queries
 var Sequelize = require('sequelize');
-var env       = process.env.NODE_ENV  || 'test';
+var env       = process.env.NODE_ENV  || 'development';
 var config    = require('../config/config.json')[env];
 var apicache = require('apicache').options({ debug: false }).middleware;
 if(process.env.DATABASE_URL){
@@ -547,6 +547,7 @@ router.post('/:id/votes/new', authController.isBearerAuthenticated,  middleware.
                 var vote = {user: user, establishmentId: req.params.id};
                 res.status(201).send({Vote: vote,links: links});
             }).catch(function (err) {
+                console.log(err);
                 res.status(500).send({errors: handler.customServerError(err)});
             });
         }
