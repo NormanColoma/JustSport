@@ -81,7 +81,7 @@ router.get('/:id/schedule', middleware.numericalIdCourse, middleware.pagination,
     var before = 0;
     var prev = 'none';
     var after = 0;
-    var next = 'none';
+    next = 'none';
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
