@@ -11,5 +11,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  vote.removeAttribute('id'); //Prevent sequelize to look up for 'id' attr
   return vote;
 };

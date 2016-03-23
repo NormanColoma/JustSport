@@ -100,6 +100,7 @@ module.exports = function(sequelize, DataTypes) {
         establishment.belongsTo(models.user, {foreignKey: 'owner', as:'Owner'}),
         establishment.hasMany(models.course,{as: 'Courses'}),
         establishment.hasMany(models.commentary,{as: 'Commentaries'})
+        establishment.hasMany(models.vote,{as: 'Votes'})
       }
     }
   });

@@ -41,14 +41,11 @@ var seeder = new Umzug({
     logging: false
 });
 
-describe.only('Votes', function() {
+describe('Votes', function() {
     this.timeout(15000);
 
     var user_token = "";
     var another_token = "";
-    var commentary_1 = {text: "Primer comentario"};
-    var commentary_2 = {text: "Segundo comentario"};
-    var empty_commentary = {text: ""};
 
     before('Setting database in a known state', function (done) {
         umzug.execute({
@@ -171,6 +168,7 @@ describe.only('Votes', function() {
         it('Should return 2 votes from the 1 establishment in the collection', function(done){
             supertest(app)
                 .get('/api/establishments/1')
+                .set('x-apicache-bypass', 'true')
                 .expect(200)
                 .expect(function(res){
                     assert.equal(res.body.Votes.length, 2);
