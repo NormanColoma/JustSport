@@ -4,17 +4,15 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var handler = require('../handlers/errorHandler');
 var middleware = require('../middlewares/paramMiddleware');
-var apicache = require('apicache').options({ debug: false }).middleware;
 /**
  * Primero miramos si hay, after o before, para hacer las cláusulas where y los cambios de url,
  * si no hay, es una consulta normal. Después tendremos que comprobar el mínimo y máximo, para saber
  * si hay siguiente o anterior. Es diferente el total de la consulta, con el total de la colección,
  * por ello tenemos que consultar ambas para verificar el anterior y siguiente.
  */
-router.get('', apicache('5 minutes'),function(req, res,next) {
+router.get('',function(req, res) {
   var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports",
-      before = 0, prev = 'none', after = 0;
-  next = 'none';
+      before = 0, prev = 'none', after = 0,next = 'none';
   if(req.query.after){
     after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
     limit = req.query.limit;
@@ -65,7 +63,7 @@ router.get('', apicache('5 minutes'),function(req, res,next) {
 
 
 
-router.get('/:id', apicache('5 minutes'),function(req, res,next) {
+router.get('/:id',function(req, res) {
   if (req.params.id != parseInt(req.params.id, 10)){
     res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
   }else {
@@ -93,10 +91,9 @@ router.get('/:id', apicache('5 minutes'),function(req, res,next) {
  Además al no poder usar la función countAndFindAll, tendremos que crear el objeto con rows y count, para
  mantener el mismo formato.
  */
-router.get('/:id/establishments', middleware.numericalIdSport, middleware.pagination, apicache('5 minutes'),function(req, res,next) {
+router.get('/:id/establishments', middleware.numericalIdSport, middleware.pagination,function(req, res) {
   var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/sports/"+ req.params.id+"/establishments",
-      before = 0, prev = 'none', after = 0;
-  next = 'none';
+      before = 0, prev = 'none', after = 0,next = 'none';
   if(req.query.after){
     after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
     limit = req.query.limit;
