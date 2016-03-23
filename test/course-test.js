@@ -65,7 +65,7 @@ describe('Course', function() {
     });
 
     before('Setting database in a known state: Creating', function (done) {
-        umzug.up(['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
+        umzug.up(['20151022133423-create-user','20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
             '20151106004323-create-establishmentsport', '20151108193656-create-course']).then(function (migrations) {
             done();
         });
@@ -247,6 +247,7 @@ describe('Course', function() {
     it('Checking the course after updated it (only info was changed). Should return status 200', function(done){
         supertest(app)
             .get('/api/courses/1')
+            .set('x-apicache-bypass', 'true')
             .expect(200).expect(function(res){
                 assert.equal(JSON.stringify(res.body.Sport), JSON.stringify(sport));
                 assert.equal(JSON.stringify(res.body.Establishment), JSON.stringify(est));
@@ -261,7 +262,7 @@ describe('Course', function() {
             .put('/api/courses/Curso1').send(update)
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numercial id');
+                assert.equal(res.body.message, 'The supplied id that specifies the course is not a numerical id');
             }).end(done);
     });
 
@@ -333,7 +334,7 @@ describe('Course', function() {
             .delete('/api/courses/Curso')
             .set('Authorization', 'Bearer '+owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, "The supplied id that specifies the course is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the course is not a numerical id");
             }).end(done);
     });
 
@@ -361,7 +362,7 @@ describe('Course', function() {
             method: 'down'
         }).then(function(mig){
             umzug.down(['20151108193656-create-course','20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
-                '20151022133423-create-user']).then(function (migrations) {
+                '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         });

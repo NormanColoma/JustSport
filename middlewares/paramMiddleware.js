@@ -4,7 +4,7 @@
 
 exports.numericalIdCourse= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
-        res.status(400).send({message: "The supplied id that specifies the course is not a numercial id"});
+        res.status(400).send({message: "The supplied id that specifies the course is not a numerical id"});
     }
     else
         next();
@@ -12,7 +12,7 @@ exports.numericalIdCourse= function(req,res,next){
 
 exports.numericalIdSport= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
-        res.status(400).send({message: "The supplied id that specifies the sport is not a numercial id"});
+        res.status(400).send({message: "The supplied id that specifies the sport is not a numerical id"});
     }
     else
         next();
@@ -20,14 +20,22 @@ exports.numericalIdSport= function(req,res,next){
 
 exports.numericalIdSchedule= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
-        res.status(400).send({message: "The supplied id that specifies the schedule is not a numercial id"});
+        res.status(400).send({message: "The supplied id that specifies the schedule is not a numerical id"});
     }
     else
         next();
 };
 exports.numericalIdEstab= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
-        res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
+        res.status(400).send({message: "The supplied id that specifies the establishment is not a numerical id"});
+    }
+    else
+        next();
+};
+
+exports.numericalIdCommentary= function(req,res,next){
+    if (req.params.id != parseInt(req.params.id, 10)){
+        res.status(400).send({message: "The supplied id that specifies the commentary is not a numerical id"});
     }
     else
         next();
@@ -44,20 +52,28 @@ exports.stringLocation = function(req,res,next){
 exports.pagination = function(req,res,next){
     if (req.query.after || req.query.before){
         if(req.query.limit){
-            if(req.query.limit > 0)
-                next();
-            else
-                res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
+            if(req.query.limit != parseInt(req.query.limit, 10)){
+                res.status(400).send({message: 'Limit parameter must be numerical'});
+            }else {
+                if (req.query.limit > 0)
+                    next();
+                else
+                    res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
+            }
         }
         else
             res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
     }
     else {
         if(req.query.limit){
-            if(req.query.limit <= 0)
-                res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
-            else
-                next();
+            if(req.query.limit != parseInt(req.query.limit, 10)) {
+                res.status(400).send({message: 'Limit parameter must be numerical'});
+            }else{
+                if(req.query.limit <= 0)
+                    res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
+                else
+                    next();
+            }
         }else{
             next();
         }

@@ -13,8 +13,9 @@ var user = require('../middlewares/checkUser');
 var fs = require('fs');
 //Set this to use raw queries
 var Sequelize = require('sequelize');
-var env       = process.env.NODE_ENV  || 'test';
+var env       = process.env.NODE_ENV  || 'development';
 var config    = require('../config/config.json')[env];
+var apicache = require('apicache').options({ debug: false }).middleware;
 if(process.env.DATABASE_URL){
     var sequelize = new Sequelize(process.env.DATABASE_URL,{
         dialect: 'mysql',
@@ -72,9 +73,10 @@ router.delete('/:id/image',authController.isBearerAuthenticated, middleware.nume
     });
 });
 
-router.get('', function(req, res) {
+router.get('', apicache('5 minutes'), function(req, res, next) {
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments",
-        before = 0, prev = 'none', after = 0, next = 'none';
+        before = 0, prev = 'none', after = 0;
+    next = 'none';
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
@@ -122,7 +124,7 @@ router.get('', function(req, res) {
         });
     });
 });
-router.get('/:id', function(req, res) {
+router.get('/:id', apicache('5 minutes'), function(req, res, next) {
     if (req.params.id != parseInt(req.params.id, 10)){
         res.status(400).send({message: "The supplied id that specifies the establishment is not a numercial id"});
     }else {
@@ -131,20 +133,22 @@ router.get('/:id', function(req, res) {
                 res.status(404).send({message: "The establishment was not found"});
             else {
                 establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
-                    var links = [];
-                    var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
-                    var link2 = {rel: 'sports',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
-                    var link3 = {rel: 'filter',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
-                        "/sports/location/Alicante" };
-                    var link4 = {rel: 'associate',
-                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
-                    links.push([link1,link2,link3,link4]);
-                    res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
-                        city: establishment.city, province: establishment.province, addr: establishment.addr,
-                        phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
-                        Owner: owner, links:links});
+                    establishment.getVotes({attributes: ['user']}).then(function(votes){
+                        var links = [];
+                        var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
+                        var link2 = {rel: 'sports',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
+                        var link3 = {rel: 'filter',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
+                            "/sports/location/Alicante" };
+                        var link4 = {rel: 'associate',
+                            href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
+                        links.push([link1,link2,link3,link4]);
+                        res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
+                            city: establishment.city, province: establishment.province, addr: establishment.addr,
+                            phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
+                            Owner: owner, links:links, Votes: votes});
+                    });
                 });
             }
         }).catch(function(err){
@@ -152,9 +156,10 @@ router.get('/:id', function(req, res) {
         });
     }
 });
-router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, function(req, res) {
+router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, apicache('5 minutes'),function(req, res, next) {
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/"+ req.params.id+"/sports",
-        before = 0, prev = 'none', after = 0, next = 'none';
+        before = 0, prev = 'none', after = 0;
+    next = 'none';
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
@@ -211,10 +216,11 @@ router.get('/:id/sports',middleware.numericalIdEstab, middleware.pagination, fun
     });
 });
 router.get('/sport/:id/location/:location', middleware.numericalIdSport, middleware.stringLocation, middleware.pagination,
-    function(req,res){
+    apicache('5 minutes'),function(req,res,next){
         var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000"+
         "/api/establishments/sport/" + req.params.id + "/location/" + req.params.location,
-            before = 0, prev = 'none', after = 0, next = 'none';
+            before = 0, prev = 'none', after = 0;
+        next = 'none';
         if(req.query.after){
             after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
             limit = req.query.limit;
@@ -280,9 +286,10 @@ router.get('/sport/:id/location/:location', middleware.numericalIdSport, middlew
             res.status(500).send({errors: handler.customServerError(err)});
         });
 });
-router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, function(req,res){
+router.get('/me/all', authController.isBearerAuthenticated, middleware.pagination, apicache('5 minutes'),function(req,res,next){
     var where = "", limit = 5, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all",
-    before = 0, prev = 'none', after = 0, next = 'none', owner_id = models.user.getAdminId(req.get('Authorization').slice('7'));
+    before = 0, prev = 'none', after = 0, owner_id = models.user.getAdminId(req.get('Authorization').slice('7'));
+    next = 'none';
     if(req.query.after){
         after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
         limit = req.query.limit;
@@ -428,5 +435,121 @@ router.put('/:id', authController.isBearerAuthenticated, function(req, res) {
         else
             res.status(400).send({message: "Json is malformed: owner field is required for updatings"});
     }
+});
+
+router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  middleware.numericalIdEstab, function(req, res) {
+    var user = models.user.getAdminId(req.get('Authorization').slice('7'));
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est === null){
+            res.status(404).send({message: "The establishment was not found"});
+        }else{
+            var commentary={user: user, text: req.body.text, establishmentId: req.params.id};
+            models.commentary.create(commentary).then(function(commentary){
+                var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/" + est.id + "/commentaries/"+commentary.id;
+                res.setHeader("Location", url);
+                var links = [];
+                var link1 = {rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries/new"};
+                var link2 = {rel: 'update',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                var link3 = {rel: 'delete',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                var link4 = {rel: 'all',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                links.push([link1,link2,link3,link4]);
+                var comm = {id: commentary.id, user: commentary.user, text: commentary.text, establishmentId: commentary.establishmentId};
+                res.status(201).send({Commentary: comm,links: links});
+            }).catch(function (err) {
+                res.status(500).send({errors: handler.customServerError(err)});
+            });
+        }
+    });
+});
+
+router.get('/:id/commentaries',middleware.numericalIdEstab, middleware.pagination, apicache('5 minutes'),function(req, res,next) {
+    var where = "", limit = 10, url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments"+req.params.id+"/commentaries",
+        before = 0, prev = 'none', after = 0;
+    next = 'none';
+    if(req.query.after){
+        after = parseInt(new Buffer(req.query.after, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+"?after="+req.query.after+"?limit="+limit;
+        where = {attributes: ['id', 'text', 'createdAt'], include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$gt: after}, establishmentId: req.params.id}};
+    }else if(req.query.before){
+        before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
+        limit = req.query.limit;
+        url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+ "?before="+req.query.before+"?limit="+limit;
+        where = {attributes: ['id', 'text', 'createdAt'],include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$lt: before}, establishmentId: req.params.id}};
+    }else{
+        if(req.query.limit) {
+            limit = req.query.limit;
+            url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id+"/commentaries"+ "?limit="+limit;
+        }
+        where = {attributes: ['id', 'text', 'createdAt'],include: [{model: models.user, as: 'User', attributes: ['name', 'lname']
+        }], limit: parseInt(limit), where:{id: {$gt: after}, establishmentId: req.params.id}};
+    }
+    before = 0;
+    after = 0;
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est===null){
+            res.status(404).send({message:"The establishment was not found"});
+        }
+        else {
+            models.commentary.findAndCountAll(where).then(function (comm) {
+                if (comm.rows.length === 0) {
+                    res.status(404).send({message: "There are no commentaries added yet"});
+                } else {
+                    models.commentary.findAndCountAll().then(function (total) {
+                        if (comm.count > 0) {
+                            //Check if there are after cursors
+                            if (comm.rows.length < comm.count || comm.rows[comm.rows.length - 1].id < total.rows[total.rows.length - 1].id) {
+                                after = new Buffer(comm.rows[comm.rows.length - 1].id.toString()).toString('base64');
+                                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id + "/commentaries" + "?after=" + after + '&limit=' + limit;
+                            }
+                            models.commentary.min('id').then(function (min) {
+                                //Check if there are before cursors
+                                if (comm.rows[0].id > min) {
+                                    before = new Buffer(comm.rows[0].id.toString()).toString('base64');
+                                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/" +req.params.id + "/commentaries" + "?before=" + before + '&limit=' + limit;
+                                }
+                                var curs = {before: before, after: after};
+                                var pag = {cursors: curs, previous: prev, next: next};
+                                comm.count = total.count;
+                                res.status(200).send({
+                                    Commentaries: comm, paging: pag, links: {rel: 'self', href: url}
+                                });
+                            });
+                        } else
+                            res.status(404).send({message: "The are no commentaries added yet"});
+                    });
+                }
+            });
+        }
+    });
+});
+
+router.post('/:id/votes/new', authController.isBearerAuthenticated,  middleware.numericalIdEstab, function(req, res) {
+    var user = models.user.getAdminId(req.get('Authorization').slice('7'));
+    models.establishment.find({where: {id: req.params.id}}).then(function(est){
+        if(est === null){
+            res.status(404).send({message: "The establishment was not found"});
+        }else{
+            sequelize.query("INSERT INTO votes (user,establishmentId) VALUES ('"+user+"',"+req.params.id+")",
+            { type: sequelize.QueryTypes.INSERT}).then(function(result){
+                var links = [];
+                var link1 = {rel: 'self',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/votes/new"};
+                var link4 = {rel: 'all',
+                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/votes"};
+                links.push([link1,link4]);
+                var vote = {user: user, establishmentId: req.params.id};
+                res.status(201).send({Vote: vote,links: links});
+            }).catch(function (err) {
+                res.status(500).send({errors: handler.customServerError(err)});
+            });
+        }
+    });
 });
 module.exports = router;

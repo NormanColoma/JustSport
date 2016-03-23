@@ -77,11 +77,14 @@ module.exports = function(sequelize, DataTypes) {
           msg: "role must match 'user' or 'owner' values"
         }
       }
+    },
+    img: {
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        user.hasMany(models.vote,{as: 'Votes'})
       },
       verifyPassword: function(pass, hPass){
          return bcrypt.compareSync(pass, hPass);

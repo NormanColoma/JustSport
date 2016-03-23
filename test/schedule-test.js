@@ -70,7 +70,7 @@ describe('Schedule', function() {
 
     before('Setting database in a known state: Creating', function (done) {
         umzug.execute({
-            migrations: ['20151022133423-create-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
+            migrations: ['20151022133423-create-user','20160311103832-add-img-user', '20151106004253-create-establishment', '20151016205501-sport-migration',
                 '20151106004323-create-establishmentsport','20151108193656-create-course'],
             method: 'up'
         }).then(function (migrations) {
@@ -313,7 +313,7 @@ describe('Schedule', function() {
             .delete('/api/schedules/horario').send(deleted)
             .set('Authorization', 'Bearer '+another_owner_token)
             .expect(400).expect(function(res){
-                assert.equal(res.body.message, "The supplied id that specifies the schedule is not a numercial id");
+                assert.equal(res.body.message, "The supplied id that specifies the schedule is not a numerical id");
             }).end(done);
     });
 
@@ -333,7 +333,7 @@ describe('Schedule', function() {
             method: 'down'
         }).then(function(mig){
             umzug.down(['20151113141451-create-schedule','20151108193656-create-course','20151106004323-create-establishmentsport','20151106004253-create-establishment','20151016205501-sport-migration',
-                '20151022133423-create-user']).then(function (migrations) {
+                '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         });
