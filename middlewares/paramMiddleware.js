@@ -51,18 +51,24 @@ exports.stringLocation = function(req,res,next){
 
 exports.pagination = function(req,res,next){
     if (req.query.after || req.query.before){
-        if(req.query.limit){
-            if(req.query.limit != parseInt(req.query.limit, 10)){
-                res.status(400).send({message: 'Limit parameter must be numerical'});
-            }else {
-                if (req.query.limit > 0)
-                    next();
-                else
-                    res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
+        /* jshint ignore:start */
+        if(req.query.after == 0 || req.query.before == 0){
+            res.status(404).send({message: 'There no more rows to retrieve'});
+        }else{
+            if(req.query.limit){
+                if(req.query.limit != parseInt(req.query.limit, 10)){
+                    res.status(400).send({message: 'Limit parameter must be numerical'});
+                }else {
+                    if (req.query.limit > 0)
+                        next();
+                    else
+                        res.status(400).send({message: 'The limit for pagination, must be greater than 0'});
+                }
             }
+            else
+                res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
         }
-        else
-            res.status(400).send({message: "Wrong parameters, limit parameter must be set for paging"});
+        /* jshint ignore:end */
     }
     else {
         if(req.query.limit){
