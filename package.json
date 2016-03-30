@@ -14,6 +14,7 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "express-session": "^1.12.0",
+    "googleplaces": "^0.6.0",
     "jade": "~1.11.0",
     "jwt-simple": "^0.3.1",
     "moment": "^2.10.6",
@@ -25,6 +26,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.2",
+    "request": "^2.69.0",
     "sequelize": "^3.12.1",
     "sequelize-cli": "^2.0.0",
     "umzug": "^1.6.0"
