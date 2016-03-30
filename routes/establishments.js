@@ -11,6 +11,7 @@ var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
 var fs = require('fs');
+var PlaceAutocomplete = require("googleplaces");
 //Set this to use raw queries
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'development';
@@ -543,6 +544,28 @@ router.post('/:id/votes/new', authController.isBearerAuthenticated,  middleware.
                 res.status(500).send({errors: handler.customServerError(err)});
             });
         }
+    });
+});
+
+router.get('/:location/suggestions', function(req, res){
+    var suggestions = [];
+    var loc = "";
+    var placeAutocomplete = new PlaceAutocomplete("AIzaSyCUaBwVoJuCosYblfg7yM6v-twXweYOYqY", "json");
+    var parameters = {
+        input: req.params.location,
+        types: '(cities)',
+        language: 'es',
+    };
+
+    placeAutocomplete.placeAutocomplete(parameters, function (error, response) {
+        if (error) throw error;
+
+        for(var i=0;i<response.predictions.length;i++){
+            var loc = response.predictions[i].description.split(", ");
+            if(loc[1] === "España")
+                suggestions.push(loc[0]);
+        }
+        res.status(200).send({locations:suggestions});
     });
 });
 module.exports = router;
