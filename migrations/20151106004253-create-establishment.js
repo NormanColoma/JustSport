@@ -14,7 +14,7 @@ module.exports = {
       },
       desc: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       city: {
         allowNull: false,
