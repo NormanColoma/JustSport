@@ -574,7 +574,7 @@ router.get('/:id/sport/:sport/schedule', middleware.numericalIdEstab, middleware
     models.course.findAndCountAll(where).then(function(courses){
         console.log(courses.rows);
         if(courses.rows.length === 0){
-            res.status(404).send({message: 'There are no courses established yet'})
+            res.status(404).send({message: 'There are no courses established yet'});
         }else{
             var ids = [];
             for(var i=0;i<courses.count;i++){
@@ -583,7 +583,7 @@ router.get('/:id/sport/:sport/schedule', middleware.numericalIdEstab, middleware
             models.schedule.findAndCountAll({where: {courseId: [(ids)]}, attributes: ['id','day','startTime',
                 'endTime','courseId']}).then(function(schedule){
                 if(schedule.rows.length === 0){
-                    res.status(404).send({message: 'There is no schedule established yet'})
+                    res.status(404).send({message: 'There is no schedule established yet'});
                 }else{
                     res.status(200).send({Schedule: schedule});
                 }
