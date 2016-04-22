@@ -18,6 +18,15 @@ exports.numericalIdSport= function(req,res,next){
         next();
 };
 
+exports.numericalIdSport2= function(req,res,next){
+    if (req.params.sport != parseInt(req.params.sport, 10)){
+        res.status(400).send({message: "The supplied id that specifies the sport is not a numerical id"});
+    }
+    else
+        next();
+};
+
+
 exports.numericalIdSchedule= function(req,res,next){
     if (req.params.id != parseInt(req.params.id, 10)){
         res.status(400).send({message: "The supplied id that specifies the schedule is not a numerical id"});
