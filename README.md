@@ -1636,13 +1636,13 @@ Es obligatorio enviar en el cuerpo dela petición, la id del curso al cual se va
 
 ###Comentarios
 
-####POST api/schedules/new
+#### POST api/establishments/:id/commentaries/new
 
 Permite al usuario establecer un horario a un curso. Un horario está directamente relacionado con un curso. Devolverá el recurso creado.
 
 #####Ruta del Recurso
 
-*https://localhost:3000/api/schedules/new*
+*https://localhost:3000/establishments/:id/commentaries/new*
 
 #####Parámetros
 
@@ -1658,7 +1658,7 @@ Permite al usuario establecer un horario a un curso. Un horario está directamen
 #####Ejemplo de Petición
 
 POST
-*https://localhost:3000/api/schedules/:id/commentaries/new*
+*https://localhost:3000/api/establishments/1/commentaries/new*
 
 ```json
 {
