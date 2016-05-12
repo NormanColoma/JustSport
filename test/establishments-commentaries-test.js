@@ -92,7 +92,7 @@ describe('Establishments commentaries', function() {
             .expect(201)
             .expect(function(res){
                 assert.equal(res.body.Commentary.text, commentary_1.text);
-                assert.equal(res.body.Commentary.user, '8d75a3xa-767e-46f1-bc86-a46a0f103735');
+                assert.equal(res.body.Commentary.User.name, 'Pepe');
                 assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.Commentary.establishmentId+"/commentaries/"+res.body.Commentary.id);
             }).end(done);
 
@@ -153,10 +153,10 @@ describe('Establishments commentaries', function() {
             .post('/api/establishments/1/commentaries/new').send({text:""})
             .set('Authorization', 'Bearer '+user_token)
             .expect(500).expect(function(res){
-                assert.equal(res.body.errors.length, 2);
+                assert.equal(res.body.errors.length, 1);
                 assert.equal(res.body.errors[0].type, "Validation failed");
                 assert.equal(res.body.errors[0].field, "text");
-                assert.equal(res.body.errors[0].message, "text cannot be empty");
+                assert.equal(res.body.errors[0].message, "text is required");
             })
             .end(done);
     });
