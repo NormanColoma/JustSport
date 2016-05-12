@@ -49,11 +49,13 @@ describe('Votes', function() {
 
     before('Setting database in a known state', function (done) {
         umzug.execute({
-            migrations: ['20160315113959-create-commentary.js','20160323111436-create-vote','20151106004253-create-establishment', '20151022133423-create-user', '20160315113959-create-commentary'],
+            migrations: ['20151108193656-create-course.js','20160315113959-create-commentary.js','20160323111436-create-vote','20151106004253-create-establishment',
+                '20151016205501-sport-migration', '20151106004323-create-establishmentsport','20151022133423-create-user', '20160315113959-create-commentary'],
             method: 'down'
         }).then(function (migrations) {
             umzug.up(['20151022133423-create-user', '20160311103832-add-img-user', '20151106004253-create-establishment',
-                '20160323111436-create-vote', '20160315113959-create-commentary.js']).then(function (migrations) {
+                '20151016205501-sport-migration', '20151106004323-create-establishmentsport','20160323111436-create-vote',
+                '20160315113959-create-commentary.js','20151108193656-create-course.js']).then(function (migrations) {
                 done();
             });
         });
@@ -181,8 +183,9 @@ describe('Votes', function() {
             migrations: ['20151105165531-user-test-seeder', '20151105165744-establishments-test-seeder'],
             method: 'down'
         }).then(function(mig){
-            umzug.down(['20160315113959-create-commentary.js','20160323111436-create-vote','20151106004253-create-establishment',
-                '20160311103832-add-img-user','20151022133423-create-user']).then(function (migrations) {
+            umzug.down(['20151108193656-create-course.js','20160315113959-create-commentary.js','20160323111436-create-vote',
+                '20151106004323-create-establishmentsport','20151106004253-create-establishment', '20151016205501-sport-migration','20160311103832-add-img-user',
+                '20151022133423-create-user']).then(function (migrations) {
                 done();
             });
         });
