@@ -93,7 +93,7 @@ describe('Establishments commentaries', function() {
             .expect(function(res){
                 assert.equal(res.body.Commentary.text, commentary_1.text);
                 assert.equal(res.body.Commentary.User.name, 'Pepe');
-                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/'+res.body.Commentary.establishmentId+"/commentaries/"+res.body.Commentary.id);
+                assert.equal(res.get('Location'), 'http://127.0.0.1:3000/api/establishments/1/commentaries/'+res.body.Commentary.id);
             }).end(done);
 
     });

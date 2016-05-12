@@ -458,9 +458,10 @@ router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  midd
                     var link4 = {rel: 'all',
                         href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
                     links.push([link1,link2,link3,link4]);
-                    var comm = {id: commentary.id, text: commentary.text, establishmentId: commentary.establishmentId,
+                    var comm = {id: commentary.id, text: commentary.text, createdAt:commentary.createdAt,
                         User:{
-                            name: user.name
+                            name: user.name,
+                            img: user.img
                         }};
                     res.status(201).send({Commentary: comm,links: links});
                 });
