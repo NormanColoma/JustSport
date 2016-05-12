@@ -145,10 +145,10 @@ describe('Commentaries', function() {
             supertest(app).put('/api/commentaries/1').send({text:""})
                 .set('Authorization', 'Bearer '+user_token)
                 .expect(500).expect(function(res){
-                    assert.equal(res.body.errors.length, 2);
+                    assert.equal(res.body.errors.length, 1);
                     assert.equal(res.body.errors[0].type, "Validation failed");
                     assert.equal(res.body.errors[0].field, "text");
-                    assert.equal(res.body.errors[0].message, "text cannot be empty");
+                    assert.equal(res.body.errors[0].message, "text is required");
                 })
                 .end(done);
         });

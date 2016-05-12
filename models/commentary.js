@@ -5,10 +5,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        is:{
-          args: /^([ \u00c0-\u01ffa-zA-Z-0-9'\-])+$/i,
-          msg: "text cannot be empty"
-        },
         notEmpty:{
           msg: "text is required"
         }

@@ -445,20 +445,25 @@ router.post('/:id/commentaries/new', authController.isBearerAuthenticated,  midd
         }else{
             var commentary={user: user, text: req.body.text, establishmentId: req.params.id};
             models.commentary.create(commentary).then(function(commentary){
-                var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/" + est.id + "/commentaries/"+commentary.id;
-                res.setHeader("Location", url);
-                var links = [];
-                var link1 = {rel: 'self',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries/new"};
-                var link2 = {rel: 'update',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
-                var link3 = {rel: 'delete',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
-                var link4 = {rel: 'all',
-                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
-                links.push([link1,link2,link3,link4]);
-                var comm = {id: commentary.id, user: commentary.user, text: commentary.text, establishmentId: commentary.establishmentId};
-                res.status(201).send({Commentary: comm,links: links});
+                commentary.getUser().then(function(user){
+                    var url = req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/" + est.id + "/commentaries/"+commentary.id;
+                    res.setHeader("Location", url);
+                    var links = [];
+                    var link1 = {rel: 'self',
+                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries/new"};
+                    var link2 = {rel: 'update',
+                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                    var link3 = {rel: 'delete',
+                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                    var link4 = {rel: 'all',
+                        href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/commentaries"};
+                    links.push([link1,link2,link3,link4]);
+                    var comm = {id: commentary.id, text: commentary.text, establishmentId: commentary.establishmentId,
+                        User:{
+                            name: user.name
+                        }};
+                    res.status(201).send({Commentary: comm,links: links});
+                });
             }).catch(function (err) {
                 res.status(500).send({errors: handler.customServerError(err)});
             });
