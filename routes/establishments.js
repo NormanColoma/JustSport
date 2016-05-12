@@ -134,20 +134,23 @@ router.get('/:id', function(req, res) {
                 establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
                     establishment.getVotes({attributes: ['user']}).then(function(votes){
                         establishment.getCommentaries({attributes: ['id', 'text', 'createdAt']}).then(function(commentaries){
-                            var links = [];
-                            var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
-                            var link2 = {rel: 'sports',
-                                href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
-                            var link3 = {rel: 'filter',
-                                href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
-                                "/sports/location/Alicante" };
-                            var link4 = {rel: 'associate',
-                                href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
-                            links.push([link1,link2,link3,link4]);
-                            res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
-                                city: establishment.city, province: establishment.province, addr: establishment.addr,
-                                phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
-                                Owner: owner, links:links, Commentaries: commentaries, Votes: votes});
+                            establishment.getCourses({attributes: ['id', 'instructor', 'price', 'info'],
+                                include: [{model: models.sport, as:'Sport',attributes:['name']}]}).then(function(courses){
+                                var links = [];
+                                var link1 = {rel: 'self',href:req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id};
+                                var link2 = {rel: 'sports',
+                                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports"};
+                                var link3 = {rel: 'filter',
+                                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+
+                                    "/sports/location/Alicante" };
+                                var link4 = {rel: 'associate',
+                                    href: req.protocol + "://" + req.hostname + ":"+global.port + "/api/establishments/"+req.params.id+"/sports/new"};
+                                links.push([link1,link2,link3,link4]);
+                                res.status(200).send({id: establishment.id, name: establishment.name, desc: establishment.desc,
+                                    city: establishment.city, province: establishment.province, addr: establishment.addr,
+                                    phone: establishment.phone, website: establishment.website, main_img: establishment.main_img,
+                                    Owner: owner, links:links, Commentaries: commentaries, Votes: votes, Courses: courses});
+                            });
                         });
                     });
                 });
