@@ -133,7 +133,7 @@ router.get('/:id', function(req, res) {
             else {
                 establishment.getOwner({attributes:['uuid', 'name', 'lname', 'email', 'gender']}).then(function(owner){
                     establishment.getVotes({attributes: ['user']}).then(function(votes){
-                        establishment.getCommentaries({attributes: ['id', 'text', 'createdAt'], include:[{model: models.user, as: 'User', attributes: ['name', 'lname']}]}).then(function(commentaries){
+                        establishment.getCommentaries({attributes: ['id', 'text', 'createdAt'], include:[{model: models.user, as: 'User', attributes: ['name', 'lname', 'img']}]}).then(function(commentaries){
                             establishment.getCourses({attributes: ['id', 'instructor', 'price', 'info'],
                                 include: [{model: models.sport, as:'Sport',attributes:['name']}]}).then(function(courses){
                                 var links = [];
