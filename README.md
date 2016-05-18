@@ -279,6 +279,31 @@ estado 204 en caso de éxito de la operación.
 DELETE 
 *https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815*
 
+#### UPDATE api/users/:id
+
+Permite al usuario actualizar los datos de la cuenta (Por el momento solo el pass). Se requiere ser el propietario de la cuenta en cuestión. Devuelve el 
+estado 204 en caso de éxito de la operación.
+
+#####Ruta del Recurso
+
+*https://localhost:3000/api/users/:id*
+
+#####Parámetros 
+
+**id:**      La id del usuario el cual queremos actualizar la información.
+*obligatorio*  
+
+#####información del Recurso
+
+| Formato de Respuesta | Autenticación | Rol       |
+| ---------------------|:-------------:| :--------:|
+| JSON                 | Sí            | Público   |
+
+#####Ejemplo de Petición
+
+DELETE 
+*https://localhost:3000/api/users/26b408e3-b1bc-4afb-b85a-211269eb7815*
+
 
 ###Clientes
 
