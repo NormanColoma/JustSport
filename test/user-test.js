@@ -87,7 +87,7 @@ describe('User', function(){
     });
 
     it('Updating user that exists. Should return 204', function(done){
-        var data = {pass: 'nuevo2016', role: 'owner'};
+        var data = {pass: 'nuevo2016', role: 'owner', gender: 'male'};
         supertest(app)
             .put('/api/users/'+user_id).send(data)
             .set('Authorization', 'Bearer '+token)
@@ -135,7 +135,7 @@ describe('User', function(){
             }).end(done);
     });
 
-    it('Updating user sending incorret pass. Should return status 500', function(done){
+    it('Updating user sending not valid pass. Should return status 500', function(done){
         supertest(app)
         var data = { pass: '123'};
         supertest(app)
@@ -146,6 +146,32 @@ describe('User', function(){
             .expect(function(res){
                 assert.equal(res.body.errors[0].message, 'pass is not valid. It must be at least 6 characters, ' +
                     'no more than 15, and must include at least one lower case letter, and one numeric digit');
+            }).end(done);
+    });
+
+    it('Updating user sending not valid role. Should return status 500', function(done){
+        supertest(app)
+        var data = { pass: 'admin2015', role:"pepe"};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "role must match 'user' or 'owner' values");
+            }).end(done);
+    });
+
+    it('Updating user sending not valid gender. Should return status 500', function(done){
+        supertest(app)
+        var data = { pass: 'admin2015', gender:"pepe"};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, "gender must match 'male' or 'female' values");
             }).end(done);
     });
 

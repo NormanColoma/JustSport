@@ -80,7 +80,7 @@ router.post('/new', function(req, res) {
 });
 
 router.get('/:id',function(req, res) {
-  models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role']}).then(function (user) {
+  models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role', 'img']}).then(function (user) {
       if (user === null)
         res.status(404).send({message: "User was not found"});
       else {
@@ -114,7 +114,7 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
 
 router.put('/:id', authController.isBearerAuthenticated, user_middleware.isSelfUser, function(req, res) {
     models.user.findOne({where:{uuid: req.params.id}}).then(function (user) {
-        user.update({pass: req.body.pass}).then(function(){
+        user.update({pass: req.body.pass, gender: req.body.gender, role:req.body.role}).then(function(){
             sequelize.query("UPDATE users SET pass = '"+bcrypt.hashSync(req.body.pass)+"' WHERE uuid = '"+req.params.id+"'",
                 { type: sequelize.QueryTypes.UPDATE}).then(function () {
                 res.status(204).send();
