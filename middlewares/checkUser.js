@@ -65,3 +65,18 @@ exports.isOwner = function(req,res,next){
     else
         res.status(403).send({message: "You are not authorized to perform this action"});
 };
+
+exports.isSelfUser = function(req,res,next){
+    models.user.findOne({where:{uuid: req.params.id}}).then(function (user) {
+        if(user){
+            if (models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
+                next();
+            } else {
+                res.status(403).send({message: "You are not authorized to perform this action"});
+            }
+        }else{
+            res.status(404).send({message: "User was not found"});
+        }
+
+    });
+}
