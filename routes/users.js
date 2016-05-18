@@ -3,9 +3,26 @@ var express = require('express');
 var router  = express.Router();
 var authController = require('../routes/auth');
 var handler = require('../handlers/errorHandler');
+var middleware = require('../middlewares/paramMiddleware');
+var bcrypt = require('bcrypt-nodejs');
+var user_middleware = require('../middlewares/checkUser');
 var dest = process.env.UPLOAD_USER_DEST || '../public/images/users';
 var multer = require('multer');
 var fs = require('fs');
+var Sequelize = require('sequelize');
+var env       = process.env.NODE_ENV  || 'development';
+var config    = require('../config/config.json')[env];
+if(process.env.DATABASE_URL){
+    var sequelize = new Sequelize(process.env.DATABASE_URL,{
+        dialect: 'mysql',
+        port: '3306',
+        host: 'us-cdbr-iron-east-03.cleardb.net',
+        logging: false
+    });
+}
+else {
+    var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
+}
 //Set options for Multer.js
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -93,6 +110,21 @@ router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
    else {
       res.status(403).send({message: "You are not authorized to perform this action"});
     }
+});
+
+router.put('/:id', authController.isBearerAuthenticated, user_middleware.isSelfUser, function(req, res) {
+    models.user.findOne({where:{uuid: req.params.id}}).then(function (user) {
+        user.update({pass: req.body.pass}).then(function(){
+            sequelize.query("UPDATE users SET pass = '"+bcrypt.hashSync(req.body.pass)+"' WHERE uuid = '"+req.params.id+"'",
+                { type: sequelize.QueryTypes.UPDATE}).then(function () {
+                res.status(204).send();
+            }).catch(function (err) {
+                res.status(500).send({errors: handler.customServerError(err)});
+            });
+        }).catch(function (err) {
+            res.status(500).send({errors: handler.customServerError(err)});
+        });
+    });
 });
 
 module.exports = router;

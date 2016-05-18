@@ -85,6 +85,71 @@ describe('User', function(){
                 });
             }).end(done);
     });
+
+    it('Updating user that exists. Should return 204', function(done){
+        var data = {pass: 'nuevo2016', role: 'owner'};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(204)
+            .end(done);
+    });
+
+
+    it('Updating user that does not exist. Should return status 404', function(done){
+        supertest(app)
+        var data = {pass: 'nuevo2016'};
+        supertest(app)
+            .put('/api/users/111-232-adx578').send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(404)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.message, 'User was not found');
+            }).end(done);
+    });
+
+    it('Updating user without senging pass. Should return status 500', function(done){
+        supertest(app)
+        var data = { role: 'owner'};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, 'pass cannot be null');
+            }).end(done);
+    });
+
+    it('Updating user sending null pass. Should return status 500', function(done){
+        supertest(app)
+        var data = { pass: null};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, 'pass cannot be null');
+            }).end(done);
+    });
+
+    it('Updating user sending incorret pass. Should return status 500', function(done){
+        supertest(app)
+        var data = { pass: '123'};
+        supertest(app)
+            .put('/api/users/'+user_id).send(data)
+            .set('Authorization', 'Bearer '+token)
+            .expect(500)
+            .expect('Content-type', 'application/json; charset=utf-8')
+            .expect(function(res){
+                assert.equal(res.body.errors[0].message, 'pass is not valid. It must be at least 6 characters, ' +
+                    'no more than 15, and must include at least one lower case letter, and one numeric digit');
+            }).end(done);
+    });
+
+
     it('Deleting user without being himself. Should return status 403', function(done){
         supertest(app)
             .delete('/api/users/111-222-adf568')

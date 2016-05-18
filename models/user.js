@@ -119,12 +119,6 @@ module.exports = function(sequelize, DataTypes) {
           user.pass = hash;
           done();
         });
-      },
-      beforeUpdate:function (user, options, done){
-        bcrypt.hash(user.pass, null, null, function(err, hash) {
-          user.pass = hash;
-          done();
-        });
       }
     }
   });
