@@ -28,7 +28,7 @@ else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
 
-var dest = process.env.UPLOAD_DEST || '../public/images/ests';
+var dest = process.env.UPLOAD_DEST || './public/images/ests';
 //Set options for Multer.js
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
