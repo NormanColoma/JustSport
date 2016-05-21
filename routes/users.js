@@ -38,7 +38,7 @@ var upload = multer({ storage: storage, limits: {fileSize:512000}}).single('user
 router.put('/me/profile/image',  authController.isBearerAuthenticated, function(req, res) {
     upload(req, res, function (err) {
         if (err) {
-            res.status(500).send({message: "File size is too long"});
+            res.status(500).send({message: err});
         } else {
             if(req.file === undefined){
                 res.status(404).send({message: "Image file was not found"});
