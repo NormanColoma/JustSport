@@ -41,10 +41,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isIn:{
-          args: [['Albacete', 'Alicante', 'Almer�a', '�lava', 'Asturias', '�vila', 'Badajoz','Islas Baleares', 'Barcelona',
-            'Vizcaya', 'Burgos', 'C�ceres', 'C�diz', 'Cantabria', 'Castell�n', 'Ceuta', 'Ciudad Real', 'C�rdoba', 'Coru�a A', 'Cuenca',
-            'Gipuzkoa', 'Girona', 'Granda', 'Guadalajara', 'Huelva', 'Huesca', 'Ja�n','La Rioja','Las Palmas','Le�n', 'Lleida', 'Lugo', 'Madrid',
-            'M�laga', 'Melilla', 'Murcia','Navarra', 'Ourense', 'Palencia','Pontevedra','Salamanca', 'Santa Cruz de Tenerife', 'Segovia',
+          args: [['Albacete', 'Alicante', 'Almería', 'Álava', 'Asturias', 'Ávila', 'Badajoz','Islas Baleares', 'Barcelona',
+            'Vizcaya', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Coruña A', 'Cuenca',
+            'Gipuzkoa', 'Girona', 'Granda', 'Guadalajara', 'Huelva', 'Huesca', 'Jaén','La Rioja','Las Palmas','León', 'Lleida', 'Lugo', 'Madrid',
+            'Málaga', 'Melilla', 'Murcia','Navarra', 'Ourense', 'Palencia','Pontevedra','Salamanca', 'Santa Cruz de Tenerife', 'Segovia',
             'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Zamora', 'Zaragoza']],
           msg: 'province must match a existent spanish province'
         },
