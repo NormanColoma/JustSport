@@ -80,10 +80,10 @@ describe('EstablishmentsSports', function(){
             email: 'ua.norman@mail.com', gender: 'male'};
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
-        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpeg', Owner: owner};
+        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpg', Owner: owner};
     var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
         city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
-        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpeg', Owner: owner};
+        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpg', Owner: owner};
     supertest(app)
         .get('/api/sports/1/establishments')
         .expect(200)
@@ -124,10 +124,10 @@ it('Getting all establishments where the sport is imparted without specify curso
             email: 'ua.norman@mail.com', gender: 'male'};
         var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
             city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpeg', Owner: owner};
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpg', Owner: owner};
         var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
             city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpeg', Owner: owner};
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpg', Owner: owner};
         supertest(app)
             .get('/api/sports/1/establishments?limit=2')
             .expect(200)
@@ -149,7 +149,7 @@ it('Getting all establishments where the sport is imparted specifying after curs
             email: 'ua.norman@mail.com', gender: 'male'};
         var est2 = {id:2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
             city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
-            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpeg', Owner: owner};
+            phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpg', Owner: owner};
         var id = 1;
         var after = new Buffer(id.toString()).toString('base64');
         supertest(app)
@@ -173,7 +173,7 @@ it('Getting all establishments where the sport is imparted specifying before cur
             email: 'ua.norman@mail.com', gender: 'male'};
         var est1 = {id:1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
             city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
-            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpeg', Owner: owner};
+            phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpg', Owner: owner};
         var id = 2;
         var before = new Buffer(id.toString()).toString('base64');
         supertest(app)

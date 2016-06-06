@@ -51,7 +51,7 @@ describe('Course', function() {
         email: 'ua.norman@mail.com', gender: 'male'};
     var est = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
-        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpeg',owner: owner_id};
+        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpg',owner: owner_id};
     var sport = {id: 1,name: 'Spinning'};
     var course1 = {sportId:'1', establishmentId:'1',instructor: 'Juan Domínguez',price:'17.50',info:'Un curso muy completo'};
     before('Setting database in a known state: Deleting', function (done) {

@@ -443,7 +443,7 @@ describe('Establishments', function(){
     it('Getting establishment that exists. Should return status 200',function(done){
         var est3 = {name: 'Más Sport', desc: 'Asociación deportiva con unas instalaciones increíbles.',
             city: 'Valencia', province: 'Valencia', addr: 'Calle Arco nº32',
-            phone: '965663057', website: 'http://wwww.masport.es', main_img:'default.jpeg',owner: owner_id};
+            phone: '965663057', website: 'http://wwww.masport.es', main_img:'default.jpg',owner: owner_id};
         supertest(app)
             .get('/api/establishments/3')
             .expect(200)

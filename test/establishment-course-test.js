@@ -43,13 +43,13 @@ describe('Establishments filtered by city and location', function() {
     this.timeout(15000);
     var est1 = {id: 1,name: 'Gym A Tope', desc: 'Gimnasio perfecto para realizar tus actividades deportivas.',
         city: 'San Vicente del Raspeig', province: 'Alicante', addr: 'Calle San Franciso nº15',
-        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpeg'};
+        phone: '965660327', website: 'http://wwww.gymatope.es', main_img:'default.jpg'};
     var est2 = {id: 2,name: 'Gym Noray', desc: 'Gimnasio muy acondicionado y en perfecto estado.',
         city: 'Santa Pola', province: 'Alicante', addr: 'Calle Falsa nº34',
-        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpeg'};
+        phone: '965662347', website: 'http://wwww.noraygym.com', main_img:'default.jpg'};
     var est3 = {id: 4, name: 'Montemar', desc: 'Especializados en cursos y clases de ténis.',
         city: 'Alicante', province: 'Alicante', addr: 'Avenida Novelda Km 14',
-        phone: '965662268', website: 'http://wwww.montemar.es', main_img:'default.jpeg'};
+        phone: '965662268', website: 'http://wwww.montemar.es', main_img:'default.jpg'};
     before('Setting database in a known state: Deleting', function (done) {
         umzug.execute({
             migrations: ['20151108193656-create-course', '20151106004323-create-establishmentsport', '20151106004253-create-establishment',
