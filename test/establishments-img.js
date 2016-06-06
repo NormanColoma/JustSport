@@ -12,6 +12,7 @@ var models = require("../models");
 var app = require('../app');
 var Sequelize = require("sequelize");
 var config = require("../config/config")[process.env.NODE_ENV];
+var dest = process.env.UPLOAD_DEST || '../public/images/ests';
 var sequelize = new Sequelize(
     config.database,
     config.username,
@@ -240,6 +241,7 @@ describe('Img estab', function() {
     });
 
     after('Dropping database',function(done) {
+        fs.unlinkSync(dest+'/'+'img-1.jpg');
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
                 '20151105165744-establishments-test-seeder'],
