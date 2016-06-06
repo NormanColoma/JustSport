@@ -8,6 +8,7 @@ var app = require('../app');
 var Sequelize = require("sequelize");
 var config = require("../config/config")[process.env.NODE_ENV];
 var fs=require("fs");
+var dest = process.env.UPLOAD_USER_DEST || '../public/images/users';
 var sequelize = new Sequelize(
     config.database,
     config.username,
