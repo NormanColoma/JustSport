@@ -241,7 +241,6 @@ describe('Img estab', function() {
     });
 
     after('Dropping database',function(done) {
-        fs.unlinkSync(dest+'/'+'img-1.jpg');
         seeder.execute({
             migrations: ['20151106235801-sportestablishment-test-seeder','20151106235642-sport-test-seeder','20151105165531-user-test-seeder',
                 '20151105165744-establishments-test-seeder'],
