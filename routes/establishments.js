@@ -49,7 +49,7 @@ router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.n
                 if(est === null){
                     res.status(404).send({message: "The establishment was not found"});
                 }else{
-                    if(est.get("main_img") !== "default.jpg" && env !== "test")
+                    if(est.get("main_img") !== "default.jpg" && env !== "test" && env !== 'travis')
                         fs.unlinkSync(dest+'/'+est.get("main_img"));
                     est.set("main_img", req.file.filename);
                     est.save();
