@@ -11,14 +11,14 @@ module.exports = {
       sportId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: {model: "establishmentsports", key: "sportId"},
+        references: {model: "sports", key: "id"},
         onDelete: 'CASCADE'
 
       },
       establishmentId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: {model: "establishmentsports", key: "establishmentId"},
+        references: {model: "establishments", key: "id"},
         onDelete: 'CASCADE'
       },
       instructor: {
