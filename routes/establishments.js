@@ -297,7 +297,8 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
             "?after="+req.query.after+"?limit"+limit;
         where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone','website','main_img'],
             include: {model: models.course, as: 'Courses', attributes: ['id', 'info', 'price', 'instructor'],
-                include:{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']}},
+                include:[{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']},
+                    {model: models.sport, as:'Sport',attributes:['name']}]},
             limit: parseInt(limit), where:{id: {$gt: after},owner: owner_id}};
     }else if(req.query.before){
         before = parseInt(new Buffer(req.query.before, 'base64').toString('ascii'));
@@ -305,7 +306,8 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
         url = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" + "?before="+req.query.before+"?limit"+limit;
         where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone','website','main_img'],
             include: {model: models.course, as: 'Courses', attributes: ['id', 'info', 'price', 'instructor'],
-                include:{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']}},
+                include:[{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']},
+                    {model: models.sport, as:'Sport',attributes:['name']}]},
             limit: parseInt(limit), where:{id: {$lt: after},owner: owner_id}};
     }else{
         if(req.query.limit) {
@@ -314,7 +316,8 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
         }
         where = {attributes: ['id', 'name', 'desc', 'city', 'province', 'addr', 'phone','website','main_img'],
             include: {model: models.course, as: 'Courses', attributes: ['id', 'info', 'price', 'instructor'],
-                include:{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']}},
+                include:[{model: models.schedule, as: 'Schedule', attributes: ['id', 'day', 'startTime', 'endTime']},
+                    {model: models.sport, as:'Sport',attributes:['name']}]},
             limit: parseInt(limit), where:{id: {$gt: after},owner: owner_id}};
     }
     before = 0;
