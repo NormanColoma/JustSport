@@ -8,9 +8,9 @@ module.exports = {
       name: 'Norman',
       lname: 'Coloma García',
       email: 'ua.norman@gmail.com',
-      pass: bcrypt.hashSync("admin2015"),
+      pass: bcrypt.hashSync("Admin2016"),
       gender: 'male',
-      role: 'admin'
+      role: 'owner'
     }]);
   },
 
