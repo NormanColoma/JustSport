@@ -18,6 +18,8 @@ var app = express();
 var cors = require('cors');
 var listeners = process.env.MAX_LISTENERS || 10;
 
+app.use(cors());
+
 global.secret = '23asdfwer5676asdfaqzxsrt56woppxcjq12341pasdfasfd547kjxhoaefr44556añksdfjlka13a2adf4134sjdfla';
 global.port = '3000';
 
@@ -25,7 +27,6 @@ global.port = '3000';
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
