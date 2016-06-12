@@ -85,7 +85,7 @@ describe('User', function(){
                 });
             }).end(done);
     });
-    
+
 
     it('Updating user that does not exist. Should return status 404', function(done){
         supertest(app)
