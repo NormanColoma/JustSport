@@ -85,16 +85,7 @@ describe('User', function(){
                 });
             }).end(done);
     });
-
-    it('Updating user that exists. Should return 204', function(done){
-        var data = {pass: 'nuevo2016', role: 'owner', gender: 'male'};
-        supertest(app)
-            .put('/api/users/'+user_id).send(data)
-            .set('Authorization', 'Bearer '+token)
-            .expect(204)
-            .end(done);
-    });
-
+    
 
     it('Updating user that does not exist. Should return status 404', function(done){
         supertest(app)
