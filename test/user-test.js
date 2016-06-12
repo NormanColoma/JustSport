@@ -25,15 +25,6 @@ var umzug = new Umzug({
 });
 
 describe('User', function(){
-    this.timeout(15000);
-    var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
-    var credentials = {
-        "grant_type" : "password",
-        "username" : "ua.norman@mail.com",
-        "password" : "adi2015"
-    };
-    var token = "";
-    var user_id="";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151022133423-create-user'],
