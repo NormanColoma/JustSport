@@ -56,7 +56,7 @@ app.post('/api/oauth/authorization', passport.authenticate('local', { failureRed
     function(req, res) {
       res.redirect('/api/oauth2/authorize?response_type=' + req.body.responseType + '&client_id=' + req.body.clientId +
           '&redirect_uri=' + req.body.redirectUri);
-});
+    });
 
 app.use('/api', router);
 app.use('/', routes);

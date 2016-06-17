@@ -323,28 +323,33 @@ router.get('/me/all', authController.isBearerAuthenticated, middleware.paginatio
     before = 0;
     after = 0;
     models.establishment.findAndCountAll(where).then(function(ests){
-        models.establishment.findAndCountAll({ where: {owner: owner_id}}).then(function(total){
-            //Check if there are after cursors
-            if(ests.rows.length < ests.count || ests.rows[ests.rows.length -1].id < total.rows[total.count-1].id){
-                after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
-                next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
-                    "?after=" + after + '&limit=' + limit;
-            }
-            models.establishment.min('id', { where: {owner: owner_id}}).then(function(min){
-                //Check if there are before cursors
-                if (ests.rows[0].id > min) {
-                    before = new Buffer(ests.rows[0].id.toString()).toString('base64');
-                    prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
-                        "?before=" + before + '&limit=' + limit;
+        if(ests.count === 0){
+            res.status(404).send({message: "There are no establishments added yet"});
+        }else{
+            models.establishment.findAndCountAll({ where: {owner: owner_id}}).then(function(total){
+                //Check if there are after cursors
+                if(ests.rows.length < ests.count || ests.rows[ests.rows.length -1].id < total.rows[total.count-1].id){
+                    after = new Buffer(ests.rows[ests.rows.length - 1].id.toString()).toString('base64');
+                    next = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
+                        "?after=" + after + '&limit=' + limit;
                 }
-                var curs = {before: before, after: after};
-                var pag = {cursors: curs, previous: prev, next: next};
-                ests.count = total.count;
-                res.status(200).send({
-                    Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                models.establishment.min('id', { where: {owner: owner_id}}).then(function(min){
+                    //Check if there are before cursors
+                    if (ests.rows[0].id > min) {
+                        before = new Buffer(ests.rows[0].id.toString()).toString('base64');
+                        prev = req.protocol + "://" + req.hostname + ":3000" + "/api/establishments/me/all" +
+                            "?before=" + before + '&limit=' + limit;
+                    }
+                    var curs = {before: before, after: after};
+                    var pag = {cursors: curs, previous: prev, next: next};
+                    ests.count = total.count;
+                    res.status(200).send({
+                        Establishments: ests, paging: pag, links: {rel: 'self', href: url}
+                    });
                 });
             });
-        });
+        }
+
     });
 });
 router.post('/new', authController.isBearerAuthenticated, function(req, res) {
