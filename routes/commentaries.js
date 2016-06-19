@@ -3,7 +3,6 @@
  */
 var models  = require('../models');
 var express = require('express');
-var multer = require('multer');
 var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
