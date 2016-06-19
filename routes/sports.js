@@ -4,6 +4,7 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var handler = require('../handlers/errorHandler');
 var middleware = require('../middlewares/paramMiddleware');
+
 /**
  * Primero miramos si hay, after o before, para hacer las cláusulas where y los cambios de url,
  * si no hay, es una consulta normal. Después tendremos que comprobar el mínimo y máximo, para saber

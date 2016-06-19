@@ -4,10 +4,12 @@ var router  = express.Router();
 var authController = require('../routes/auth');
 var handler = require('../handlers/errorHandler');
 var middleware = require('../middlewares/paramMiddleware');
+var cloudinary = require('cloudinary');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 var bcrypt = require('bcrypt-nodejs');
 var user_middleware = require('../middlewares/checkUser');
 var dest = process.env.UPLOAD_USER_DEST || './public/images/users';
-var multer = require('multer');
 var fs = require('fs');
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV  || 'development';
@@ -23,49 +25,32 @@ if(process.env.DATABASE_URL){
 else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
-//Set options for Multer.js
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, dest);
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+
+cloudinary.config({
+    cloud_name: 'hgu1piqd2',
+    api_key: '235926947113524',
+    api_secret: '1RMIA5DVuAF8ii9er3hX71flbCk'
+});
+
+
+router.put('/me/profile/image',  authController.isBearerAuthenticated, multipartMiddleware, function(req, res) {
+    if (req.files.size > 512000) {
+        res.status(500).send({message: "File size is too long. It cant not be greater than 512 Kb."});
+    }else{
+        cloudinary.uploader.upload(
+            req.files.user_profile.path,
+            function(result) {
+                var url = result.secure_url;
+                var img = result.secure_url;
+                models.user.find({where: {uuid: models.user.getAdminId(req.get('Authorization').slice('7'))}}).then(function (user) {
+                    models.user.update({img: img},{where: {uuid: models.user.getAdminId(req.get('Authorization').slice('7'))}}).then(function(result){
+                        res.send({img_url: url});
+                    });
+                });
+            },{width: 260, height: 230}
+        );
     }
 });
-
-var upload = multer({ storage: storage, limits: {fileSize:512000}}).single('user_profile');
-
-router.put('/me/profile/image',  authController.isBearerAuthenticated, function(req, res) {
-    upload(req, res, function (err) {
-        if (err) {
-            res.status(500).send({message: "File size is too long"});
-        } else {
-            if(req.file === undefined){
-                res.status(404).send({message: "Image file was not found"});
-            }
-            else {
-                if (req.file.mimetype == "image/jpeg" || req.file.mimetype == "image/png") {
-                    models.user.find({where: {uuid: models.user.getAdminId(req.get('Authorization').slice('7'))}}).then(function (user) {
-                        if (user.get("img") != "default.jpg")
-                            fs.unlinkSync(dest + '/' + user.get("img"));
-                        models.user.update({img: req.file.filename},{where: {uuid: models.user.getAdminId(req.get('Authorization').slice('7'))}}).then(function(result){
-                            res.status(204).send();
-                        });
-                    });
-                }
-                else {
-                    deleteFile(req.file.filename);
-                    res.status(400).send({message: "File must be jpg/png type"});
-                }
-            }
-        }
-    });
-});
-
-function deleteFile(fileName){
-    fs.unlinkSync(dest + '/' + fileName);
-}
-
 
 router.post('/new', function(req, res) {
   models.user.create(req.body).then(function (user) {
@@ -79,6 +64,27 @@ router.post('/new', function(req, res) {
   });
 });
 
+router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
+    if(models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
+        models.user.destroy({
+            where: {
+                uuid: req.params.id
+            }
+        }).then(function (rows) {
+            if (rows > 0) {
+                res.status(204).send();
+            }
+            else
+                res.status(404).send({message: "User was not found"});
+        }).catch(function (err) {
+            res.status(500).send(err);
+        });
+    }
+    else {
+        res.status(403).send({message: "You are not authorized to perform this action"});
+    }
+});
+
 router.get('/:id',function(req, res) {
   models.user.findOne({where:{uuid: req.params.id}, attributes: ['uuid','name', 'lname','email','gender', 'role', 'img']}).then(function (user) {
       if (user === null)
@@ -89,27 +95,6 @@ router.get('/:id',function(req, res) {
     }).catch(function(err){
       res.status(500).send(err);
     });
-});
-
-router.delete('/:id', authController.isBearerAuthenticated, function(req, res) {
-    if(models.user.selfUser(req.get('Authorization').slice('7'), req.params.id)) {
-      models.user.destroy({
-        where: {
-          uuid: req.params.id
-        }
-      }).then(function (rows) {
-        if (rows > 0) {
-          res.status(204).send();
-        }
-        else
-          res.status(404).send({message: "User was not found"});
-      }).catch(function (err) {
-        res.status(500).send(err);
-      });
-    }
-   else {
-      res.status(403).send({message: "You are not authorized to perform this action"});
-    }
 });
 
 router.put('/:id', authController.isBearerAuthenticated, user_middleware.isSelfUser, function(req, res) {

@@ -4,13 +4,15 @@
 var models  = require('../models');
 var express = require('express');
 var multer = require('multer');
+var cloudinary = require('cloudinary');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 var router  = express.Router();
 var authController = require('../routes/auth');
 var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
-var cors = require('cors');
 var fs = require('fs');
 var PlaceAutocomplete = require("googleplaces");
 //Set this to use raw queries
@@ -29,49 +31,33 @@ else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
 
-var dest = process.env.UPLOAD_DEST || './public/images/ests';
-//Set options for Multer.js
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, dest);
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
+cloudinary.config({
+    cloud_name: 'hgu1piqd2',
+    api_key: '235926947113524',
+    api_secret: '1RMIA5DVuAF8ii9er3hX71flbCk'
 });
 
-var upload = multer({ storage: storage, limits: {fileSize:512000}}).single('est_profile');
-router.put('/:id/new/image', cors(), authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res) {
-    upload(req,res, function(err){
-        if(err){
-            res.status(500).send({message: "File size is too long"});
-        }else{
-            models.establishment.find({where: {id: req.params.id}}).then(function(est){
-                if(est === null){
-                    res.status(404).send({message: "The establishment was not found"});
+router.put('/:id/new/image', authController.isBearerAuthenticated, middleware.numericalIdEstab,
+    user.isEstabOwner, multipartMiddleware, function(req, res) {
+        models.establishment.find({where: {id: req.params.id}}).then(function(est){
+            if(est === null){
+                res.status(404).send({message: "The establishment was not found"});
+            }else{
+                if (req.files.size > 512000) {
+                    res.status(500).send({message: "File size is too long. It cant not be greater than 512 Kb."});
                 }else{
-                    if(est.get("main_img") !== "default.jpg")
-                        fs.unlinkSync(dest+'/'+est.get("main_img"));
-                    est.set("main_img", req.file.filename);
-                    est.save();
-                    res.status(204).send();
+                    cloudinary.uploader.upload(
+                        req.files.est_profile.path,
+                        function(result) {
+                            var url = result.secure_url;
+                            est.set("main_img", url);
+                            est.save();
+                            res.send({img_url: url});
+                        }
+                    );
                 }
-            });
-        }
-    });
-});
-
-router.delete('/:id/image',authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res){
-    models.establishment.find({where: {id: req.params.id}}).then(function(est){
-            if(est.get("main_img") == "default.jpg")
-                res.status(403).send({message: 'You cannot remove the default image'});
-            else{
-                fs.unlinkSync(dest+'/'+est.get("main_img"));
-                est.set("main_img", "default.jpg");
-                est.save();
-                res.status(204).send();
             }
-    });
+        });
 });
 
 router.get('', function(req, res) {
