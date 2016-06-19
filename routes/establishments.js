@@ -10,6 +10,7 @@ var jwt = require('jwt-simple');
 var middleware = require('../middlewares/paramMiddleware');
 var handler = require('../handlers/errorHandler');
 var user = require('../middlewares/checkUser');
+var cors = require('cors');
 var fs = require('fs');
 var PlaceAutocomplete = require("googleplaces");
 //Set this to use raw queries
@@ -28,7 +29,7 @@ else {
     var sequelize = new Sequelize(config.database, config.username, config.password,{logging: false});
 }
 
-var dest = process.env.UPLOAD_DEST || '../public/images/ests';
+var dest = process.env.UPLOAD_DEST || './public/images/ests';
 //Set options for Multer.js
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -40,7 +41,7 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage, limits: {fileSize:512000}}).single('est_profile');
-router.put('/:id/new/image',  authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res) {
+router.put('/:id/new/image', cors(), authController.isBearerAuthenticated, middleware.numericalIdEstab, user.isEstabOwner, function(req, res) {
     upload(req,res, function(err){
         if(err){
             res.status(500).send({message: "File size is too long"});

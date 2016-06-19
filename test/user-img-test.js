@@ -102,9 +102,8 @@ describe('User Img Upload', function() {
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
             .attach('user_profile', './test/test-images/bigger.jpeg')
-            .expect(500).expect(function(res){
-                assert.equal("File size is too long", res.body.message);
-            }).end(done);
+            .expect(500)
+            .end(done);
     });
 
     it('Should return status 404, when trying to upload image without attach it, function(done)', function(done){
