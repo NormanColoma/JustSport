@@ -25,6 +25,15 @@ var umzug = new Umzug({
 });
 
 describe('User', function(){
+    this.timeout(15000);
+    var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@mail.com', pass: 'adi2015', gender: 'male'};
+    var credentials = {
+        "grant_type" : "password",
+        "username" : "ua.norman@mail.com",
+        "password" : "adi2015"
+    };
+    var token = "";
+    var user_id="";
     before('Setting database in a known state',function(done) {
         umzug.execute({
             migrations: ['20151022133423-create-user'],
@@ -68,14 +77,15 @@ describe('User', function(){
         supertest(app)
             .post('/api/oauth2/token').send(credentials)
             .expect(200).expect(function(res){
-                assert(res.body.access_token);
-                token = res.body.access_token;
-                models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
-                    user_id = user.uuid;
-                    assert(user_id);
-                });
-            }).end(done);
+            assert(res.body.access_token);
+            token = res.body.access_token;
+            models.user.findOne({where : {email: 'ua.norman@mail.com'}, attributes: ['uuid']}).then(function(user){
+                user_id = user.uuid;
+                assert(user_id);
+            });
+        }).end(done);
     });
+
 
     it('Updating user that does not exist. Should return status 404', function(done){
         supertest(app)
@@ -232,7 +242,7 @@ describe('User', function(){
 
     it('Creating user with optional fields, but not the corrects. Should return status 500', function(done){
         var user = {name: 'Norman', lname: 'Coloma García', email: 'ua.norman@gmail.com', pass: 'adi2015', gender: 'not correct_gender',
-        role: 'admin'};
+            role: 'admin'};
         supertest(app)
             .post('/api/users/new').send(user)
             .expect(500)
