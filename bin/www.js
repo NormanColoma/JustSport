@@ -8,6 +8,8 @@
 
 var app = require('../app');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
 var models = require("../models");
 
 /**
@@ -17,8 +19,16 @@ var models = require("../models");
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-var server = http.createServer(app).listen(port)
-var listener = server.listen(port, function(){
+var options = {
+    key: fs.readFileSync('../fixtures/keys/server.key'),
+    cert: fs.readFileSync('../fixtures/keys/server.crt')
+};
+
+/**
+ * Create HTTPs server.
+ */
+var server = https.createServer(options, app);
+var listener = server.listen(3000, function(){
     console.log('Listening on port ' + listener.address().port);
 });
 

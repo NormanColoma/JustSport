@@ -112,8 +112,8 @@ describe('User Img Upload', function() {
             .set('Content-Type', 'multipart/form-data')
             .field('name','user_profile')
             .expect(404).expect(function(res){
-                assert.equal("Image file was not found", res.body.message);
-             }).end(done);
+            assert.equal("Image file was not found", res.body.message);
+        }).end(done);
     });
 
     it('Should return status 400, when trying to upload image with different mime type than jpg/png', function(done){
@@ -123,9 +123,9 @@ describe('User Img Upload', function() {
             .field('name','user_profile')
             .attach('user_profile', './test/test-images/text.txt')
             .expect(400).expect(function(res){
-                assert.equal("File must be jpg/png type", res.body.message);
+            assert.equal("File must be jpg/png type", res.body.message);
 
-            }).end(done);
+        }).end(done);
     });
 
     after('Dropping database',function(done) {
