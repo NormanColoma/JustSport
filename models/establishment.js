@@ -83,7 +83,10 @@ module.exports = function(sequelize, DataTypes) {
         }
       }
     },
-    main_img: DataTypes.STRING,
+    main_img: {
+      type: DataTypes.STRING,
+      defaultValue: 'https://res.cloudinary.com/hgu1piqd2/image/upload/v1466335739/default-image_d2b3yh.jpg'
+    },
     owner: DataTypes.UUID,
     createdAt: {
       type: DataTypes.DATE,

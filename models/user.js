@@ -80,6 +80,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     img: {
       type: DataTypes.STRING,
+      defaultValue: 'https://res.cloudinary.com/hgu1piqd2/image/upload/v1466335739/default-image_d2b3yh.jpg'
     }
   }, {
     classMethods: {
