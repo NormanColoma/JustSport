@@ -3,7 +3,6 @@
  */
 var models  = require('../models');
 var express = require('express');
-var multer = require('multer');
 var cloudinary = require('cloudinary');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
